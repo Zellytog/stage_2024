@@ -415,16 +415,20 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
 \end{lem}
 
 \begin{proof}
-  A FAIRE
+  On remarque que chaque apparition d'un terme $\bt$ dans une formule $\varphi$ est remplacée par $\bt^\sigma$ lors de son interprétation. De plus, pour un terme $\bu$, $\bu^{\sigma[x\leftarrow \bt^\sigma]} = (\bu[\bt/x])^\sigma$. Formellement, ces deux arguments demandent une induction (respectivement sur $\varphi$ et sur $\bu$).
 \end{proof}
 
 \begin{lem}
-  Pour tous $\Gamma,\Delta$, si $\Gamma\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ on a, en notant $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow a_1,\ldots,x_n\leftarrow a_n]}$~:
+  Pour tous $\Gamma,\Delta$, si $\Gamma\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ on a, en notant $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow a_1,\ldots,\bx_n\leftarrow a_n]}$~:
   \[t\reali_{\rho[X\leftarrow S]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi/X]\]
 \end{lem}
 
 \begin{proof}
-  A FAIRE
+  Par induction sur $\varphi$~:
+  \begin{itemize}
+  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors $\trad\varphi_{\rho[X\leftarrow S]}^\sigma = S(\bt_1^\sigma,\ldots,\bt_n^\sigma) = \trad\psi_\rho^{\sigma[\bx_1\leftarrow \bt_1^\sigma,\ldots,\bx_n\leftarrow \bt_n^\sigma]} = $ A FAIRE
+  \item A FAIRE
+  \end{itemize}
 \end{proof}
 
 \begin{lem}[Adéquation]
@@ -457,7 +461,7 @@ En particulier, si $\vdash t : \varphi$ alors $t\reali \varphi$.
 
 \subsubsection{Quelques réaliseurs élémentaires}
 
-On commence par donner quelques réaliseurs simples montrant que notre modèle de réalisabilité vérifie les axiomes d'un modèle de $\HA2$ par exemple.
+On commence par donner quelques réaliseurs simples pour donner l'idée de comment prouver des résultats sur notre modèle de réalisabilité.
 
 \begin{expl}
   Pour toute sorte $A$, $\lambda x.x\reali \forall \bx^A, \bx = \bx$. On peut directement le déduire de l'adéquation~:
@@ -474,6 +478,86 @@ On commence par donner quelques réaliseurs simples montrant que notre modèle d
 \begin{expl}
   On peut réaliser la récurrence relativisée définie comme la formule suivante~:
   \[R \defeq \forall X^\bN, X(0) \implies (\forall n^{\{\bN\}}, X(n) \implies X(S\;n))\implies \forall n^{\{\bN\}}, X(n)\]
+
+  Ceci se réalise directement par $\rec_\bN$ (à lire comme $\lambda t\;u\;v.\rec_\bN\;t\;u\;v$). Pour prouver que $\rec_\bN\reali R$, on ne peut pas utiliser l'adéquation puisqu'il n'y a pas de règle de typage pour $\rec_\bN$. Soit donc une fonction $F : \bN \to \SAT$, $t\reali X(0)$, $u\reali \forall n^{\{\bN\}}, X(n) \implies X(S\;n)$ et $v\reali \bN(n)$. On sait donc que $v\reduc^* \overline n$. On peut donc raisonner par induction sur ce $n$~:
+  \begin{itemize}
+  \item si $v\reduc^* \bZ$, alors
+    \[\rec_\bN\;t\;u\;v\reduc^* \rec_\bN\;t\;u\;\bZ\reduc t\reali X(0)\]
+    donc $\rec_\bN\;t\;u\;v\reali X(0)$ par saturation.
+  \item supposons que pour tout $v\reduc^* \overline n$, $\rec_\bN\;t\;u\;v\reali X(n)$, et soit $v\reduc^* S\;\overline n$, alors
+    \[\rec_\bN\;t\;u\;v \reduc^* \rec_\bN\;t\;u\;(S\;\overline n)\reduc u\;\overline n\;(\rec_\bN\;t\;u\;\overline n)\]
+    or $u\reali \forall n^{\{\bN\}}, X(n)\implies X(S\;n)$ donc $u\;\overline n\reali X(n)\implies X(S\;n)$. De plus, par hypothèse d'induction, $\rec_\bN\;t\;u\;\overline n \reali X(n)$, donc $u\;\overline n\;(\rec_\bN\;t\;u\;\overline n)\reali X(S\;n)$. Donc par saturation $\rec_\bN\;t\;u\;v\reali X(S\;n)$.
+  \end{itemize}
+  Ainsi, par induction, pour tout $n\in \bN$, si $v\reduc^* \overline n$ alors $\rec_\bN\;t\;u\;v\reali X(n)$, ce qui signifie donc que $\rec_\bN\;t\;u\reali \forall x^{\{\bN\}}, X(n)$, donc que $\rec_\bN\reali R$.
 \end{expl}
+
+\begin{expl}
+  On peut construire un test d'égalité des entiers~:
+  \[t_= \defeq \rec_\bN\;(\rec_\bN\;\btt\;(\lambda\_\;\_.\bff))\;(\lambda p.\lambda f.\rec_\bN\;\bff\;(\lambda q\;\_. f\;q))\reali\Dec(=^{\bN,\bN})\]
+  On montre par induction sur $(n,m)$ que $t_=$ réduit vers la valeur attendue à chaque fois~:
+  \begin{itemize}
+  \item si $(n,m) = (0,0)$, on a
+    \[t_=\;\bZ\;\bZ \reduc \rec_\bN\;\btt\;(\lambda \_\;\_.\bff)\;\bZ\reduc \btt\]
+  \item si $(n,m) = (0,S\;p)$, on a
+    \[t_=\;\bZ\;(\bfS\;\overline p)\reduc \rec_\bN\;\btt\;(\lambda\_\;\_.\bff)\;(\bfS\;\overline p)\reduc (\lambda\_\;\_.\bff)\;\overline p\;(\rec_\bN\;\btt\;(\lambda\_\;\_.\bff)\;\overline p) \reduc^2 \bff\]
+  \item si $(n,m) = (S\;p,0)$, on a
+    \[t_=\;(\bfS\;\overline p)\;\bZ\reduc (\lambda p.\lambda f.\rec_\bN\;\bff\;(\lambda q\;\_.f\;q))\;\overline p\;(t_=\;\overline p)\;\bZ\reduc^2 \rec_\bN\;\bff\;(\lambda q\;\_.(t_=\;\overline p)\;q)\;\bZ \reduc \bff\]
+  \item si $(n,m) = (S\;p,S\;q)$, on a
+    \begin{align*}
+      t_=\;(\bfS\;\overline p)\;(\bfS\;\overline q)&\reduc (\lambda p.\lambda f.\rec_\bN\;\bff\;(\lambda q\;\_.f\;q))\;\overline p\;(t_=\;\overline p)\;(\bfS\;\overline q)\\
+      &\reduc^2 \rec_\bN\;\bff\;(\lambda q\;\_.(t_=\;\overline p)\;q)\;(\bfS\;\overline q)\\
+      &\reduc (\lambda q\;\_.t_=\;\overline p\;q)\;\overline q\;(\rec_\bN\;\bff\;(\lambda q\;\_.(t_=\;\overline p)\;q)\;\overline q)\\
+      &\reduc^2 t_=\;\overline p\;\overline q
+    \end{align*}
+    et l'hypothèse d'induction nous dit que $t_=\;\overline p\;\overline q$ se réduit vers $\btt$ si les deux termes sont égaux, vers $\bff$ s'ils sont différents.
+  \end{itemize}
+  Ainsi $t_=\reali \Dec(=^{\bN,\bN})$.
+\end{expl}
+
+\subsubsection{Traiter les arbres}
+
+On s'intéresse maintenant au cas des arbres. Dans le contexte des types, on peut naturellement considérer qu'un arbre est un type généré par une constante et un opérateur prenant une fonction partielle $\bN \to \mathrm{Tree}$ pour retourner un nouvel arbre. Ainsi un n\oe ud construit à partir d'une fonction $f$ est un n\oe ud dont la $i$-ème branche mène à $f(n)$. Cela nous donne une construction proche de celle des $W$-types de Martin-Löf. Cependant, comme notre cadre est entre la programmation et les mathématiques à rebours, nous adoptons un formalisme plus extrinsèque, en considérant des prédicats sur $\bL$.
+
+On a alors besoin de définir différentes primitives pour traiter les prédicats sur $\bL$.
+
+\begin{defi}[Préfixe]
+  On définit un nouveau symbole de relation, $\preceq$, d'arité $\bL,\bL$. Ainsi $\ell \preceq \ell'$ est une nouvelle proposition atomique. On étend alors notre interprétation de réalisabilité~:
+  \[\trad{\ell \preceq \ell'}_\rho^\sigma \defeq
+  \left\{\begin{array}{l}
+  \Lambda\text{ si } \ell \text{ est un préfixe de } \ell'\\
+  \varnothing\text{ sinon}
+  \end{array}\right.\]
+\end{defi}
+
+\begin{lem}
+  $\preceq$ est décidable. En effet, on peut construire un réaliseur de $\Dec(\preceq^{\bL,\bL})$~:
+  \[\rec_\bL\;(\lambda x.\btt)\;[\cdots]\reali \Dec(\preceq^{\bL,\bL})\]
+\end{lem}
+
+\begin{defi}[Arbre]
+  Un arbre est un prédicat sur $\bL$ clos par préfixe~:
+  \[\isTree(T) \defeq \forall \bx^\bL\;\by^\bL, (\bx\preceq \by \implies T(\by) \implies T(\bx))\]
+\end{defi}
+
+\begin{nota}
+  Pour alléger l'introduction des arbres, on prendra ces conventions d'écritures~:
+  \[\forall T^\Tree, \varphi \defeq \forall T^\bL, \isTree(T) \implies \varphi\qquad \forall T^{\{\Tree\}}, \varphi\defeq \forall T^{\{\bL\}}, \isTree(T) \implies \varphi\]
+\end{nota}
+
+On définit de plus le prédicat disant d'un arbre qu'il est binaire. Celui-ci nous permettra d'introduire des affaiblissement du lemme de König.
+
+\begin{defi}[Arbre binaire]
+  On dit qu'un arbre $T$ est binaire s'il pour tout $u\in T$, on ne peut pas augmenter $u$ avec un nombre autre que $0$ ou $1$~:
+  \[\isBinTree(T) \defeq \forall \ell^\bL, T(\ell) \implies (T(\bZ :: \ell) \implies \bot) \land (T(\boldsymbol 1 :: \ell) \implies \bot)\]
+\end{defi}
+
+\begin{nota}
+  On prend des conventions similaires à celles pour $\Tree$~:
+  \[\forall T^\BinTree, \varphi \defeq \forall T^\Tree, \isBinTree(T) \implies \varphi \qquad \forall T^{\{\BinTree\}}, \varphi \defeq \forall T^{\{\Tree\}}, \isBinTree(T) \implies \varphi\]
+\end{nota}
+
+Donnons alors la version faible du lemme de König~:
+
+\[\WKL \defeq \forall T^\BinTree, (\forall n^{\{\bN\}}, \exists \ell^{\{\bL\}}, |\ell| = n \land T(\ell)) \implies \exists X^\bN, \forall n^{\{\bN\}}, T(X^\bN_{0,\ldots,n-1})\]
 
 \end{document}
