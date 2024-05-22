@@ -1,0 +1,479 @@
+\documentclass{article}
+\usepackage{prelude}
+
+\title{Choix, réalisabilité et evidenced frames}
+
+\author{Titouan Leclercq}
+
+\date{April 15$^{\mathrm{th}}$ -- July 15$^{\mathrm{th}}$}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Boîte à outils réalisable}
+
+\subsection{Un modèle de HA2 amélioré}
+
+On commence par donner une présentation d'une version enrichie de l'arithmétique de Heyting du second ordre (HA2) avec un modèle de réalisabilité basé sur le lambda-calcul.
+
+\subsubsection{Langage de programmation}
+
+Le $\lambda$-calcul est connu pour permettre de représenter n'importe quelle fonction calculable. A ce titre, on pourrait considérer le $\lambda$-calcul pur non typé pour réaliser des propositions. Cependant, pour la même raison, nous allons adopter un $\lambda$-calcul possédant plus de constructeurs~: tant qu'à pouvoir coder tout ce que l'on souhaite, autant se donner directement des primitives pour manipuler les éléments qui nous importent.
+
+\begin{defi}[$\Lambda$]
+  On se donne un ensemble $\mathcal X_\Lambda$ de variables de termes. On définit l'ensemble des $\lambda$-termes, $\Lambda$, par la grammaire suivante~:
+  \[t,u ::= x\mid\lambda x. t\mid t\;u\mid \langle t,u\rangle\mid \pi_1\;t\mid \pi_2\;t\mid \bZ\mid \bfS\;t\mid \rec_\bN\;t\;u\;u\mid \btt\mid\bff\mid\rec_\bB\;t\;u\;v\mid [\;]\mid t:: u\mid \rec_\bL\;t\;u\;v\]
+\end{defi}
+
+\begin{defi}[Contexte]
+  On définit l'ensemble $\Lambda_{\bnnbr{\;}}$ des contextes, définit récursivement par~:
+  \begin{multline*}
+    E,F::= \bnnbr{\ }\mid \lambda x.E\mid E\;t\mid t\;E\mid \langle E,t\rangle\mid \langle t,E\rangle\mid \pi_1\;E\mid\pi_2\;E\mid\bfS\;\mid \rec_\bN\;E\;t\;u\mid \rec_\bN\;t\;E\;u\mid\rec_\bN\;t\;u\;E\\\mid\rec_\bB\;E\;t\;u\mid\rec_\bB\;t\;E\;u\mid\rec_\bB\;t\;u\;E\mid E::t\mid t::E\mid \rec_\bL\;E\;t\;u\mid \rec_\bL\;t\;E\;u\mid\rec_\bL\;t\;u\;E
+  \end{multline*}
+
+  Si $C$ est un contexte et $t$ un $\lambda$-terme, on note $C\bnnbr{t}$ le terme obtenu en substituant $\bnnbr{}$ par $t$ dans l'écriture de $C$.
+\end{defi}
+
+On définit de façon usuelle la substitution ainsi que la relation d'$\alpha$-équivalence, modulo laquelle on travaillera à partir de maintenant.
+
+\begin{defi}[Réduction]
+  On définit la relation $\mapsto\subseteq \Lambda\times\Lambda$ par les règles suivantes~:
+  \begin{center}
+    \begin{prooftree}
+      \infer0{(\lambda x.t)u\mapsto t[u/x]}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\forall i\in\{1,2\}, \pi_1\;\langle t_1,t_2\rangle \mapsto t_i}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\rec_\bN\;t\;u\;\bZ\mapsto t}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\rec_\bN\;t\;u\;(\bfS\;v)\mapsto u\;v\;(\rec_\bN\;t\;u\;v)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0{\rec_\bB\;t\;u\;\btt\mapsto t}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\rec_\bB\;t\;u\;\bff\mapsto u}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\rec_\bL\;t\;u\;[\;]\mapsto t}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\rec_\bL\;t\;u\;(v::w)\mapsto u\:v\:w\:(\rec_\bL\:t\:u\:w)}
+    \end{prooftree}
+  \end{center}
+
+  On définit alors la relation $\reduc$ par
+  \[t\reduc u \defeq \exists C \in\Lambda_{\bnnbr{\;}},\exists t'\;u'\in\Lambda, t = C\bnnbr{t'}\land u = C\bnnbr{u'}\land t' \mapsto u'\]
+\end{defi}
+
+On introduit la notion d'ensemble saturé, qui peut se considérer comme une partie de $\Lambda$ qui est calculatoirement pertinente.
+
+\begin{defi}[Partie saturée]
+  Soit $S\subseteq\Lambda$, on dit que $S$ est saturée si la propriété suivante est vérifiée~:
+  \[\forall t,u\in\Lambda, u \in S \land t \reduc u \implies t \in S\]
+
+  On note
+  \[\SAT \defeq \{S\subseteq \Lambda\mid S\;\text{est saturée}\}\]
+\end{defi}
+
+\subsubsection{Partie logique}
+
+On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, qui comporte les trois sortes $\{\bN,\bB,\bL\}$ représentant respectivement les entiers, les booléens et les listes d'entiers. On se donne la signature suivante pour construire nos termes du premier ordre (où l'exposant indique l'arité des fonctions)~:
+\[\mathcal L \defeq \{0^\bN, S^{\bN\to\bN}, +^{\bN\to\bN\to\bN}, \times^{\bN\to\bN\to\bN}, \btt^\bB, \bff^\bB, [\:]^\bL, ::^{\bL\to\bL\to\bL}\}\]
+
+\begin{defi}[Termes du premier ordre]
+  On se donne un ensemble dénombrable $\mathcal X_1$ de variables du premier ordre. Un contexte de typage du premier ordre $\Gamma$ est une liste de paires $(x,\tau)\in \mathcal X_1\times \{\bN,\bB,\bL\}$. On définit l'ensemble des termes du premier ordre bien typés par les règles suivantes~:
+  \begin{center}
+    \begin{prooftree}
+      \infer0{\Gamma\vdash 0 : \bN}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bN}
+      \infer1{\Gamma\vdash S\;\bt : \bN}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bN}
+      \hypo{\Gamma\vdash \bu : \bN}
+      \infer2{\Gamma\vdash \bt + \bu : \bN}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bN}
+      \hypo{\Gamma\vdash \bu : \bN}
+      \infer2{\Gamma\vdash \bt \times \bu : \bN}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \btt : \bB}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bff : \bB}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\Gamma\vdash [\:] : \bL}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bN}
+      \hypo{\Gamma\vdash \bu : \bL}
+      \infer2{\Gamma\vdash \bt :: \bu : \bL}
+    \end{prooftree}
+  \end{center}
+\end{defi}
+
+On peut maintenant définit les formules de notre HA2 enrichi.
+
+\begin{defi}[Propositions]
+  On se donne un ensemble $\mathcal X_2$ de variables du second ordre. Un contexte de typage du second ordre $\Delta$ est une liste de paires $(X,\alpha) \in \mathcal X_2\times \List(\{\bN,\bB,\bL\})$. Une proposition du second ordre est un objet bien typé par les règles suivantes~:
+  \begin{center}
+    \begin{prooftree}
+      \hypo{(X : A_1,A_2,\ldots,A_n)\in\Delta}
+      \hypo{\forall i \in \{1,\ldots,n\}, \Gamma\vdash \bt_i : A_i}
+      \infer2{\Gamma\mid\Delta\vdash X(\bt_1,\ldots,\bt_n) : \Propo}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\vdash \varphi : \Propo}
+      \hypo{\Gamma\mid\Delta\vdash \psi : \Propo}
+      \infer2{\Gamma\mid\Delta\vdash \varphi \land \psi : \Propo}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\vdash \varphi : \Propo}
+      \hypo{\Gamma\mid\Delta\vdash \psi : \Propo}
+      \infer2{\Gamma\mid\Delta\vdash \varphi \to \psi : \Propo}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, x : A\mid \Delta\vdash \varphi : \Propo}
+      \infer1{\Gamma\mid\Delta\vdash\forall x^A, \varphi : \Propo}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid \Delta, X : A_1,\ldots,A_n\vdash \varphi : \Propo}
+      \infer1{\Gamma\mid\Delta\vdash \forall X^{A_1,\ldots,A_n}, \varphi : \Propo}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bN}
+      \infer1{\Gamma\mid\Delta \vdash \mathbb \bN(\bt) : \Propo}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bB}
+      \infer1{\Gamma\mid\Delta \vdash \mathbb \bB(\bt) : \Propo}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \bL}
+      \infer1{\Gamma\mid\Delta \vdash \mathbb \bL(\bt) : \Propo}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, x_1 : A_1, \ldots, x_n : A_n\mid\Delta\vdash \varphi : \Propo}
+      \infer1{\Gamma\mid\Delta\vdash \Dec(\varphi^{A_1,\ldots,A_n}) : \Propo}
+    \end{prooftree}
+  \end{center}
+\end{defi}
+
+L'idée des prédicats de la forme $\mathbb A(\bt)$ avec une sorte $\mathbb A$ est de donner un témoin du fait que le terme est un terme standard. Le prédicat $\Dec(\varphi)$, lui, exprime qu'un prédicat est décidable. Il permettra de récupérer un témoin de la procédure de décision de l'appartenance à la partie des termes définie par le prédicat.
+
+\begin{nota}
+  Pour rendre les propositions plus lisibles, on adoptera la convention que, plutôt que d'écrire $\forall x^A, \mathbb A(x) \to \varphi$, on notera directement $\forall x^{\{A\}}, \varphi$. De même $\forall X^{\{A_1,\ldots,A_n\}}, \varphi$ est une abréviation pour la formule $\forall X^{A_1,\ldots,A_n},\Dec(X^{A_1\ldots,A_n})\to \varphi$. Ce procédé de conditionner par $\mathbb A(x)$ (respectivement $\Dec$) sera appelé ici relativisation. On définit de même la version relativisée de $\exists$.
+\end{nota}
+
+\subsubsection{Relation de réalisabilité}
+
+Pour définir la relation de réalisabilité à proprement parler, on va d'abord donner quelques points. Tout d'abord, on peut donner une représentation de chaque terme typé par un $\lambda$-terme, nous noterons $\overline \bt$ le représentant, donné par~:
+\begin{itemize}
+\item $\overline 0 = \bZ$
+\item $\overline{n + 1} = \bfS\;\overline n$
+\item $\overline \btt = \btt$
+\item $\overline \bff = \bff$
+\item $\overline [\:] = [\:]$
+\item $\overline{\bt:: \bu} = \overline{\bt} :: \overline{\bu}$
+\end{itemize}
+
+On définit aussi les notions de valuations du premier et du second ordre.
+
+\begin{defi}[Valuation]
+  Une valuation du premier ordre est une fonction $\sigma : \mathcal X_1 \to \bN\cup \bB\cup\bL$ partielle. On dit que $\sigma$ est adéquate pour un terme $\bt$ si pour toute variable libre $\bx\in \varlib{\bt}$, le type de $\bx$ correspond au type de $\sigma(\bx)$. Si $\sigma$ est adéquate pour $\bt$ alors on note $\bt^\sigma \in \bN\cup\bB\cup\bL$ la valeur obtenue en substituant les variables libres par les valeurs données par $\sigma$. On considère dans la suite que toutes les valuations du premier ordre considérées sont adéquates. De même $\sigma$ est adéquate pour une proposition $\varphi$ si elle est adéquate pour tout terme apparaissant dans $\varphi$.
+
+  Une valuation du second ordre est une fonction $\rho : \mathcal X_2\to \SAT^{\List(\bN\cup\bB\cup\bL)}$. On dit que $\rho$ est adéquate pour une proposition $\varphi$ si pour toute variable libre $X\in\varlib{\varphi}$, l'arité de $\rho(X)$ correspond à celle de $X$.
+\end{defi}
+
+On peut maintenant définir la fonction $\trad{-}_\rho^\sigma : \Propo \to \mathcal P(\Lambda)$.
+
+\begin{defi}[Interprétation]
+  On définit la fonction par induction, en considérant $\rho$ et $\sigma$ adéquates~:
+  \begin{itemize}
+  \item $\trad{X(\bt_1,\ldots,\bt_n)}_\rho^\sigma \defeq \rho(X)(t_1^\sigma,\ldots,t_n^\sigma)$
+  \item $\trad{\varphi\to\psi}_\rho^\sigma\defeq \{t\in\Lambda\mid \forall u \in \trad{\varphi}_\rho^\sigma, t\;u\in\trad{\psi}_\rho^\sigma\}$
+  \item $\trad{\varphi\land \psi}_\rho^\sigma \defeq \{t\in \Lambda\mid \pi_1\;t\in\trad{\varphi}_\rho^\sigma, \pi_2\;t\in\trad{\psi}_\rho^\sigma\}$
+  \item $\displaystyle\trad{\forall x^A, \varphi}_\rho^\sigma \defeq \bigcap_{v \in A}\trad{\varphi}_\rho^{\sigma[x \leftarrow v]}$
+  \item $\displaystyle\trad{\forall X^{A_1,\ldots,A_n}, \varphi}_\rho^\sigma\defeq\bigcap_{S : \prod_i A_i \to \SAT}\trad{\varphi}_{\rho[X \leftarrow S]}^\sigma$
+  \item $\trad{\mathbb A(\bt)}_\rho^\sigma \defeq \{t\in \Lambda\mid t \reduc^* \overline{\bt^\sigma}\}$
+  \item \begin{multline*}
+    \trad{\Dec(\varphi^{A_1,\ldots,A_n})}_\rho^\sigma \defeq \{t\in \Lambda\mid
+    \forall (v_1,\ldots,v_n)\in \mathbb A_1\times\ldots\times\mathbb A_n, \\
+    \trad{\varphi}_\rho^{\sigma[\bx_i \leftarrow v_i]}\neq \varnothing \implies t\;\overline{v_1}\;\ldots\;\overline{v_n}\reduc^* \btt\text{ et }\trad{\varphi}_\rho^{\sigma[\bx_i \leftarrow v_i]}=\varnothing \implies t\:\overline{v_1}\;\ldots\;\overline{v_n}\reduc^* \bff\}
+  \end{multline*}
+  \end{itemize}
+\end{defi}
+
+\begin{nota}
+  On notera $t\reali_\rho^\sigma \varphi$ pour $t\in\trad\varphi_\rho^\sigma$, et $t\reali\varphi$ pour $t\in\trad\varphi_\varnothing^\varnothing$. On appellera alors $t$ un réaliseur de $\varphi$.
+\end{nota}
+
+On peut alors voir la différence fondamentale entre $\forall x^A, \varphi$ et $\forall x^{\{A\}}, \varphi$~: le premier signifie simplement qu'il existe un réaliseur de $\varphi$ qui est uniforme pour $x$, c'est-à-dire que ce même réaliseur fonctionne pour toutes les valeurs possibles de $x$ ; le second, lui, indique que l'on possède une façon de calculer $\overline \bt$ en un réaliseur de $\varphi$. Par exemple $\forall x^\bN, x = x$ signifie qu'il existe $t$ qui réalise chaque $n = n$ pour $n\in \bN$, quand $\forall x^{\{\bN\}}, x = x$ signifie qu'il existe une fonction qui à $\overline n$ associe une preuve de $n = n$. Créer cette distinction permet de contrôler le plus finement possible ce qui est du ressort du calcul et ce qui est du ressort de la vérité logique. En particulier, on voit qu'un réaliseur d'une formule de la forme $\forall x^{\{A\}}, \exists y^{\{B\}}, \varphi(x,y)$ calcule directement une fonction $A \to B$ ainsi qu'une preuve de $\varphi(x,f(x))$, là où sans cette relativisation le $y$ dépendant de $x$ n'a pas besoin d'être calculable et peut simplement exister dans la méta-théorie.
+
+Un des lemmes principaux est celui de saturation, qui assure que tous les ensembles ainsi définis restent saturés.
+
+On commence par montrer que $\SAT$ est un treillis complet.
+
+\begin{lem}
+  $(\SAT,\subseteq,\Lambda,\varnothing,\bigcap,\bigcup)$ est un treillis complet.
+\end{lem}
+
+\begin{proof}
+  Il est évident que $S\in \SAT \implies \varnothing\subseteq S \subseteq \Lambda$ et que ces deux parties sont stables par anté-réduction. Supposons que $\{S_i\}_{i\in I}$ est une famille de parties saturées. Si $t\reduc u$ et $u \in \bigcap S_i$, alors pour tout $i \in I$, $t \in S_i$ par saturation de $S_i$, donc $t\in \bigcap S_i$, donc $\bigcap S_i$ est saturée. De même si $u \in \bigcup S_i$, alors on trouve $i$ tel que $u \in S_i$ donc $t\in S_i$ par saturation. Donc $\bigcup S_i$ est saturée. Ainsi $(\SAT,\subseteq,\Lambda,\varnothing, \bigcap,\bigcup)$ est un treillis complet.
+\end{proof}
+
+\begin{lem}[Saturation]
+  Pour toute proposition $\varphi \in \Propo$ et valuations $\sigma,\rho$ adéquates, $\trad\varphi_\rho^\sigma\in\SAT$.
+\end{lem}
+
+\begin{proof}
+  On procède par induction sur $\varphi$~:
+  \begin{itemize}
+  \item dans le cas de $X(\bt_1,\ldots,\bt_n)$ la définition même de $\trad-_\rho^\sigma$ nous donne un ensemble saturé.
+  \item supposons que $\trad{\varphi}_\rho^\sigma\in\SAT$ et $\trad{\psi}_\rho^\sigma\in \SAT$. Soient alors $t,u\in\Lambda$ tels que $t\reduc u$ et $u \reali_\rho^\sigma \varphi \to \psi$. Soit $v\reali_\rho^\sigma\varphi$, par définition on en déduit que $u\;v\reali_\rho^\sigma \psi$ donc par hypothèse d'induction, et comme $t\;v\reduc u\;v$, $t\;v\reali_\rho^\sigma\psi$ donc $t\reali_\rho^\sigma\psi$, d'où $\trad{\varphi\to\psi}_\rho^\sigma \in\SAT$.
+  \item supposons que $\trad{\varphi_1}_\rho^\sigma$ et $\trad{\varphi_2}_\rho^\sigma$ sont des ensembles saturés, soient alors $t, u \in \Lambda$ tels que $t\reduc u$ et $u \in \trad{\varphi_1\land \varphi_2}_\rho^\sigma$. On sait donc que pour tout $i\in\{1,2\}$, $\pi_i\;u \reali_\rho^\sigma \varphi_i$ et $\pi_i\;t\reduc\pi_i\;u$, donc par hypothèse d'induction et saturation $\pi_i\;t\reali_\rho^\sigma\varphi_i$. Donc $\trad{\varphi_1\land\varphi_2}_\rho^\sigma\in\SAT$.
+  \item Si tous les $\trad\varphi_\rho^{\sigma[x\leftarrow v]}$ sont saturés, comme $\SAT$ est un treillis complet, on en déduit directement que $\bigcap \trad\varphi_\rho^{\sigma[x\leftarrow v]}$ est saturé.
+  \item De même que précédemment, le fait que $\SAT$ est un treillis complet assure que ce cas passe à l'induction.
+  \item Si $t\reduc u$ et $u\reduc^* \overline{\bt^\sigma}$ alors $t\reduc^*\overline{\bt^\sigma}$.
+  \item Comme précédemment, la clôture par anté-réduction est directe par la forme de la définition.
+  \end{itemize}
+
+  Ainsi, par induction, si $t\reduc u$ et $u\reali_\rho^\sigma \varphi$ alors $t\reali_\rho^\sigma\varphi$.
+\end{proof}
+
+\subsubsection{Système de types}
+
+On définit un système de typage pour $\Lambda$, dont les types sont des propositions.
+
+\begin{defi}[Typage]
+  Nos contextes de typage de termes sont des listes de couples $(x : \varphi)\in\mathcal X_\Lambda\times \Propo$. On définit la relation de typage par les règles suivantes, où les deux premiers contextes servent à typer les variables du premier et second ordre (en particulier on considère que tous les séquents sont bien typés)~:
+  \begin{center}
+    \begin{prooftree}
+      \infer0[Ax]{\Gamma\mid\Delta\mid\Xi,x : \varphi\vdash x : \varphi}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi \vdash t : \varphi}
+      \infer1[Aff$_1$]{\Gamma, \bx : A\mid\Delta\mid\Xi \vdash t : \varphi}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
+      \infer1[Aff$_2$]{\Gamma\mid\Delta, X : A_1,\ldots,A_n\mid\Xi\vdash t : \varphi}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
+      \infer1[Aff$_\Lambda$]{\Gamma\mid\Delta\mid\Xi, x : \psi\vdash t : \varphi}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi, x : \varphi \vdash t : \psi}
+      \infer1[$\to_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda x.t : \varphi \to \psi}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi \to \psi}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \varphi}
+      \infer2[$\to_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t\:u : \psi}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \psi}
+      \infer2[$\land_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \langle t,u\rangle : \varphi\land \psi}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi_1\land\varphi_2}
+      \infer1[$\land_\mathrm e^i$]{\Gamma\mid\Delta\mid\Xi\vdash \pi_i\;t : \varphi_i}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma, \bx : A\mid\Delta\mid\Xi\vdash t : \varphi}
+      \infer1[$\forall^1_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^A, \varphi}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^A, \varphi}
+      \hypo{\Gamma\vdash \bt : A}
+      \infer2[$\forall^1_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\bt/\bx]}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta, X^{A_1,\ldots,A_n}\mid\Xi\vdash t : \varphi}
+      \infer1[$\forall^2_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{A_1,\ldots,A_n}, \varphi}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{A_1,\ldots,A_n}, \varphi}
+      \hypo{\Gamma, \bx_1 : A_1,\ldots,\bx_n : A_n\mid\Delta\vdash \psi : \Propo}
+      \infer2[$\forall^2_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\psi/X]}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0[$\bN_0$]{\Gamma\mid\Delta\mid\Xi\vdash \bZ : \bN(0)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \bN(\bt)}
+      \infer1[$\bN_S$]{\Gamma\mid\Delta\mid\Xi\vdash \bfS\;t : \bN(S\:\bt)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0[$\bB_{\btt}$]{\Gamma\mid\Delta\mid\Xi\vdash \btt : \bB(\btt)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0[$\bB_{\bff}$]{\Gamma\mid\Delta\mid\Xi\vdash \bff : \bB(\bff)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0[$\bL_{[\;]}$]{\Gamma\mid\Delta\mid\Xi\vdash [\:] : \bL([\:])}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \bN(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \bL(\bu)}
+      \infer2[$\bL_{::}$]{\Gamma\mid\Delta\mid\Xi\vdash t :: u : \bL(\bt :: \bu)}
+    \end{prooftree}
+  \end{center}
+\end{defi}
+
+On définit une notion de valuation adaptée au lemme d'adéquation.
+
+\begin{defi}[Valuation de réalisabilité]
+  Soit un contexte de typage du premire ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
+  \[\forall i \in I, \sigma(x_i)\reali_\rho^\sigma\varphi_i\]
+\end{defi}
+
+On définit aussi la substitution simultanée $t^\nu$ en remplaçant directement chaque variable libre $x$ de $t$ par $\nu(x)$ dans $t$.
+
+On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
+
+\begin{lem}
+  Pour tous $\sigma,\rho$, $\bt : A$, $t\in\Lambda$, $\varphi : \Propo$, on a
+  \[t\reali_\rho^{\sigma[\bx \leftarrow \bt^\sigma]} \varphi\iff t\reali_\rho^\sigma \varphi[\bt/\bx]\]
+\end{lem}
+
+\begin{proof}
+  A FAIRE
+\end{proof}
+
+\begin{lem}
+  Pour tous $\Gamma,\Delta$, si $\Gamma\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ on a, en notant $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow a_1,\ldots,x_n\leftarrow a_n]}$~:
+  \[t\reali_{\rho[X\leftarrow S]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi/X]\]
+\end{lem}
+
+\begin{proof}
+  A FAIRE
+\end{proof}
+
+\begin{lem}[Adéquation]
+  Soient des contextes $\Gamma,\Delta,\Xi$ et des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$. Soit $t\in\Lambda$ et $\varphi\in\Propo$ tels que $\Gamma\mid\Delta\mid\Xi\vdash t : \varphi$. Alors $t^\nu \reali_\rho^\sigma \varphi$.
+\end{lem}
+
+\begin{proof}
+  La preuve se fait par induction sur la relation de typage $\vdash$~:
+  \begin{itemize}
+  \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $t^\nu = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
+  \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $t^\nu \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $(\lambda x.t)^\nu\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $t^{\nu[x \leftarrow u]}\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $t^{\nu[x\leftarrow u]} = t^\nu[u/x]$ donc $t^\nu[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.t^\nu) u \reali_\rho^\sigma \psi$, donc $\lambda x.t^\nu\reali_\rho^\sigma \varphi\to\psi$.
+  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi \to \psi$ et $u^\nu\reali_\rho^\sigma \varphi$, alors par définition $(t\;u)^\nu\reali_\rho^\sigma \psi$.
+  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi$ et $u^\nu\reali_\rho^\sigma \psi$, alors $\pi_1\;\langle t,u\rangle^\nu \reduc t^\nu \reali_\rho^\sigma \varphi$ et $\pi_2\;\langle t,u\rangle^\nu\reduc u^\nu \reali_\rho^\sigma \psi$, donc $\langle t,u\rangle^\nu \reali_\rho^\sigma \varphi\land\psi$.
+  \item Si $t^\nu \reali_\rho^\sigma \varphi_1\land\varphi_2$ alors par définition, $\pi_i\;t^\nu\reali_\rho^\sigma \varphi_i$.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : A), \Delta,\Xi$, $t^\nu\reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, alors par hypothèse pour tout $a \in \mathbb A$, $\nu\reali_\rho^{\sigma[\bx\leftarrow a]}(\Gamma, \bx : A), \Delta, \Xi$ donc $t^\nu\reali_\rho^{\sigma[\bx \leftarrow a]}\varphi$ pour tout $a\in \mathbb A$, ce qui signifie que $t^\nu \reali_\rho^\sigma \forall \bx^A, \varphi$.
+  \item On suppose que $t^\nu\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : A$, $\bt^\sigma \in \mathbb A$ donc $t^\nu\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n), \Xi$, $t^\nu \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $S : A_1\times\ldots\times A_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow S]}^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n),\Xi$ donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$. Comme cela tient pour tout $S : A_1\times\ldots\times A_n \to \SAT$, on en déduit que $t^\nu\reali_\rho^\sigma \forall X, \varphi$.
+  \item Si $t^\nu\reali_\rho^\sigma \forall X, \varphi$ et $\Gamma,x_1 : A_1,\ldots,x_n : A_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow a_1,\ldots, x_n \leftarrow a_n]}$ définit une fonction $A_1\times\ldots\times A_n \to\SAT$, donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi/X]$ par le lemme de substitution du second ordre.
+  \item On voit que $\bZ\reduc^*\bZ$ donc $\bZ^\nu\reali_\rho^\sigma\bN(0)$.
+  \item Si $t^\nu\reali_\rho^\sigma \bN(\bt)$ alors $t^\nu\reduc^*\overline{\bt^\sigma}$ donc $\bfS\;t^\nu\reduc^* \overline{S\:\bt^\sigma}$, donc $\bfS\;t^\nu\reali_\rho^\sigma \bN(S\;\bt)$.
+  \item Comme $\btt\reduc^* \btt$, on en déduit que $\btt^\nu\reali_\rho^\sigma\bB(\btt)$.
+  \item Comme $\bff\reduc^* \bff$, on en déduit que $\btt^\nu\reali_\rho^\sigma\bB(\bff)$.
+  \item Pareil pour les listes.
+  \end{itemize}
+
+  On en déduit par induction le résultat.
+\end{proof}
+
+En particulier, si $\vdash t : \varphi$ alors $t\reali \varphi$.
+
+\subsubsection{Quelques réaliseurs élémentaires}
+
+On commence par donner quelques réaliseurs simples montrant que notre modèle de réalisabilité vérifie les axiomes d'un modèle de $\HA2$ par exemple.
+
+\begin{expl}
+  Pour toute sorte $A$, $\lambda x.x\reali \forall \bx^A, \bx = \bx$. On peut directement le déduire de l'adéquation~:
+  \begin{center}
+    \begin{prooftree}
+      \infer0[Ax]{\bx : A\mid X^A\mid x : X(\bx)\vdash x : X(\bx)}
+      \infer1[$\to_\mathrm i$]{\bx : A\mid X^A\mid\varnothing\vdash \lambda x.x : X(\bx) \to X(\bx)}
+      \infer1[$\forall^2_\mathrm i$]{\bx : A\mid\varnothing\mid\varnothing\vdash \lambda x.x : \bx = \bx}
+      \infer1[$\forall^1_\mathrm i$]{\vdash \lambda x.x : \forall \bx^A, \bx = \bx}
+    \end{prooftree}
+  \end{center}
+\end{expl}
+
+\begin{expl}
+  On peut réaliser la récurrence relativisée définie comme la formule suivante~:
+  \[R \defeq \forall X^\bN, X(0) \implies (\forall n^{\{\bN\}}, X(n) \implies X(S\;n))\implies \forall n^{\{\bN\}}, X(n)\]
+\end{expl}
+
+\end{document}

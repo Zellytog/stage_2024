@@ -1,0 +1,322 @@
+\ProvidesPackage{prelude}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{cancel}
+\usepackage{comment}
+\usepackage{ebproof}
+%\fontfamily{mathpazo}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{tabularx}
+\usepackage{physics}
+%%%%%%%%%%%%%%%%%%%%%%%%%% IMPORTS %%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}     % good encoding
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[framemethod=tikz]{mdframed} % frames (props, thms, ...)
+\usepackage{hyperref}           % refs
+\usepackage{titlesec}           % titles
+\usepackage[titles]{tocloft}    % titles
+\usepackage{xcolor}             % color definitions
+%\usepackage{sectsty}            % ???
+\usepackage{geometry}           % margins
+\usepackage{tikz-cd}            % diagrams
+\usepackage{enumitem}           % managing enumerations
+\usepackage{etoolbox}           % conditional logic
+\usepackage{xparse}             % better commands
+\usepackage[new]{old-arrows}    % more arrows
+\usepackage{newtxmath}
+\usepackage{bbm}
+\usepackage{stmaryrd}
+
+
+\usepackage{geometry}
+\geometry{
+	a4paper,
+	total={170mm,260mm}
+}
+
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage[titletoc]{appendix}
+
+\usepackage{enumitem}
+
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{optics}
+\usepackage{indentfirst}
+
+\graphicspath{{images/}}
+
+\usepackage{epstopdf} % Permet la conversion des .eps en .pdf pour les inclure
+
+\usepackage{tabularx} % gestion avancée des tableaux
+
+\usepackage{psfrag} % remplacement du texte d'une figure ps par du texte latex
+
+\usepackage{eurosym} % symbole
+
+\usepackage{xcolor} % gestion de différentes couleurs
+
+\usepackage{fancyhdr} % entêtes et pieds de pages personnalisés
+
+\pagestyle{fancy}
+\fancyfoot[C]{ \thepage}
+
+\tikzset{CrochetStyle/.style ={black, line width=2pt}}
+
+%Série de macros
+\newcommand{\cpx}[0] {\mathbb{C}}
+\newcommand{\bN}[0] {\mathbb{N}}
+\newcommand{\reel} {\mathbb{R}}
+\newcommand{\evf}[0]{\mathrm{ev}}
+\newcommand{\blank} {\newline \quad \newline}
+\newcommand{\compre}[2]{\{#1\;|\;#2\}}
+\newcommand{\Bcompre}[2]{\Bigg\{#1\;\Bigg|\;#2\Bigg\}}
+\newcommand{\Pset}[1]{\mathcal P (#1)}
+
+\newcommand{\includefig}[2]{\begin{figure}[htb]
+\centering
+\rule{17cm}{0.5pt}\\
+\vspace{0.5cm}
+\begin{tikzpicture}[scale = .8]
+\input{#1}
+\end{tikzpicture}
+\vspace{0.5cm}
+\rule{17cm}{0.5pt}
+\caption{#2}
+\end{figure}}
+
+\newcommand{\RR}[0]{\mathcal R}
+\newcommand{\FF}[0]{\mathcal F}
+\newcommand{\VV}[0]{\mathcal V}
+\newcommand{\LL}[0]{\mathcal L}
+\newcommand{\sS}[0]{\mathcal S}
+\newcommand{\MM}[0]{\mathcal M}
+\newcommand{\NN}[0]{\mathcal N}
+\newcommand{\EE}[0]{\mathcal E}
+\newcommand{\aA}[0]{\mathcal A}
+\newcommand{\PP}[0]{\mathcal P}
+\newcommand{\Tt}[0]{\mathcal T}
+\newcommand{\bZ}[0]{\boldsymbol 0}
+\newcommand{\bfS}[0]{\mathbf{S}}
+\newcommand{\btt}[0]{\mathrm{t}\!\mathrm{t}}
+\newcommand{\bff}[0]{\mathrm{f}\!\mathrm{f}}
+\newcommand{\bt}{\mathbf{t}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\Dec}{\mathrm{Dec}}
+\newcommand{\WHE}[0]{(\mathcal {WHE})}
+\newcommand{\WN}[0]{\mathcal {WN}}
+\newcommand{\SN}[0]{\mathcal {SN}}
+\newcommand{\SAT}[0]{\mathcal {SAT}}
+\newcommand{\SATS}[0]{\mathcal {SAT}_{\mathcal{SN}}}
+\newcommand{\Theor}[0]{\mathcal{T}\!h}
+\newcommand{\encode}[1]{\lceil #1 \rceil}
+\newcommand{\evall}[0]{\mathrm{eval}}
+\newcommand{\domm}[0]{\mathrm{dom}}
+\newcommand{\valu}[0]{\mathrm{Val}}
+\newcommand{\PA}[0]{\mathrm{PA}}
+\newcommand{\Term}[0]{\mathrm{Term}}
+\newcommand{\Propo}[0]{\mathrm{Prop}}
+\newcommand{\Prooft}[0]{\mathrm{Proof}}
+\newcommand{\Subst}[0]{\mathrm{Subst}}
+\newcommand{\Demonstr}[0]{\mathrm{Dem}}
+\newcommand{\Coh}[0]{\mathrm{Coh}}
+\newcommand{\ZF}[0]{\mathrm{ZF}}
+\newcommand{\On}[0]{\mathrm{On}}
+\newcommand{\Cn}[0]{\mathrm{Cn}}
+\newcommand{\Elim}[0]{\mathrm{Elim}}
+\newcommand{\restr}[0]{\upharpoonright}
+\newcommand{\quot}[2]{\raisebox{0.1cm}{$#1$}\!/\!\raisebox{-0.1cm}{$#2$}}
+\newcommand{\toot}[0]{\longleftrightarrow}
+\newcommand{\card}[1]{\mathrm{card}(#1)}
+\newcommand{\syst}[4]{\left\{ 
+\begin{array}{rcl}
+#1&=&#2 \\
+#3&=&#4
+\end{array}
+\right.}
+\newcommand{\fundef}[5]{\begin{array}{rcccl}
+#1 & : & #2 &\longrightarrow & #3\\
+& &#4 & \longmapsto & #5\end{array}
+}
+\newcommand{\barre}[1]{\overline{#1}}
+\newcommand{\varlib}[1]{\mathrm{vl}(#1)}
+\newcommand{\varlie}[1]{\mathrm{vlie}(#1)}
+\newcommand{\id}[0]{\mathrm{id}}
+\newcommand{\betared}[0]{\rhd_\beta}
+\newcommand{\beteq}[0]{=_\beta}
+\newcommand{\oto}[0]{\multimap}
+\newcommand{\comma}[0]{,}
+\newcommand{\Prop}[0]{\mathcal P}
+\newcommand{\reduc}[0]{\rhd}
+\newcommand{\whr}[0]{\rhd_{\mathrm{wh}}}
+\newcommand{\cuder}[0]{\lhd}
+\newcommand{\trad}[1]{\llbracket #1 \rrbracket}
+\newcommand{\lift}[0]{\!\!\uparrow}
+
+\newcommand{\fonction}[5]{\begin{array}[t]{lrcl}
+#1: & #2 & \longrightarrow & #3 \\
+    & #4 & \longmapsto & #5 \end{array}}
+    
+\newcommand{\ifthenelsee}[3]{\texttt{if } #1 \texttt{ then } #2\texttt{ else }#3}
+\newcommand{\eqz}[0]{\texttt{eq0}}
+\newcommand{\intt}[0]{\texttt{int}}
+\newcommand{\boolt}[0]{\texttt{bool}}
+\newcommand{\types}[0]{\texttt{Type}}
+\newcommand{\fun}[0]{\texttt{fun}}
+\newcommand{\letrec}[3]{\texttt{let rec }#1 = #2\texttt{ in }#3}
+\newcommand{\letin}[3]{\texttt{let }#1 = #2\texttt{ in } #3}
+\newcommand{\andt}[0]{\texttt{\&\&}}
+\newcommand{\nott}[0]{\texttt{not}}
+\newcommand{\unit}[0]{\texttt{unit}}
+\newcommand{\voidt}[0]{\texttt{void}}
+\newcommand{\pare}[0]{\texttt{()}}
+\newcommand{\true}[0]{\mathrm{true}}
+\newcommand{\false}[0]{\mathrm{false}}
+\newcommand{\fact}[0]{\mathrm{fact}}
+\newcommand{\rec}[0]{\mathrm{rec}}
+\newcommand{\pred}[0]{\mathrm{pred}}
+\newcommand{\ind}[0]{\mathrm{ind}}
+\newcommand{\nil}[0]{\mathrm{nil}}
+\newcommand{\List}[0]{\mathrm{List}}
+\newcommand{\cons}[0]{\mathrm{cons}}
+\newcommand{\WKL}{\mathrm{WKL}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{.5}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\newcommand{\toa}[0]{\to_\mathrm a}
+\newcommand{\btwo}[0]{\mathbbm{2}}
+\newcommand{\Bool}[0]{\mathrm{Bool}}
+\newcommand{\twotors}[0]{2\mathrm{Tors}}
+\newcommand{\idd}[0]{\mathrm{id}}
+\newcommand{\refl}[0]{\mathrm{refl}}
+\newcommand{\oplusa}[0]{\oplus_\mathrm a}
+\newcommand{\Oplusa}[0]{\bigoplus_\mathrm a}
+\newcommand{\Gtwo}[0]{\quot{\mathbb Z}{2\mathbb Z}}
+\newcommand{\UU}[0]{\mathcal{U}}
+\newcommand{\ttb}[0]{\mathrm{true}}
+\newcommand{\ffb}[0]{\mathrm{false}}
+\newcommand{\isEquiv}[0]{\mathrm{isEquiv}}
+\newcommand{\bilin}[0]{\mathrm{bilin}}
+\newcommand{\isContr}[0]{\mathrm{isContr}}
+\newcommand{\sumTors}[0]{\mathrm{SumTors}}
+\newcommand{\pointt}[0]{\bullet_t}
+\newcommand{\Ab}[0]{\vmathbb{Ab}}
+\newcommand{\Grp}[0]{\vmathbb{Grp}}
+\newcommand{\plusa}[0]{+_\mathrm a}
+\newcommand{\transport}[0]{\mathrm{transport}}
+\newcommand{\ori}[0]{\mathrm{ori}}
+\newcommand{\invamalg}{\mathbin{\rotatebox[origin=c]{180}{$\amalg$}}}
+\newcommand{\inl}[0]{\mathrm{inl}}
+\newcommand{\inr}[0]{\mathrm{inr}}
+\newcommand{\Types}[0]{\mathrm{Types}}
+\newcommand{\PathP}[0]{\mathrm{PathP}}
+\newcommand{\fiber}[0]{\mathrm{fiber}}
+\newcommand{\ua}[0]{\mathrm{ua}}
+\newcommand{\isProp}[0]{\mathrm{isProp}}
+\newcommand{\isSet}[0]{\mathrm{isSet}}
+\newcommand{\isGroupoid}[0]{\mathrm{isGroupoid}}
+\newcommand{\base}[0]{\mathrm{base}}
+\newcommand{\loops}[0]{\mathrm{loop}}
+\newcommand{\orien}[0]{\mathrm{ori}}
+\newcommand{\pt}[0]{\mathrm{pt}}
+\newcommand{\Fin}[0]{\mathrm{Fin}}
+\newcommand{\FinSet}[0]{\mathrm{FinSet}}
+\newcommand{\defeq}[0]{\triangleq}
+\newcommand{\HA}{\mathrm{HA}}
+\newcommand{\bS}{\mathbb{S}}
+\newcommand{\bB}{\mathbb{B}}
+\newcommand{\bL}{\mathbb{L}}
+\newcommand{\bnnbr}[1]{(\!| #1|\!)}
+
+\newcommand{\reali}[0]{\Vdash}
+
+% permet de centrer les colonnes dans les tableaux
+\newcolumntype{M}[1]{\rangle{\centering\arraybackslash}m{#1}}
+
+\newtheorem*{correction}{Correction}
+%%%%%%%%%%%%%%%%%%%%%%%%%% COLORS %%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{aqua}{rgb}{0.0,0.6,0.7}
+\definecolor{ltgreen}{rgb}{0.0,0.8,0.7}
+\definecolor{ltblue}{rgb}{0.0,0.2,0.7}
+\definecolor{ocre}{RGB}{0, 113, 188}
+\definecolor{dkgreen}{RGB}{113, 188, 113}
+\definecolor{gris}{rgb}{0.1,0.1,0.1}
+
+\definecolor{coral}{RGB}{233, 137, 128}
+\definecolor{sand}{RGB}{240,204,0}
+\definecolor{darksand}{RGB}{150,115,0}
+\definecolor{gentleyellow}{RGB}{192,195,0}
+\definecolor{ORANGE}{RGB}{255,128,0}
+\definecolor{temple}{RGB}{204,102,0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% THM ENVS %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% Abstract Commands
+\newcommand\propenvmaker[4]{
+    \theoremstyle{#1}
+    \newmdtheoremenv[
+        innerleftmargin=10pt,
+        innerrightmargin=10pt,
+        innertopmargin=0pt,
+        linecolor=#2,
+        linewidth=1pt,
+	roundcorner=0pt
+    ]{#3}{#4}[section]
+}
+
+\newcommand\thmenvmaker[5]{
+    \theoremstyle{#1}
+    \newmdtheoremenv[
+        linecolor=#2,
+        backgroundcolor=#3,
+        roundcorner=0pt,
+        linewidth=0.5pt,
+        innertopmargin=0pt,
+    ]{#4}{#5}[section]
+}
+
+
+\newcommand\newpropenv[4][definition]{
+    \propenvmaker{#1}{#2}{#3}{#4}
+    \propenvmaker{#1*}{#2}{#3*}{#4}
+}
+
+\newcommand\newthmenv[5][plain]{
+    \thmenvmaker{#1}{#2}{#3}{#4}{#5}
+    \thmenvmaker{#1*}{#2}{#3}{#4*}{#5}
+}
+
+%%%%%%%%%% Counterless styles
+\newtheoremstyle{plain*}{\topsep}{\topsep}{\itshape}{0pt}{}{.}{5pt plus 1pt minus 1pt}{{\bfseries\thmname{#1}}\ifstrempty{#3}{}{ (\thmnote{#3})}}
+
+\newtheoremstyle{definition*}{\topsep}{\topsep}{}{0pt}{}{.}{3pt plus 1pt minus 1pt}{{\bfseries\thmname{#1}}\ifstrempty{#3}{}{ (\thmnote{#3})}}
+
+%%%%%%%%%% Property-like
+\newpropenv[plain]{ltblue}{prop}{Proposition}
+\newpropenv[plain]{coral}{lem}{Lemma}
+\newpropenv[plain]{gris}{cor}{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{expl}{Example}
+\newtheorem{ctexpl}{Counter-Example}
+\newtheorem{rmk}{Remark}
+\newtheorem{exo}{Exercise}
+\newpropenv{gris}{ax}{Axiom}
+
+%%%%%%%%%% Theorem-like
+\newthmenv{coral}{coral!5}{them}{Theorem}
+\newthmenv{ltblue}{ltblue!5}{defi}{Definition}
+\newthmenv{gentleyellow}{yellow!5}{nota}{Notation}
