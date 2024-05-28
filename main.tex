@@ -231,9 +231,15 @@ Les catégories nous permettent d'étudier la logique, en particulier avec la no
 
 Dans le cas de la pur logique propositionnelle (intuitionniste), la structure algébrique associée est celle des pré-algèbres de Heyting, qui correspond catégoriquement aux catégories ordonnées cartésiennes fermées. Pour en faire de la logique parlant plus explicitement d'une certaine catégorie (disons des ensembles), on considère une fibration au-dessus de cette catégorie, dont les fibres sont des pré-algèbres de Heyting.
 
-Un tripos est une telle structure~: c'est une paire de catégories et un foncteur $p : \mathbb E \to \mathbb B$ de telle sorte que la fibration catégorique résultante vérifie des propriétés de cohérence permettant de faire de la logique du premier ordre et d'ordre supérieur.
+Nous allons donc voir les définitions importantes pour manipuler des catégories fibrées.
 
-Un tripos peut en fait être construit pour tout langage respectant certaines propriétés, on l'appelle le tripos de réalisabilité.
+\begin{defi}[Flèche cartésienne]
+  Soient $\bE,\bB$ deux catégories et $p : \bE \to \bB$ un foncteur. On dit qu'une flèche $u : X \to Y$ dans $\bE$ est cartésienne si la propriété suivante est vérifiée~: pour toute flèche $v : Z \to Y$ et $k : pZ \to pX$ il existe une unique flèche $w : Z \to X$ telle que $v = u\circ w$. Cela se résume par le diagramme suivant~:
+\end{defi}
+
+\begin{defi}[Catégorie fibrée]
+  Une catégorie fibrée est la donnée de deux catégories $\bE,\bB$ et d'un foncteur $p : \bE \to \bB$ satisfaisant la propriété suivante~: pour toute
+\end{defi}
 
 \section{Boîte à outils réalisable}
 
@@ -247,7 +253,7 @@ Le $\lambda$-calcul est connu pour permettre de représenter n'importe quelle fo
 
 \begin{defi}[$\Lambda$]
   On se donne un ensemble $\mathcal X_\Lambda$ de variables de termes. On définit l'ensemble des $\lambda$-termes, $\Lambda$, par la grammaire suivante~:
-  \[t,u ::= x\mid\lambda x. t\mid t\;u\mid \langle t,u\rangle\mid \pi_1\;t\mid \pi_2\;t\mid \bZ\mid \bfS\;t\mid \rec_\bN\;t\;u\;u\mid \btt\mid\bff\mid\rec_\bB\;t\;u\;v\mid [\;]\mid t:: u\mid \rec_\bL\;t\;u\;v\]
+  \[t,u ::= x\mid\lambda x. t\mid t\;u\mid \langle t,u\rangle\mid \pi_1\;t\mid \pi_2\;t\mid 0\mid S\;t\mid \rec_\bN\;t\;u\;u\mid \btt\mid\bff\mid\rec_\bB\;t\;u\;v\mid [\;]\mid t:: u\mid \rec_\bL\;t\;u\;v\]
 \end{defi}
 
 \begin{defi}[Contexte]
@@ -273,11 +279,11 @@ On définit de façon usuelle la substitution ainsi que la relation d'$\alpha$-�
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \infer0{\rec_\bN\;t\;u\;\bZ\mapsto t}
+      \infer0{\rec_\bN\;t\;u\;0\mapsto t}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \infer0{\rec_\bN\;t\;u\;(\bfS\;v)\mapsto u\;v\;(\rec_\bN\;t\;u\;v)}
+      \infer0{\rec_\bN\;t\;u\;(S\;v)\mapsto u\;v\;(\rec_\bN\;t\;u\;v)}
     \end{prooftree}
 
     \vspace{0.5cm}
@@ -315,51 +321,80 @@ On introduit la notion d'ensemble saturé, qui peut se considérer comme une par
 
 \subsubsection{Partie logique}
 
-On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, qui comporte les trois sortes $\{\bN,\bB,\bL\}$ représentant respectivement les entiers, les booléens et les listes d'entiers. On se donne la signature suivante pour construire nos termes du premier ordre (où l'exposant indique l'arité des fonctions)~:
-\[\mathcal L \defeq \{0^\bN, S^{\bN\to\bN}, +^{\bN\to\bN\to\bN}, \times^{\bN\to\bN\to\bN}, \btt^\bB, \bff^\bB, [\:]^\bL, ::^{\bL\to\bL\to\bL}\}\]
+On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, dont les sortes sont données par la grammaire suivante~:
+\[S,S' ::= \Nat\mid\Bool\mid\List\mid S \to S'\]
+représentant respectivement les entiers, les booléens, les listes d'entiers et les fonctions d'une sorte à une autre. On notera $\Sort$ l'ensemble des sortes. On définit maintenant les termes du premier ordre (qui sont donc typés).
 
 \begin{defi}[Termes du premier ordre]
-  On se donne un ensemble dénombrable $\mathcal X_1$ de variables du premier ordre. Un contexte de typage du premier ordre $\Gamma$ est une liste de paires $(x,\tau)\in \mathcal X_1\times \{\bN,\bB,\bL\}$. On définit l'ensemble des termes du premier ordre bien typés par les règles suivantes~:
+  On se donne un ensemble dénombrable $\mathcal X_1$ de variables du premier ordre. Un contexte de typage du premier ordre $\Gamma$ est une liste de paires $(x,\tau)\in \mathcal X_1\times \Sort$. On définit l'ensemble des termes du premier ordre bien typés par les règles suivantes~:
   \begin{center}
     \begin{prooftree}
-      \infer0{\Gamma\vdash 0 : \bN}
+      \infer0{\Gamma, x : S \vdash x : S}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bN}
-      \infer1{\Gamma\vdash S\;\bt : \bN}
+      \infer0{\Gamma\vdash \bZ : \Nat}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bN}
-      \hypo{\Gamma\vdash \bu : \bN}
-      \infer2{\Gamma\vdash \bt + \bu : \bN}
+      \hypo{\Gamma\vdash \bt : \Nat}
+      \infer1{\Gamma\vdash \bfS\;\bt : \Nat}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bN}
-      \hypo{\Gamma\vdash \bu : \bN}
-      \infer2{\Gamma\vdash \bt \times \bu : \bN}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bu : \Nat \to S \to S}
+      \hypo{\Gamma\vdash \bv : \Nat}
+      \infer3{\Gamma\vdash \rec_{\Nat}\;\bt\;\bu\;\bv : S}
     \end{prooftree}
 
     \vspace{0.5cm}
 
     \begin{prooftree}
-      \infer0{\Gamma\vdash \btt : \bB}
+      \infer0{\Gamma\vdash \bbtt : \Bool}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \infer0{\Gamma\vdash \bff : \bB}
+      \infer0{\Gamma\vdash \bbff : \Bool}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \infer0{\Gamma\vdash [\:] : \bL}
+      \hypo{\Gamma\vdash \bt : \Bool}
+      \hypo{\Gamma\vdash \bu : S}
+      \hypo{\Gamma\vdash \bv : S}
+      \infer3{\Gamma\vdash \rec_{\Bool}\;\bt\;\bu\;\bv : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bnil : \List}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bN}
-      \hypo{\Gamma\vdash \bu : \bL}
-      \infer2{\Gamma\vdash \bt :: \bu : \bL}
+      \hypo{\Gamma\vdash \bt : \Nat}
+      \hypo{\Gamma\vdash \bu : \List}
+      \infer2{\Gamma\vdash \bt \bcons \bu : \List}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bt : \Nat \to \List \to S \to S}
+      \hypo{\Gamma\vdash \bv : \List}
+      \infer3{\Gamma\vdash \rec_{\List}\;\bt\;\bu\;\bv : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma, \bx : S \vdash \bt : S'}
+      \infer1{\Gamma\vdash \blam \bx.\bt : S \to S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S \to S'}
+      \hypo{\Gamma\vdash \bu : S}
+      \infer2{\Gamma\vdash \bt(\bu) : S'}
     \end{prooftree}
   \end{center}
 \end{defi}
@@ -400,53 +435,49 @@ On peut maintenant définit les formules de notre HA2 enrichi.
     \end{prooftree}
 
     \vspace{0.5cm}
-
+    
     \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bN}
-      \infer1{\Gamma\mid\Delta \vdash \mathbb \bN(\bt) : \Propo}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bB}
-      \infer1{\Gamma\mid\Delta \vdash \mathbb \bB(\bt) : \Propo}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \bL}
-      \infer1{\Gamma\mid\Delta \vdash \mathbb \bL(\bt) : \Propo}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma, x_1 : A_1, \ldots, x_n : A_n\mid\Delta\vdash \varphi : \Propo}
-      \infer1{\Gamma\mid\Delta\vdash \Dec(\varphi^{A_1,\ldots,A_n}) : \Propo}
+      \hypo{\Gamma\vdash \bt : S}
+      \infer1{\Gamma\mid\Delta\vdash S(\bt) : \Propo}
     \end{prooftree}
   \end{center}
 \end{defi}
 
-L'idée des prédicats de la forme $\mathbb A(\bt)$ avec une sorte $\mathbb A$ est de donner un témoin du fait que le terme est un terme standard. Le prédicat $\Dec(\varphi)$, lui, exprime qu'un prédicat est décidable. Il permettra de récupérer un témoin de la procédure de décision de l'appartenance à la partie des termes définie par le prédicat.
+L'idée des prédicats de la forme $S(\bt)$ avec une sorte $S$ est de donner un témoin du fait que le terme est un terme standard.
 
 \begin{nota}
-  Pour rendre les propositions plus lisibles, on adoptera la convention que, plutôt que d'écrire $\forall x^A, \mathbb A(x) \to \varphi$, on notera directement $\forall x^{\{A\}}, \varphi$. De même $\forall X^{\{A_1,\ldots,A_n\}}, \varphi$ est une abréviation pour la formule $\forall X^{A_1,\ldots,A_n},\Dec(X^{A_1\ldots,A_n})\to \varphi$. Ce procédé de conditionner par $\mathbb A(x)$ (respectivement $\Dec$) sera appelé ici relativisation. On définit de même la version relativisée de $\exists$.
+  Pour rendre les propositions plus lisibles, on adoptera la convention que, plutôt que d'écrire $\forall x^A, A(x) \to \varphi$, on notera directement $\forall x^{\{A\}}, \varphi$. Ce procédé de conditionner par $A(x)$ sera appelé ici relativisation. On définit de même la version relativisée de $\exists$.
 \end{nota}
 
 \subsubsection{Relation de réalisabilité}
 
-Pour définir la relation de réalisabilité à proprement parler, on va d'abord donner quelques points. Tout d'abord, on peut donner une représentation de chaque terme typé par un $\lambda$-terme, nous noterons $\overline \bt$ le représentant, donné par~:
+On définit par induction sur la structure des sortes une interprétation ensembliste $\trad S$ (aussi notée $\bS$) pour chaque $S$, et pour chaque $x \in \bS$ un ensemble (possiblement vide) $\ceil x\in \SAT$ de codes de $x$~:
 \begin{itemize}
-\item $\overline 0 = \bZ$
-\item $\overline{n + 1} = \bfS\;\overline n$
-\item $\overline \btt = \btt$
-\item $\overline \bff = \bff$
-\item $\overline [\:] = [\:]$
-\item $\overline{\bt:: \bu} = \overline{\bt} :: \overline{\bu}$
+\item $\trad{\Nat} = \bN$, et $\ceil n = \{t\in\Lambda\mid t \reduc^* S^n\;0\}$.
+\item $\trad{\Bool} = \{0,1\}$, $\ceil{0} = \{t\in\Lambda\mid t \reduc^*\bff\}$ et $\ceil 1 = \{t\in\Lambda\mid t \reduc^*\btt\}$.
+\item $\trad{\List} = \bN^*$, $\ceil{\varepsilon} = \{t\in\Lambda\mid t \reduc^*[\:]\}$ et $\ceil{u\star a} = \{t \in \Lambda\mid \exists t',t'' \in \Lambda, t' \in \ceil a, t'' \in \ceil u, t \reduc^* t' :: t''\}$
+\item $\trad{S \to S'} = \{f : \trad S \to \trad{S'}\}$ et $\ceil f = \{t\in \Lambda\mid \forall s \in \trad S, \forall e \in \ceil s, t\;e \in \ceil{f(s)}\}$
 \end{itemize}
+
+\begin{lem}
+  Pour toute sorte $S$ et $s\in \bS$, $\ceil s \in \SAT$.
+\end{lem}
+
+\begin{proof}
+  Par induction sur $S$~:
+  \begin{itemize}
+  \item pour le cas de $\Nat,\Bool,\List$ le résultat est directement dû au fait que la relation $\reduc^* t$ pour $t\in \Lambda$ est close par antéréduction.
+  \item si $t\reduc u$ et $u\in \ceil f$, alors pour tout $s\in \bS, e \in \ceil s$ on sait que $t\;e\reduc u\;e \in \ceil{f(s)}$, donc par induction (comme tout ensemble de codes d'élément de $S'$ est saturé) on en déduit que $t\;e \in \ceil{f(s)}$, donc que $t\in \ceil f$, ainsi $\ceil f \in \SAT$.
+  \end{itemize}
+  D'où la preuve par induction.
+\end{proof}
 
 On définit aussi les notions de valuations du premier et du second ordre.
 
 \begin{defi}[Valuation]
-  Une valuation du premier ordre est une fonction $\sigma : \mathcal X_1 \to \bN\cup \bB\cup\bL$ partielle. On dit que $\sigma$ est adéquate pour un terme $\bt$ si pour toute variable libre $\bx\in \varlib{\bt}$, le type de $\bx$ correspond au type de $\sigma(\bx)$. Si $\sigma$ est adéquate pour $\bt$ alors on note $\bt^\sigma \in \bN\cup\bB\cup\bL$ la valeur obtenue en substituant les variables libres par les valeurs données par $\sigma$. On considère dans la suite que toutes les valuations du premier ordre considérées sont adéquates. De même $\sigma$ est adéquate pour une proposition $\varphi$ si elle est adéquate pour tout terme apparaissant dans $\varphi$.
+  Une valuation du premier ordre est une fonction $\sigma : \mathcal X_1 \to \bigcup_{S \in \Sort}\bS$ partielle. On dit que $\sigma$ est adéquate pour un terme $\bt$ si pour toute variable libre $\bx\in \varlib{\bt}$, le type de $\bx$ correspond au type de $\sigma(\bx)$. Si $\sigma$ est adéquate pour $\bt$ alors on note $\bt^\sigma \in \bigcup_{S\in\Sort}\bS$ la valeur obtenue en substituant les variables libres par les valeurs données par $\sigma$. On considère dans la suite que toutes les valuations du premier ordre considérées sont adéquates. De même $\sigma$ est adéquate pour une proposition $\varphi$ si elle est adéquate pour tout terme apparaissant dans $\varphi$.
 
-  Une valuation du second ordre est une fonction $\rho : \mathcal X_2\to \SAT^{\List(\bN\cup\bB\cup\bL)}$. On dit que $\rho$ est adéquate pour une proposition $\varphi$ si pour toute variable libre $X\in\varlib{\varphi}$, l'arité de $\rho(X)$ correspond à celle de $X$.
+  Une valuation du second ordre est une fonction $\rho : \mathcal X_2\to \SAT^{\List(\bigcup \bS)}$. On dit que $\rho$ est adéquate pour une proposition $\varphi$ si pour toute variable libre $X\in\varlib{\varphi}$, l'arité de $\rho(X)$ correspond à celle de $X$.
 \end{defi}
 
 On peut maintenant définir la fonction $\trad{-}_\rho^\sigma : \Propo \to \mathcal P(\Lambda)$.
@@ -457,14 +488,9 @@ On peut maintenant définir la fonction $\trad{-}_\rho^\sigma : \Propo \to \math
   \item $\trad{X(\bt_1,\ldots,\bt_n)}_\rho^\sigma \defeq \rho(X)(t_1^\sigma,\ldots,t_n^\sigma)$
   \item $\trad{\varphi\to\psi}_\rho^\sigma\defeq \{t\in\Lambda\mid \forall u \in \trad{\varphi}_\rho^\sigma, t\;u\in\trad{\psi}_\rho^\sigma\}$
   \item $\trad{\varphi\land \psi}_\rho^\sigma \defeq \{t\in \Lambda\mid \pi_1\;t\in\trad{\varphi}_\rho^\sigma, \pi_2\;t\in\trad{\psi}_\rho^\sigma\}$
-  \item $\displaystyle\trad{\forall x^A, \varphi}_\rho^\sigma \defeq \bigcap_{v \in A}\trad{\varphi}_\rho^{\sigma[x \leftarrow v]}$
-  \item $\displaystyle\trad{\forall X^{A_1,\ldots,A_n}, \varphi}_\rho^\sigma\defeq\bigcap_{S : \prod_i A_i \to \SAT}\trad{\varphi}_{\rho[X \leftarrow S]}^\sigma$
-  \item $\trad{\mathbb A(\bt)}_\rho^\sigma \defeq \{t\in \Lambda\mid t \reduc^* \overline{\bt^\sigma}\}$
-  \item \begin{multline*}
-    \trad{\Dec(\varphi^{A_1,\ldots,A_n})}_\rho^\sigma \defeq \{t\in \Lambda\mid
-    \forall (v_1,\ldots,v_n)\in \mathbb A_1\times\ldots\times\mathbb A_n, \\
-    \trad{\varphi}_\rho^{\sigma[\bx_i \leftarrow v_i]}\neq \varnothing \implies t\;\overline{v_1}\;\ldots\;\overline{v_n}\reduc^* \btt\text{ et }\trad{\varphi}_\rho^{\sigma[\bx_i \leftarrow v_i]}=\varnothing \implies t\:\overline{v_1}\;\ldots\;\overline{v_n}\reduc^* \bff\}
-  \end{multline*}
+  \item $\displaystyle\trad{\forall x^S, \varphi}_\rho^\sigma \defeq \bigcap_{v \in \bS}\trad{\varphi}_\rho^{\sigma[x \leftarrow v]}$
+  \item $\displaystyle\trad{\forall X^{S_1,\ldots,S_n}, \varphi}_\rho^\sigma\defeq\bigcap_{F : \prod_i \bS_i \to \SAT}\trad{\varphi}_{\rho[X \leftarrow F]}^\sigma$
+  \item $\trad{S(\bt)}_\rho^\sigma \defeq \ceil{\bt^\sigma}$
   \end{itemize}
 \end{defi}
 
@@ -496,10 +522,9 @@ On commence par montrer que $\SAT$ est un treillis complet.
   \item dans le cas de $X(\bt_1,\ldots,\bt_n)$ la définition même de $\trad-_\rho^\sigma$ nous donne un ensemble saturé.
   \item supposons que $\trad{\varphi}_\rho^\sigma\in\SAT$ et $\trad{\psi}_\rho^\sigma\in \SAT$. Soient alors $t,u\in\Lambda$ tels que $t\reduc u$ et $u \reali_\rho^\sigma \varphi \to \psi$. Soit $v\reali_\rho^\sigma\varphi$, par définition on en déduit que $u\;v\reali_\rho^\sigma \psi$ donc par hypothèse d'induction, et comme $t\;v\reduc u\;v$, $t\;v\reali_\rho^\sigma\psi$ donc $t\reali_\rho^\sigma\psi$, d'où $\trad{\varphi\to\psi}_\rho^\sigma \in\SAT$.
   \item supposons que $\trad{\varphi_1}_\rho^\sigma$ et $\trad{\varphi_2}_\rho^\sigma$ sont des ensembles saturés, soient alors $t, u \in \Lambda$ tels que $t\reduc u$ et $u \in \trad{\varphi_1\land \varphi_2}_\rho^\sigma$. On sait donc que pour tout $i\in\{1,2\}$, $\pi_i\;u \reali_\rho^\sigma \varphi_i$ et $\pi_i\;t\reduc\pi_i\;u$, donc par hypothèse d'induction et saturation $\pi_i\;t\reali_\rho^\sigma\varphi_i$. Donc $\trad{\varphi_1\land\varphi_2}_\rho^\sigma\in\SAT$.
-  \item Si tous les $\trad\varphi_\rho^{\sigma[x\leftarrow v]}$ sont saturés, comme $\SAT$ est un treillis complet, on en déduit directement que $\bigcap \trad\varphi_\rho^{\sigma[x\leftarrow v]}$ est saturé.
-  \item De même que précédemment, le fait que $\SAT$ est un treillis complet assure que ce cas passe à l'induction.
-  \item Si $t\reduc u$ et $u\reduc^* \overline{\bt^\sigma}$ alors $t\reduc^*\overline{\bt^\sigma}$.
-  \item Comme précédemment, la clôture par anté-réduction est directe par la forme de la définition.
+  \item si tous les $\trad\varphi_\rho^{\sigma[x\leftarrow v]}$ sont saturés, comme $\SAT$ est un treillis complet, on en déduit directement que $\bigcap \trad\varphi_\rho^{\sigma[x\leftarrow v]}$ est saturé.
+  \item de même que précédemment, le fait que $\SAT$ est un treillis complet assure que ce cas passe à l'induction.
+  \item un lemme précédent nous dit que $\ceil{t^\sigma}$ est bien saturé.
   \end{itemize}
 
   Ainsi, par induction, si $t\reduc u$ et $u\reali_\rho^\sigma \varphi$ alors $t\reali_\rho^\sigma\varphi$.
@@ -588,34 +613,61 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     \vspace{0.5cm}
 
     \begin{prooftree}
-      \infer0[$\bN_0$]{\Gamma\mid\Delta\mid\Xi\vdash \bZ : \bN(0)}
+      \infer0[$\bN_\mathrm i^0$]{\Gamma\mid\Delta\mid\Xi\vdash 0 : \Nat(\bZ)}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \bN(\bt)}
-      \infer1[$\bN_S$]{\Gamma\mid\Delta\mid\Xi\vdash \bfS\;t : \bN(S\:\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Nat(\bt)}
+      \infer1[$\bN_\mathrm i^S$]{\Gamma\mid\Delta\mid\Xi\vdash S\;t : \Nat(\bfS\:\bt)}
     \end{prooftree}
 
     \vspace{0.5cm}
     
     \begin{prooftree}
-      \infer0[$\bB_{\btt}$]{\Gamma\mid\Delta\mid\Xi\vdash \btt : \bB(\btt)}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \infer0[$\bB_{\bff}$]{\Gamma\mid\Delta\mid\Xi\vdash \bff : \bB(\bff)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : S(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : (\Nat\to S \to S)(\bu)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash v : \Nat(\bv)}
+      \infer3[$\bN_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_\bN\;t\;u\;v : S(\rec_{\Nat}\;\bt\;\bu\;\bv)}
     \end{prooftree}
 
     \vspace{0.5cm}
     
     \begin{prooftree}
-      \infer0[$\bL_{[\;]}$]{\Gamma\mid\Delta\mid\Xi\vdash [\:] : \bL([\:])}
+      \infer0[$\bB_\mathrm i ^{\btt}$]{\Gamma\mid\Delta\mid\Xi\vdash \btt : \Bool(\bbtt)}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \bN(\bt)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \bL(\bu)}
-      \infer2[$\bL_{::}$]{\Gamma\mid\Delta\mid\Xi\vdash t :: u : \bL(\bt :: \bu)}
+      \infer0[$\bB_\mathrm i^{\bff}$]{\Gamma\mid\Delta\mid\Xi\vdash \bff : \Bool(\bbff)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Bool(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : S(\bu)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash v : S(\bv)}
+      \infer3[$\bB_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_\bB\;t\;u\;v : S(\rec_{\Bool}\;\bt\;\bu\;\bv)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0[$\bL_\mathrm i^{[\;]}$]{\Gamma\mid\Delta\mid\Xi\vdash [\:] : \List(\bnil)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Nat(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \List(\bu)}
+      \infer2[$\bL_\mathrm i^{::}$]{\Gamma\mid\Delta\mid\Xi\vdash t :: u : \List(\bt \bcons \bu)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : S(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : (\Nat\to \List \to S \to S)(\bu)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash v : \List(\bv)}
+      \infer3[$\bL_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_\bL\;t\;u\;v : S(\rec_{\List}\;\bt\;\bu\;\bv)}
     \end{prooftree}
   \end{center}
 \end{defi}
@@ -681,105 +733,24 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
 
 En particulier, si $\vdash t : \varphi$ alors $t\reali \varphi$.
 
-\subsubsection{Quelques réaliseurs élémentaires}
+\subsection{Traiter les arbres}
 
-On commence par donner quelques réaliseurs simples pour donner l'idée de comment prouver des résultats sur notre modèle de réalisabilité.
+On peut désormais étudier les notions liées aux arbres. On donne d'abord deux fonctions utilitaires liées aux listes et aux fonctions~:
 
-\begin{expl}
-  Pour toute sorte $A$, $\lambda x.x\reali \forall \bx^A, \bx = \bx$. On peut directement le déduire de l'adéquation~:
-  \begin{center}
-    \begin{prooftree}
-      \infer0[Ax]{\bx : A\mid X^A\mid x : X(\bx)\vdash x : X(\bx)}
-      \infer1[$\to_\mathrm i$]{\bx : A\mid X^A\mid\varnothing\vdash \lambda x.x : X(\bx) \to X(\bx)}
-      \infer1[$\forall^2_\mathrm i$]{\bx : A\mid\varnothing\mid\varnothing\vdash \lambda x.x : \bx = \bx}
-      \infer1[$\forall^1_\mathrm i$]{\vdash \lambda x.x : \forall \bx^A, \bx = \bx}
-    \end{prooftree}
-  \end{center}
-\end{expl}
-
-\begin{expl}
-  On peut réaliser la récurrence relativisée définie comme la formule suivante~:
-  \[R \defeq \forall X^\bN, X(0) \implies (\forall n^{\{\bN\}}, X(n) \implies X(S\;n))\implies \forall n^{\{\bN\}}, X(n)\]
-
-  Ceci se réalise directement par $\rec_\bN$ (à lire comme $\lambda t\;u\;v.\rec_\bN\;t\;u\;v$). Pour prouver que $\rec_\bN\reali R$, on ne peut pas utiliser l'adéquation puisqu'il n'y a pas de règle de typage pour $\rec_\bN$. Soit donc une fonction $F : \bN \to \SAT$, $t\reali X(0)$, $u\reali \forall n^{\{\bN\}}, X(n) \implies X(S\;n)$ et $v\reali \bN(n)$. On sait donc que $v\reduc^* \overline n$. On peut donc raisonner par induction sur ce $n$~:
-  \begin{itemize}
-  \item si $v\reduc^* \bZ$, alors
-    \[\rec_\bN\;t\;u\;v\reduc^* \rec_\bN\;t\;u\;\bZ\reduc t\reali X(0)\]
-    donc $\rec_\bN\;t\;u\;v\reali X(0)$ par saturation.
-  \item supposons que pour tout $v\reduc^* \overline n$, $\rec_\bN\;t\;u\;v\reali X(n)$, et soit $v\reduc^* S\;\overline n$, alors
-    \[\rec_\bN\;t\;u\;v \reduc^* \rec_\bN\;t\;u\;(S\;\overline n)\reduc u\;\overline n\;(\rec_\bN\;t\;u\;\overline n)\]
-    or $u\reali \forall n^{\{\bN\}}, X(n)\implies X(S\;n)$ donc $u\;\overline n\reali X(n)\implies X(S\;n)$. De plus, par hypothèse d'induction, $\rec_\bN\;t\;u\;\overline n \reali X(n)$, donc $u\;\overline n\;(\rec_\bN\;t\;u\;\overline n)\reali X(S\;n)$. Donc par saturation $\rec_\bN\;t\;u\;v\reali X(S\;n)$.
-  \end{itemize}
-  Ainsi, par induction, pour tout $n\in \bN$, si $v\reduc^* \overline n$ alors $\rec_\bN\;t\;u\;v\reali X(n)$, ce qui signifie donc que $\rec_\bN\;t\;u\reali \forall x^{\{\bN\}}, X(n)$, donc que $\rec_\bN\reali R$.
-\end{expl}
-
-\begin{expl}
-  On peut construire un test d'égalité des entiers~:
-  \[t_= \defeq \rec_\bN\;(\rec_\bN\;\btt\;(\lambda\_\;\_.\bff))\;(\lambda p.\lambda f.\rec_\bN\;\bff\;(\lambda q\;\_. f\;q))\reali\Dec(=^{\bN,\bN})\]
-  On montre par induction sur $(n,m)$ que $t_=$ réduit vers la valeur attendue à chaque fois~:
-  \begin{itemize}
-  \item si $(n,m) = (0,0)$, on a
-    \[t_=\;\bZ\;\bZ \reduc \rec_\bN\;\btt\;(\lambda \_\;\_.\bff)\;\bZ\reduc \btt\]
-  \item si $(n,m) = (0,S\;p)$, on a
-    \[t_=\;\bZ\;(\bfS\;\overline p)\reduc \rec_\bN\;\btt\;(\lambda\_\;\_.\bff)\;(\bfS\;\overline p)\reduc (\lambda\_\;\_.\bff)\;\overline p\;(\rec_\bN\;\btt\;(\lambda\_\;\_.\bff)\;\overline p) \reduc^2 \bff\]
-  \item si $(n,m) = (S\;p,0)$, on a
-    \[t_=\;(\bfS\;\overline p)\;\bZ\reduc (\lambda p.\lambda f.\rec_\bN\;\bff\;(\lambda q\;\_.f\;q))\;\overline p\;(t_=\;\overline p)\;\bZ\reduc^2 \rec_\bN\;\bff\;(\lambda q\;\_.(t_=\;\overline p)\;q)\;\bZ \reduc \bff\]
-  \item si $(n,m) = (S\;p,S\;q)$, on a
-    \begin{align*}
-      t_=\;(\bfS\;\overline p)\;(\bfS\;\overline q)&\reduc (\lambda p.\lambda f.\rec_\bN\;\bff\;(\lambda q\;\_.f\;q))\;\overline p\;(t_=\;\overline p)\;(\bfS\;\overline q)\\
-      &\reduc^2 \rec_\bN\;\bff\;(\lambda q\;\_.(t_=\;\overline p)\;q)\;(\bfS\;\overline q)\\
-      &\reduc (\lambda q\;\_.t_=\;\overline p\;q)\;\overline q\;(\rec_\bN\;\bff\;(\lambda q\;\_.(t_=\;\overline p)\;q)\;\overline q)\\
-      &\reduc^2 t_=\;\overline p\;\overline q
-    \end{align*}
-    et l'hypothèse d'induction nous dit que $t_=\;\overline p\;\overline q$ se réduit vers $\btt$ si les deux termes sont égaux, vers $\bff$ s'ils sont différents.
-  \end{itemize}
-  Ainsi $t_=\reali \Dec(=^{\bN,\bN})$.
-\end{expl}
-
-\subsubsection{Traiter les arbres}
-
-On s'intéresse maintenant au cas des arbres. Dans le contexte des types, on peut naturellement considérer qu'un arbre est un type généré par une constante et un opérateur prenant une fonction partielle $\bN \to \mathrm{Tree}$ pour retourner un nouvel arbre. Ainsi un n\oe ud construit à partir d'une fonction $f$ est un n\oe ud dont la $i$-ème branche mène à $f(n)$. Cela nous donne une construction proche de celle des $W$-types de Martin-Löf. Cependant, comme notre cadre est entre la programmation et les mathématiques à rebours, nous adoptons un formalisme plus extrinsèque, en considérant des prédicats sur $\bL$.
-
-On a alors besoin de définir différentes primitives pour traiter les prédicats sur $\bL$.
-
-\begin{defi}[Préfixe]
-  On définit un nouveau symbole de relation, $\preceq$, d'arité $\bL,\bL$. Ainsi $\ell \preceq \ell'$ est une nouvelle proposition atomique. On étend alors notre interprétation de réalisabilité~:
-  \[\trad{\ell \preceq \ell'}_\rho^\sigma \defeq
-  \left\{\begin{array}{l}
-  \Lambda\text{ si } \ell \text{ est un préfixe de } \ell'\\
-  \varnothing\text{ sinon}
-  \end{array}\right.\]
+\begin{defi}[Longueur, préfixe]
+  On définit les deux fonctions suivantes au premier ordre, où $\ell : \List$ et $f : \Nat\to\Nat$~:
+  \begin{align*}
+    |\ell| &\defeq \rec_{\List}\;\bZ\;(\blam \bx.\blam\by.\blam\bz.\bfS\;\bz)\;\ell\\
+    f_n &\defeq \rec_{\Nat}\;\bnil\;(\blam \bn.\blam \bx.(f(\bn))\bcons \bx)\;n
+  \end{align*}
 \end{defi}
 
-\begin{lem}
-  $\preceq$ est décidable. En effet, on peut construire un réaliseur de $\Dec(\preceq^{\bL,\bL})$~:
-  \[\rec_\bL\;(\lambda x.\btt)\;[\cdots]\reali \Dec(\preceq^{\bL,\bL})\]
-\end{lem}
-
-\begin{defi}[Arbre]
-  Un arbre est un prédicat sur $\bL$ clos par préfixe~:
-  \[\isTree(T) \defeq \forall \bx^\bL\;\by^\bL, (\bx\preceq \by \implies T(\by) \implies T(\bx))\]
-\end{defi}
-
-\begin{nota}
-  Pour alléger l'introduction des arbres, on prendra ces conventions d'écritures~:
-  \[\forall T^\Tree, \varphi \defeq \forall T^\bL, \isTree(T) \implies \varphi\qquad \forall T^{\{\Tree\}}, \varphi\defeq \forall T^{\{\bL\}}, \isTree(T) \implies \varphi\]
-\end{nota}
-
-On définit de plus le prédicat disant d'un arbre qu'il est binaire. Celui-ci nous permettra d'introduire des affaiblissement du lemme de König.
-
-\begin{defi}[Arbre binaire]
-  On dit qu'un arbre $T$ est binaire s'il pour tout $u\in T$, on ne peut pas augmenter $u$ avec un nombre autre que $0$ ou $1$~:
-  \[\isBinTree(T) \defeq \forall \ell^\bL, T(\ell) \implies (T(\bZ :: \ell) \implies \bot) \land (T(\boldsymbol 1 :: \ell) \implies \bot)\]
-\end{defi}
-
-\begin{nota}
-  On prend des conventions similaires à celles pour $\Tree$~:
-  \[\forall T^\BinTree, \varphi \defeq \forall T^\Tree, \isBinTree(T) \implies \varphi \qquad \forall T^{\{\BinTree\}}, \varphi \defeq \forall T^{\{\Tree\}}, \isBinTree(T) \implies \varphi\]
-\end{nota}
-
-Donnons alors la version faible du lemme de König~:
-
-\[\WKL \defeq \forall T^\BinTree, (\forall n^{\{\bN\}}, \exists \ell^{\{\bL\}}, |\ell| = n \land T(\ell)) \implies \exists X^\bN, \forall n^{\{\bN\}}, T(X^\bN_{0,\ldots,n-1})\]
+Avec ces termes, on peut déjà définir les deux théorèmes que l'on veut étudier~:
+\begin{equation}
+  \KL \defeq \forall T^{\List}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
+\end{equation}
+\begin{equation}
+  \FT \defeq \forall T^{\List}, (\exists f^{\{(\Nat\to\Nat)\to\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_{f(\alpha)})) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
+\end{equation}
 
 \end{document}
