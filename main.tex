@@ -1,5 +1,10 @@
 \documentclass{article}
 \usepackage{prelude}
+\usepackage{ulem}
+\usepackage[draft,inline,nomargin]{fixme}
+\fxusetheme{color}
+\fxuseenvlayout{color}
+\FXRegisterAuthor{em}{aem}{\color{blue}[E]}
 
 \title{Choix, réalisabilité et evidenced frames}
 
@@ -19,17 +24,17 @@ L'élément central de ce stage est la réalisabilité. Nous nous devons donc d'
 
 \subsection{L'interprétation BHK}
 
-L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétation de la sémantique d'une propositions, non en terme de valeurs de vérité, mais en terme d'ensemble de ses preuves.
+L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétation de la sémantique d'une proposition, non en termes de valeurs de vérité, mais en termes de l'ensemble de ses preuves.\emnote{je changerais le ``en termes''}
 
-La volonté derrière l'interprétation BHK est de définir une logique constructiviste, en ce qu'une preuve d'une proposition doit explicitement construire les outils auxquels elle fait appel (en particulier, on cherche à avoir la propriété du témoin, qui dit que si $\vdash \exists x, \varphi$ alors il existe $t$ tel que $\vdash \varphi[t/x]$). Comme le principe du tiers exclu est non constructif, on se place dans le cadre de la logique intuitionniste.
+La volonté derrière l'interprétation BHK est de définir une logique constructiviste, en ce qu'une preuve d'une proposition doit explicitement construire les outils auxquels elle fait appel (en particulier, on cherche à avoir la propriété du témoin, qui dit que si $\vdash \exists x, \varphi$ alors il existe $t$ tel que $\vdash \varphi[t/x]$). Comme le principe du tiers-exclu est non constructif, on se place dans le cadre de la logique intuitionniste.
 
 On suppose qu'on a un ensemble de propositions $\Phi$ et un ensemble de témoins, $X$. L'interprétation BHK donne une façon de penser une relation signifiant \textit{être une preuve de}, qu'on notera $x\reali \varphi$~:
 \begin{itemize}
 \item on suppose qu'on a défini ce que signifie $x\reali\varphi$ pour $\varphi$ atomique
 \item on n'a jamais $x\reali \bot$
-\item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ représente une fonction qui, pour tout $y\reali\psi$, associe $x(y)\reali\chi$. Prouver que $\psi$ implique $\chi$ est donc une fonction qui peut renvoyer une preuve de $\chi$ dès qu'on a une preuve de $\psi$.
-\item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x = \langle y,z\rangle$ où $y\reali \psi$ et $z\reali \chi$. Ainsi être une preuve d'une conjonction est une paire de preuves, donnant la preuve de chaque composante.
-\item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x = \langle i,y\rangle$ où $i\in\{1,2\}$ et, de plus, si $i = 1$ alors $y\reali \psi$ et si $i = 2$ alors $y\reali \chi$. Être une preuve d'une disjonction est donc une preuve d'une des deux propositions, accompagnée de l'information de laquelle des propositions est prouvée (c'est une union disjointe en terme ensembliste).
+\item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ représente une fonction qui, pour tout $y\reali\psi$, associe $x(y)\reali\chi$. Prouver que $\psi$ implique $\chi$ est donc une fonction qui peut renvoyer une preuve de $\chi$ dès qu'on a une preuve de $\psi$.\emnote{Je ferais attention à nuancer la notion de ``fonction'', ou en tout cas dire dans quel monde on parle de ``fonction'' (qui a son importance par la suite quand on ``implémente'' cette interprétation en réalisabiltié via un langage de termes potentiellement avec effets))}
+\item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x = \langle y,z\rangle$ \emnote{attention à ne pas utiliser de syntaxe avant de l'avoir introduite.. là tu peux dire  ``paire'' c'est suffisant je pense !} où $y\reali \psi$ et $z\reali \chi$. Ainsi \sout{être} une preuve d'une conjonction est une paire de preuves, donnant la preuve de chaque composante.
+\item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x = \langle i,y\rangle$ où $i\in\{1,2\}$ \emnote{même remarque} et, de plus, si $i = 1$ alors $y\reali \psi$ et si $i = 2$ alors $y\reali \chi$. Être une preuve d'une disjonction est donc une preuve d'une des deux propositions, accompagnée de l'information de laquelle des propositions est prouvée (c'est une union disjointe en terme ensembliste).
 \item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une foncion qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
 \item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x = \langle t,y\rangle$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
 \end{itemize}
@@ -61,7 +66,7 @@ Ce modèle de réalisabilité est en fait le point de départ même de la réali
 
 On considère donc $X = \bN$, et on peut vérifier que les conditions sont vérifiées~:
 \begin{itemize}
-\item si $e$ représente une fonction calculable sur $n + m$ entrées, on peut construire un code $e'$ représentant cette fonction calculable sur $n$ entrées dont les autres $m$ entrées ont été abstraites~: c'est le théorème $S_m^n$. De plus, on a une opération d'application d'une fonction calculable à un argument.
+\item si $e$ représente une fonction calculable sur $n + m$ entrées, on peut construire un code $e'$ représentant cette fonction calculable sur $n$ entrées dont les autres $m$ entrées ont été abstraites~: c'est le théorème $S_m^n$\emnote{ref}. De plus, on a une opération d'application d'une fonction calculable à un argument.
 \item la bijection de Cantor nous donne une fonction $(n,m) \mapsto \langle n,m\rangle$ calculable dont les projections sont calculables.
 \item l'ensemble $\{0,1\}$ est un sous-ensemble de $\bN$, il est donc évident qu'on peut l'utiliser. Pour la construction if / then / else, c'est une construction élémentaire en programmation, et on peut la combiner à l'égalité à $0$ pour obtenir l'élimination de $\lor$.
 \item on peut représenter l'entier $n\in \bN$ dans $X$, par $n \in \bN$.
@@ -71,7 +76,7 @@ On peut donc construire une interprétation de $\bN$ comme un ensemble de preuve
 
 \subsection{Ordre supérieur}
 
-Les conditions décrites plus haut peuvent se simplifier grandement dans le cas où l'on étudie une théorie non pas d'ordre $1$, mais d'ordre $2$ (ou d'ordre supérieur). Présentons succinctement la syntaxe d'une théorie d'ordre $2$ (avec des termes d'ordre 1).
+Les conditions décrites plus haut peuvent se simplifier grandement dans le cas où l'on étudie une théorie non pas d'ordre $1$, mais d'ordre $2$ (ou d'ordre supérieur)\emnote{dire pourquoi !}. Présentons succinctement la syntaxe d'une théorie d'ordre $2$ (avec des termes d'ordre 1).
 
 On ajoute un ensemble de variables du second ordre, qu'on notera par des lettres majuscules, chacune ayant une arité. Une variable $X$ d'arité $n$ représente un prédicat à $n$ variables libres quelconque. On construit alors nos propositions comme pour celle du premier ordre, mais en ajoutant la prise en compte (et la quantification) du deuxième ordre~:
 \[\varphi,\psi ::= \cdots\mid X(t_1,\ldots,t_n)\mid \forall^2 X, \varphi\mid \exists^2 X, \varphi\]
@@ -88,7 +93,7 @@ On donne l'ensemble des encodages qu'on peut alors faire~:
 \item $\exists X, \varphi \defeq \forall Y, (\forall X, \varphi \to Y) \to Y$
 \end{itemize}
 
-Ainsi, si l'on arrive à avoir une interprétation de l'ordre $2$, il nous suffit seulement d'interpréter $\to$, $\forall^1$ et $\forall^2$. Remarquons que l'interprétation de $\to$ force $X$ à pouvoir internaliser une notion de fonction (avec un procédé d'abstraction et d'application).
+Ainsi, si l'on arrive à avoir une interprétation de l'ordre $2$, il nous suffit seulement d'interpréter $\to$, $\forall^1$ et $\forall^2$. Remarquons que l'interprétation de $\to$ \emnote{?} force $X$ à pouvoir internaliser une notion de fonction (avec un procédé d'abstraction et d'application) \emnote{pas clair je crois, et attention $X$ est surchargée en tant que notation? $\mathbb{X}/\mathcal{X}$ ? }·.
 
 \subsection{Intersection et relativisation}
 
@@ -125,7 +130,7 @@ On donne donc une première tentative de définition de $t\reali_\rho^\sigma \va
 
 Tout semble bien fonctionner, mais il y a en fait un problème~: notre interprétation précédente considérait $X$ comme un objet sémantique et non syntaxique. On entend par cela que dans $\Lambda$, il y a une différence entre $(\lambda x.t)u$ et $t[u/x]$ qui sont des termes différents, mais sont dans la même classe de $\Lambda/=_\beta$. On pourrait donc décider de ne considérer non pas $\Lambda$ mais $\Lambda/=_\beta$, mais il existe une façon plus élégante de régler ce problème.
 
-L'endroit où cette distinction apparait est dans la preuve que les règles de la déduction naturelle intuitionniste sont vérifiées par notre interprétation de réalisabilité, plus précisément dans la règle d'introduction de $\to$. En considérant un système de types associant une proposition à un terme, de la forme $x_1 : \varphi_1,\ldots,x_n : \varphi_n \vdash t : \varphi$. Dans ce cas, la validité d'un tel séquent est
+L'endroit où cette distinction apparait est dans la preuve que les règles de la déduction naturelle intuitionniste sont vérifiées par notre interprétation de réalisabilité, plus précisément dans la règle d'introduction de $\to$. En considérant un système de types associant une proposition à un terme, de la forme $x_1 : \varphi_1,\ldots,x_n : \varphi_n \vdash t : \varphi$. Dans ce cas, la validité d'un tel séquent est\emnote{pas convaincu pas les substitutions en exposant, c'est peu standard}
 \[t_1\reali_\rho^\sigma \varphi_1,\ldots,t_n \reali_\rho^\sigma \varphi_n \implies t^{x_1 \leftarrow t_1,\ldots, x_n\leftarrow t_n}\reali_\rho^\sigma \varphi\]
 et on peut réécrire $\to_\mathrm i$ par la règle
 \begin{center}
@@ -135,7 +140,7 @@ et on peut réécrire $\to_\mathrm i$ par la règle
   \end{prooftree}
 \end{center}
 
-On veut donc unifier d'un côté $t^{x_1\leftarrow t_1,\ldots,x_n\leftarrow t_n, x\leftarrow u}$ et $(\lambda x.t^{x_1\leftarrow t_1,\ldots,x_n\leftarrow t_n})u$, ce qui (à des questions d'$\alpha$-conversion près) est une antéréduction~: le second terme se réduit en le premier terme.
+On veut donc unifier d'un côté $t^{x_1\leftarrow t_1,\ldots,x_n\leftarrow t_n, x\leftarrow u}$ et $(\lambda x.t^{x_1\leftarrow t_1,\ldots,x_n\leftarrow t_n})u$, ce qui (à des questions d'$\alpha$-conversion près) est une antéréduction~\emnote{anti-réduction}: le second terme se réduit en le premier terme.
 
 Ainsi la validité de cette règle a besoin d'un élément supplémentaire qui peut être satisfait par la condition suivante~: il faut qu'à chaque $\varphi$, si $t\reduc u$ et $u\reali \varphi$ alors $t\reali \varphi$. En fait, on peut montrer qu'il suffit pour cela d'assurer cette condition sur les $\rho(X)$. Donnons donc un peu de vocabulaire.
 
@@ -170,6 +175,7 @@ On décide maintenant de modifier l'interprétation au-dessus en disant juste qu
   \end{itemize}
   Donc par induction $\trad\varphi_\rho^\sigma\in\SAT$.
 \end{proof}
+\emnote{attention, tu utilises la réduction sans l'avoir définie, et ce que tu énonces n'est pas toujours vrai (par exemple pour une réduction cbv droite-gauche ça ne marcherait pas), donc il y a besoin de fixer le cadre avant !}
 
 On peut alors déduire le lemme d'adéquation (on le montrera plus tard pour une version enrichie du $\lambda$-calcul).
 
@@ -183,17 +189,17 @@ L'autre part importante de ce stage se trouve dans les mathématiques à rebours
 
 \subsection{Présentation globale}
 
-La première question à se poser, pour organiser les théorèmes suivant leur force logique, est \textit{comment peut-on décider si un théorème est plus fort qu'un autre ?} Il est assez clair qu'on s'attend à un pré-ordre tout sauf total (mais à un pré-ordre quand même). L'idée la plus simple est de dire que $\varphi$ est un théorème plus fort que $\psi$ si $\varphi \vdash \psi$, donc si $\varphi$ est une proposition plus faible pour l'ordre de prouvabilité que $\psi$ (c'est assez logique~: être un théorème très fort, c'est être un théorème dont la preuve implique un maximum de choses). Le souci, maintenant, est que si on considère pour $\vdash$ la relation de prouvabilité dans $\ZF$, alors la plupart des résultats sont vrais. On conviendra que le pré-ordre $(\{*\},=)$ n'est pas le plus intéressant, il nous faut donc quelque chose de plus précis.
+La première question à se poser, pour organiser les théorèmes suivant leur force logique, est \textit{comment peut-on décider si un théorème est plus fort qu'un autre ?} Il est assez clair qu'on s'attend à un pré-ordre tout sauf total (mais à un pré-ordre quand même). L'idée la plus simple est de dire que $\varphi$ est un théorème plus fort que $\psi$ si $\varphi \vdash \psi$, donc si $\varphi$ est une proposition plus faible pour l'ordre de prouvabilité que $\psi$ (c'est assez logique~: être un théorème très fort, c'est être un théorème dont la preuve implique un maximum de choses). Le souci, maintenant, est que si on considère pour $\vdash$ la relation de prouvabilité dans $\ZF$, alors la plupart des résultats sont vrais\emnote{j'imagine que tu veux dire ``dans un contexte vide'', ce qui induit que tout s'écrase}. On conviendra que le pré-ordre $(\{*\},=)$ n'est pas le plus intéressant, il nous faut donc quelque chose de plus précis.
 
 Si un théorème fort est un théorème qui entraine plus de résultats avec sa vérité, et comme une théorie est un ensemble de résultats pris pour axiomes, on peut donc s'attendre à ce qu'une théorie plus faible prouve moins de résultats directement, et laisse donc plus de marge pour séparer des résultats. Cependant, la théorie doit être suffisamment forte pour rester expressive, et prouver ce qu'on considère comme le plus élémentaire. Par exemple dire que l'addition est commutative dans $\bN$ n'est pas un résultat qu'on souhaite placer dans notre ordre.
 
-Le choix se porte alors sur l'arithmétique du second ordre, plus précisément sur un sous-système appelé RCA$_0$. Ce sous-système contient suffisamment pour parler des réels et des fonctions continues (même des fonctions mesurables). C'est donc un système très expressif, relativement à sa faible capacité à prouver des résultats.
+Le choix se porte alors sur l'arithmétique du second ordre, plus précisément sur un sous-système appelé RCA$_0$. Ce sous-système contient suffisamment pour parler des réels et des fonctions continues (même des fonctions mesurables). C'est donc un système très expressif, relativement à sa faible capacité à prouver des résultats. \emnote{peut-être dire qu'il y a plusieurs sous-système possibles ?}
 
 \subsection{Le cas intuitionniste et l'indépendance relative}
 
 Comme on l'a dit, plus la théorie de base est faible, plus on est précis dans le pré-ordre intuitif de la force logique. Malheureusement, ça n'est pas toujours ce que l'on souhaite. Par exemple, l'une des questions de théorie des ensembles les plus importantes de l'histoire a porté sur un résultat indépendant de ZFC, l'hypothèse du continu. Dans ce cas, prouver que le résultat est indépendant de ZFC est un meilleur résultat que celui que l'hypothèse du continu est indépendant de ZF.
 
-Syntaxiquement, cela se voit par le fait qu'une preuve de l'hypothèse du continu dans ZFC pourrait se formuler dans ZF, donc l'un implique l'autre. Sémantiquement, cela signifie qu'on peut trouver un modèle validant HC et un validant $\lnot$HC dans une classe de modèles encore plus restreinte que celle des modèles de ZF~: celle des modèles de ZFC. Dans les deux cas, on comprend qu'une théorie plus forte donne un meilleur résultat d'indépendance.
+Syntaxiquement, cela se voit par le fait qu'une preuve de l'hypothèse du continu dans ZFC pourrait se formuler dans ZF\emnote{l'inverse non?}, donc l'un implique l'autre. Sémantiquement, cela signifie qu'on peut trouver un modèle validant HC et un validant $\lnot$HC dans une classe de modèles encore plus restreinte que celle des modèles de ZF~: celle des modèles de ZFC. Dans les deux cas, on comprend qu'une théorie plus forte donne un meilleur résultat d'indépendance.
 
 Dans le cas intuitionniste, cette volonté de prouver des cas d'indépendance est récurrente, et il est donc bon de se placer dans un cadre plus fort. En particulier, la version intuitionniste de ZF (pas de ZFC, car le tiers exclu est vrai dans ZFC) nous donne de meilleurs résultats d'indépendance.
 
@@ -206,10 +212,10 @@ L'axiome du choix, connu pour être un axiome indépendant de ZF et pour avoir �
 \item \textit{König's Lemma} (KL)~: tout arbre infini mais finiment branchant (pour tout n\oe ud il existe un nombre fini de n\oe uds qui en sont voisins) possède une branche infinie.
 \item \textit{Axiome du choix dénombrable} (ACN)~: pour toute famille $(X_i)_{i\in \bN}$ d'ensembles non vides, il existe une fonction $\alpha : \bN \to \bigcup X_i$ telle que $\alpha(i)\in X_i$.
 \item \textit{Axiome du choix dépendant} (DC)~: soit un ensemble $X$ et une relation binaire $R$ sur $X$ telle que pour tout $x\in X$, il existe $y\in X$ tel que $R(x,y)$, alors il existe une suite $\alpha : \bN \to X$ telle que $\forall i\in \bN, R(\alpha(i),\alpha(i+1))$.
-\item \textit{Axiome du choix} (AC)~: toute surjection admet une section.
+\item \textit{Axiome du choix} (AC)~: toute surjection admet une section.\emnote{un peu rude pour les non-spécialistes =)}
 \end{itemize}
 
-On sait que dans le cas classique, cette hiérarchie est strictement croissante. Dans le cas intuitionniste, plus faible, la hiérarchie est donc encore stricte. Par contre, elle n'est pas croissante, puisqu'on peut par exemple avoir DC sans avoir KL.
+On sait que dans le cas classique, cette hiérarchie est strictement croissante \emnote{sauf pour Fan, non  ?}. Dans le cas intuitionniste, plus faible, la hiérarchie est donc encore stricte. Par contre, elle n'est pas croissante, puisqu'on peut par exemple avoir DC sans avoir KL.
 
 En fait, on peut distinguer deux principes importants dans les premières versions~: l'omniscience et le choix. Dans le cas de DC, on peut construire notre suite simplement en considérant la suite jusqu'à un rang $n$ et en appliquant un oracle permettant de trouver un élément en relation avec le dernier construit. On passe donc simplement d'une fonction locale à une fonction globale par itération. Dans le cas de KL, il nous faut traiter l'infinité de données des chemins potentiels pour trouver le sommet suivant dans le chemin, en pouvant savoir à l'avance de quel côté se trouve un chemin infini. En logique classique, l'omniscience est toujours vérifiée, mais pas en intuitionniste, d'où cette cassure de monotonie au passage de KL à ACN.
 
