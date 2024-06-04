@@ -324,7 +324,7 @@ On introduit la notion d'ensemble saturé, qui peut se considérer comme une par
   On note
   \[\SAT \defeq \{S\subseteq \Lambda\mid S\;\text{est saturée}\}\]
 \end{defi}
-
+\emnote{Attention, implicitement ``may''-réduction.}
 \subsubsection{Partie logique}
 
 On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, dont les sortes sont données par la grammaire suivante~:
@@ -365,9 +365,9 @@ représentant respectivement les entiers, les booléens, les listes d'entiers et
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \Bool}
+      \hypo{\Gamma\vdash \bt : S}
       \hypo{\Gamma\vdash \bu : S}
-      \hypo{\Gamma\vdash \bv : S}
+      \hypo{\Gamma\vdash \bv : \Bool}
       \infer3{\Gamma\vdash \rec_{\Bool}\;\bt\;\bu\;\bv : S}
     \end{prooftree}
 
@@ -402,6 +402,7 @@ représentant respectivement les entiers, les booléens, les listes d'entiers et
       \hypo{\Gamma\vdash \bu : S}
       \infer2{\Gamma\vdash \bt(\bu) : S'}
     \end{prooftree}
+    \emnote{pas fan de ce parenthésage}
   \end{center}
 \end{defi}
 
@@ -508,7 +509,7 @@ On peut maintenant définir la fonction $\trad{-}_\rho^\sigma : \Propo \to \math
   On notera $t\reali_\rho^\sigma \varphi$ pour $t\in\trad\varphi_\rho^\sigma$, et $t\reali\varphi$ pour $t\in\trad\varphi_\varnothing^\varnothing$. On appellera alors $t$ un réaliseur de $\varphi$.
 \end{nota}
 
-On peut alors voir la différence fondamentale entre $\forall x^A, \varphi$ et $\forall x^{\{A\}}, \varphi$~: le premier signifie simplement qu'il existe un réaliseur de $\varphi$ qui est uniforme pour $x$, c'est-à-dire que ce même réaliseur fonctionne pour toutes les valeurs possibles de $x$ ; le second, lui, indique que l'on possède une façon de calculer $\overline \bt$ en un réaliseur de $\varphi$. Par exemple $\forall x^\bN, x = x$ signifie qu'il existe $t$ qui réalise chaque $n = n$ pour $n\in \bN$, quand $\forall x^{\{\bN\}}, x = x$ signifie qu'il existe une fonction qui à $\overline n$ associe une preuve de $n = n$. Créer cette distinction permet de contrôler le plus finement possible ce qui est du ressort du calcul et ce qui est du ressort de la vérité logique. En particulier, on voit qu'un réaliseur d'une formule de la forme $\forall x^{\{A\}}, \exists y^{\{B\}}, \varphi(x,y)$ calcule directement une fonction $A \to B$ ainsi qu'une preuve de $\varphi(x,f(x))$, là où sans cette relativisation le $y$ dépendant de $x$ n'a pas besoin d'être calculable et peut simplement exister dans la méta-théorie.
+On peut alors voir la différence fondamentale entre $\forall x^A, \varphi$ et $\forall x^{\{A\}}, \varphi$~: le premier signifie simplement qu'il existe un réaliseur de $\varphi$ qui est uniforme pour $x$, c'est-à-dire que ce même réaliseur fonctionne pour toutes les valeurs possibles de $x$ ; le second, lui, indique que l'on possède une façon de calculer $\overline \bt$ en un réaliseur de $\varphi$\emnote{pas sûr de comprendre ce que tu veux dire, plutôt \emph{calculer à partir de $\bar \bt$ un réalisateur de $\varphi(t)$} ?}. Par exemple $\forall x^\bN, x = x$ signifie qu'il existe $t$ qui réalise chaque $n = n$ pour $n\in \bN$, quand $\forall x^{\{\bN\}}, x = x$ signifie qu'il existe une fonction qui à $\overline n$ associe une preuve de $n = n$. Créer cette distinction permet de contrôler le plus finement possible ce qui est du ressort du calcul et ce qui est du ressort de la vérité logique. En particulier, on voit qu'un réaliseur d'une formule de la forme $\forall x^{\{A\}}, \exists y^{\{B\}}, \varphi(x,y)$ calcule directement une fonction $A \to B$ ainsi qu'une preuve de $\varphi(x,f(x))$, là où sans cette relativisation le $y$ dépendant de $x$ n'a pas besoin d'être calculable et peut simplement exister dans la méta-théorie.
 
 Un des lemmes principaux est celui de saturation, qui assure que tous les ensembles ainsi définis restent saturés.
 
@@ -527,11 +528,11 @@ On commence par montrer que $\SAT$ est un treillis complet.
 \end{lem}
 
 \begin{proof}
-  On procède par induction sur $\varphi$~:
+  On procède par induction sur $\varphi$~:\emnote{rq: noter les cas !}  
   \begin{itemize}
   \item dans le cas de $X(\bt_1,\ldots,\bt_n)$ la définition même de $\trad-_\rho^\sigma$ nous donne un ensemble saturé.
-  \item supposons que $\trad{\varphi}_\rho^\sigma\in\SAT$ et $\trad{\psi}_\rho^\sigma\in \SAT$. Soient alors $t,u\in\Lambda$ tels que $t\reduc u$ et $u \reali_\rho^\sigma \varphi \to \psi$. Soit $v\reali_\rho^\sigma\varphi$, par définition on en déduit que $u\;v\reali_\rho^\sigma \psi$ donc par hypothèse d'induction, et comme $t\;v\reduc u\;v$, $t\;v\reali_\rho^\sigma\psi$ donc $t\reali_\rho^\sigma\psi$, d'où $\trad{\varphi\to\psi}_\rho^\sigma \in\SAT$.
-  \item supposons que $\trad{\varphi_1}_\rho^\sigma$ et $\trad{\varphi_2}_\rho^\sigma$ sont des ensembles saturés, soient alors $t, u \in \Lambda$ tels que $t\reduc u$ et $u \in \trad{\varphi_1\land \varphi_2}_\rho^\sigma$. On sait donc que pour tout $i\in\{1,2\}$, $\pi_i\;u \reali_\rho^\sigma \varphi_i$ et $\pi_i\;t\reduc\pi_i\;u$, donc par hypothèse d'induction et saturation $\pi_i\;t\reali_\rho^\sigma\varphi_i$. Donc $\trad{\varphi_1\land\varphi_2}_\rho^\sigma\in\SAT$.
+  \item supposons que $\trad{\varphi}_\rho^\sigma\in\SAT$ et $\trad{\psi}_\rho^\sigma\in \SAT$. Soient alors $t,u\in\Lambda$ tels que $t\reduc u$ et $u \reali_\rho^\sigma \varphi \to \psi$. Soit $v\reali_\rho^\sigma\varphi$, par définition on en déduit que $u\;v\reali_\rho^\sigma \psi$ donc par hypothèse d'induction, et comme $t\;v\reduc u\;v$, $t\;v\reali_\rho^\sigma\psi$ donc $t\reali_\rho^\sigma\psi$, d'où $\trad{\varphi\to\psi}_\rho^\sigma \in\SAT$. \emnote{rq: besoin de réduction leftmost}
+  \item supposons que $\trad{\varphi_1}_\rho^\sigma$ et $\trad{\varphi_2}_\rho^\sigma$ sont des ensembles saturés, soient alors $t, u \in \Lambda$ tels que $t\reduc u$ et $u \in \trad{\varphi_1\land \varphi_2}_\rho^\sigma$. On sait donc que pour tout $i\in\{1,2\}$, $\pi_i\;u \reali_\rho^\sigma \varphi_i$ et $\pi_i\;t\reduc\pi_i\;u$, donc par hypothèse d'induction et saturation $\pi_i\;t\reali_\rho^\sigma\varphi_i$. Donc $\trad{\varphi_1\land\varphi_2}_\rho^\sigma\in\SAT$.\emnote{rq: avec la réduction des paires en profondeurs, cela repose sur l'aspect ``may''. Et sinon, normalement c'est bon puisqu'entre $t$ et $u$ pas de paires donc la réduction des $\pi$ est bloquée}
   \item si tous les $\trad\varphi_\rho^{\sigma[x\leftarrow v]}$ sont saturés, comme $\SAT$ est un treillis complet, on en déduit directement que $\bigcap \trad\varphi_\rho^{\sigma[x\leftarrow v]}$ est saturé.
   \item de même que précédemment, le fait que $\SAT$ est un treillis complet assure que ce cas passe à l'induction.
   \item un lemme précédent nous dit que $\ceil{t^\sigma}$ est bien saturé.
@@ -606,6 +607,7 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
       \hypo{\Gamma\vdash \bt : A}
       \infer2[$\forall^1_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\bt/\bx]}
     \end{prooftree}
+    \emnote{peut-être que le séquent de jugement pour $\bt$ pourrait être annoté pour bien montrer que c'est un jugement du système du 1er ordre}
 
     \vspace{0.5cm}
     
@@ -694,12 +696,22 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     \end{prooftree}
   \end{center}
 \end{defi}
+\emnote{pourquoi restreindre le type des récurseurs à des sortes ? On peut aussi présenter les récurseurs non appliqués directement avec leur type au 2nd-ordre je pense :
+$\rec_\bN : \forall Z.(Z(0) \to \forall x^{\{\bN\}}.(Z(x)\to Z(x+1)) \to
+\forall x^{\{\bN\}}.Z(x)$. Sinon j'ai peur qu'on n'ait pas de principe d'induction au niveau logique. De façon générale, je ne sais pas si on a besoin d'inclure les prédicats $...\vdash t:S(\bt)$ dans le système de type (ce qu'on discutait au tableau), je pense que des règles $...\vdash t:S$ suffisent, ce qui simplifie pas mal (et correspondrait plus ou moins à une sorte de règle ``d'injection'' (à mieux penser sûrement) :
+}
+\textcolor{blue}{
+\begin{prooftree}
+ \hypo{\Gamma \vdash t :S}
+ \infer1{\Gamma \mid \Delta \mid \Xi \vdash t:S}
+\end{prooftree}
+}
 
 On définit une notion de valuation adaptée au lemme d'adéquation.
-
+\emnote{substitution (au lieu de valuation), interne au langage de termes}
 \begin{defi}[Valuation de réalisabilité]
   Soit un contexte de typage du premire ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
-  \[\forall i \in I, \sigma(x_i)\reali_\rho^\sigma\varphi_i\]
+  \[\forall i \in I, \text{\sout{$\sigma(x_i)$}\emnote{$\nu(x_i)$} }\reali_\rho^\sigma\varphi_i\]
 \end{defi}
 
 On définit aussi la substitution simultanée $t^\nu$ en remplaçant directement chaque variable libre $x$ de $t$ par $\nu(x)$ dans $t$.
@@ -753,7 +765,7 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
 \end{proof}
 
 \begin{lem}
-  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis on a, en notant $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow a_1,\ldots,\bx_n\leftarrow a_n]}$~:
+  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis \emnote{cad ?} on a, en notant $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow a_1,\ldots,\bx_n\leftarrow a_n]}$~:
   \[t\reali_{\rho[X\leftarrow S]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
 \end{lem}
 
@@ -807,28 +819,28 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
 \end{lem}
 
 \begin{proof}
-  La preuve se fait par induction sur la relation de typage $\vdash$~:
+  La preuve se fait par induction sur la relation de typage $\vdash$~:\emnote{rq: utiliser les noms des règles de typage pour référencer chaque cas}
   \begin{itemize}
   \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $t^\nu = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
-  \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $t^\nu \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $(\lambda x.t)^\nu\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $t^{\nu[x \leftarrow u]}\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $t^{\nu[x\leftarrow u]} = t^\nu[u/x]$ donc $t^\nu[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.t^\nu) u \reali_\rho^\sigma \psi$, donc $\lambda x.t^\nu\reali_\rho^\sigma \varphi\to\psi$.
-  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi \to \psi$ et $u^\nu\reali_\rho^\sigma \varphi$, alors par définition $(t\;u)^\nu\reali_\rho^\sigma \psi$.
-  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi$ et $u^\nu\reali_\rho^\sigma \psi$, alors $\pi_1\;\langle t,u\rangle^\nu \reduc t^\nu \reali_\rho^\sigma \varphi$ et $\pi_2\;\langle t,u\rangle^\nu\reduc u^\nu \reali_\rho^\sigma \psi$, donc $\langle t,u\rangle^\nu \reali_\rho^\sigma \varphi\land\psi$.
+  \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $t^\nu \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $(\lambda x.t)^\nu\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $t^{\nu[x \leftarrow u]}\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $t^{\nu[x\leftarrow u]} = t^\nu[u/x]$ donc $t^\nu[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.t^\nu) u \reali_\rho^\sigma \psi$, donc \emnote{$(\lambda x.t)^\nu)=_\alpha$}$\lambda x.t^\nu\reali_\rho^\sigma \varphi\to\psi$. \emnote{caché : may-réduction}
+  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi \to \psi$ et $u^\nu\reali_\rho^\sigma \varphi$, alors par définition $\emnote{t^\nu\;u^\nu=}(t\;u)^\nu\reali_\rho^\sigma \psi$.
+  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi$ et $u^\nu\reali_\rho^\sigma \psi$, alors $\pi_1\;\langle t,u\rangle^\nu \reduc t^\nu \reali_\rho^\sigma \varphi$ et $\pi_2\;\langle t,u\rangle^\nu\reduc u^\nu \reali_\rho^\sigma \psi$, donc $\langle t,u\rangle^\nu \reali_\rho^\sigma \varphi\land\psi$.\emnote{caché : may-réduction}
   \item Si $t^\nu \reali_\rho^\sigma \varphi_1\land\varphi_2$ alors par définition, $\pi_i\;t^\nu\reali_\rho^\sigma \varphi_i$.
   \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : A), \Delta,\Xi$, $t^\nu\reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, alors par hypothèse pour tout $a \in \mathbb A$, $\nu\reali_\rho^{\sigma[\bx\leftarrow a]}(\Gamma, \bx : A), \Delta, \Xi$ donc $t^\nu\reali_\rho^{\sigma[\bx \leftarrow a]}\varphi$ pour tout $a\in \mathbb A$, ce qui signifie que $t^\nu \reali_\rho^\sigma \forall \bx^A, \varphi$.
-  \item On suppose que $t^\nu\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : A$, $\bt^\sigma \in \mathbb A$ donc $t^\nu\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n), \Xi$, $t^\nu \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $S : A_1\times\ldots\times A_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow S]}^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n),\Xi$ donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$. Comme cela tient pour tout $S : A_1\times\ldots\times A_n \to \SAT$, on en déduit que $t^\nu\reali_\rho^\sigma \forall X, \varphi$.
-  \item Si $t^\nu\reali_\rho^\sigma \forall X, \varphi$ et $\Gamma,x_1 : A_1,\ldots,x_n : A_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow a_1,\ldots, x_n \leftarrow a_n]}$ définit une fonction $A_1\times\ldots\times A_n \to\SAT$, donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
+  \item On suppose que $t^\nu\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\emnote{\Gamma \vdash ?}\bt : A$, $\bt^\sigma \in \mathbb A$ donc \emnote{inverser $\rho/\sigma$ ?}$t^\nu\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n), \Xi$, $t^\nu \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $S : A_1\times\ldots\times A_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow S]}^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n),\Xi$ donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$. Comme cela tient pour tout $S : A_1\times\ldots\times A_n \to \SAT$, on en déduit que $t^\nu\reali_\rho^\sigma \forall X, \varphi$. 
+  \item Si $t^\nu\reali_\rho^\sigma \forall X, \varphi$ et $\Gamma,x_1 : A_1,\ldots,x_n : A_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow a_1,\ldots, x_n \leftarrow a_n]}$ définit une fonction $A_1\times\ldots\times A_n \to\SAT$\emnote{ref lemme sur valeur de vérité dans SAT}, donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.\emnote{ici je pense que si on veut être précis précis, comme c'est la fonction $x_1,...x_n\mapsto\varphi(x_1,...x_n)$ qui substitue $X$ (dans la règle de typage), soit il faudrait écrire  quelque chose comme $\varphi(\bt_1,...\bt_n)/X(\bt_1,...,\bt_n)$, soit $\varphi/X$ en voyant $\varphi$ comme la fonction n-aire}
   \item Comme $0\reduc^* 0$ et $0\in\ceil\bZ$, on en déduit le résultat.
   \item Si $t\in\ceil{\bt^\sigma}$ où $\bt^\sigma \in \bN$, alors $t\reduc^* \overline{\bt^\sigma}$ donc $S\;t\reduc^*\overline{\bfS\;\bt^\sigma}$, donc $S\;t\in\ceil{\bfS\;\bt^\sigma}$.
   \item Supposons que $t^\nu\in\ceil{\bt^\sigma}$, $u^\nu\in\ceil{\bu^\sigma}$ et $v^\nu\in\ceil{\bv^\sigma}$. Comme $\bv^\sigma\in\bN$, on raisonne par induction sur $\bv^\sigma$~:
     \begin{itemize}
-    \item si $\bv^\sigma = 0$, alors comme la fonction $\rec_\bN\;\bt\;\bu$ vaut $\bt$ en $0$, $(\rec_\bN\;\bt\;\bu\;\bv)^\sigma = \bt^\sigma$ et $v^\nu \reduc^* 0$, donc $(\rec_\bN\;t\;u\;v)^\nu \reduc^* t^\nu \in \ceil{\bt^\sigma}$, donc $\rec_\bN\;t\;u\;v \in \ceil{(\rec_\bN\;\bt\;\bu\;\bv)^\sigma}$.
-    \item si $\bv^\sigma = n + 1$, comme on sait que la fonction $\rec_\bN\;\bt\;\bu$ vaut $\bu(n)(\rec_\bN\;\bt\;\bu\;n)$ en $n+1$, on en déduit que $(\rec_\bN\;\bt\;\bu\;\bv)^\sigma = \bu^\sigma\;n\;(\rec_\bN\;\bt^\sigma\;\bu^\sigma\;n)$. De plus, $v^\nu \reduc^* S\;n$, donc
+    \item si $\bv^\sigma = 0$, alors comme la fonction $\rec_\bN\;\bt\;\bu$ vaut $\bt$ en $0$, $(\rec_\bN\;\bt\;\bu\;\bv)^\sigma = \bt^\sigma$ et $v^\nu \reduc^* 0$, donc \emnote{je ne suis pas sûr de comprendre la prémisse, tu as donné une réduction sur $\rec_\bN$ qui ne dépend pas de valeur de fonctions méta dans $\bN$, non ? en fait je crois que j'ai compris ce que tu veux dire, cela a à voir avec ma remarque sur le typage des récurseurs.} $(\rec_\bN\;t\;u\;v)^\nu \reduc^* t^\nu \in \ceil{\bt^\sigma}$, donc $\rec_\bN\;t\;u\;v \in \ceil{(\rec_\bN\;\bt\;\bu\;\bv)^\sigma}$. \emnote{may-réduction cachée (par ex, $u=\Omega$)}
+    \item si $\bv^\sigma = n + 1$, comme on sait que la fonction $\rec_\bN\;\bt\;\bu$ vaut $\bu(n)(\rec_\bN\;\bt\;\bu\;n)$ en $n+1$, on en déduit \emnote{même remarque} que $(\rec_\bN\;\bt\;\bu\;\bv)^\sigma = \bu^\sigma\;n\;(\rec_\bN\;\bt^\sigma\;\bu^\sigma\;n)$. De plus, $v^\nu \reduc^* S\;n$, donc
       \begin{align*}
         (\rec_\bN\;t\;u\;v)^\sigma &\reduc^* \rec_\bN\;t^\nu\;u^\nu\;(S\;n)\\
         &\reduc u^\nu\;n\;(\rec_\bN\;t^\nu\;u^\nu\;n)
       \end{align*}
-      or on sait que $\rec_\bN\;t^\nu\;u^\nu\;n\in\ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\overline n}$ par hypothèse d'induction. Comme $u^\nu \in \ceil{\bu^\sigma}$ et en considérant le type de $\bu^\sigma$, on en déduit que $(\rec_\bN\;t\;u\;(S\;n))^\nu \in \ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;(\overline{n+1})}$, donc par saturation, $\rec_\bN\;t\;u\;v\in\ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\overline{n+1}}$.
+      or on sait que $\rec_\bN\;t^\nu\;u^\nu\;n\in\ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\overline n}$ par hypothèse d'induction. Comme $u^\nu \in \ceil{\bu^\sigma}$ et en considérant le type de $\bu^\sigma$, on en déduit que $(\rec_\bN\;t\;u\;(S\;n))^\nu \in \ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;(\overline{n+1})}$, donc par saturation, $\rec_\bN\;t\;u\;v\in\ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\overline{n+1}}$.\emnote{may-réduction cachée, paire critique sur $\rec_\bN\;\_\;\_\;S v$}
     \end{itemize}
     Ainsi, par induction, $\rec_\bN\;t^\nu\;u^\nu\;v^\nu \in \ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\bv^\sigma}$.
   \item les cas de $\bB$ et $\bL$ sont analogues.
