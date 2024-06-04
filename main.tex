@@ -489,7 +489,7 @@ On peut maintenant définir la fonction $\trad{-}_\rho^\sigma : \Propo \to \math
 \begin{defi}[Interprétation]
   On définit la fonction par induction, en considérant $\rho$ et $\sigma$ adéquates~:
   \begin{itemize}
-  \item $\trad{X(\bt_1,\ldots,\bt_n)}_\rho^\sigma \defeq \rho(X)(t_1^\sigma,\ldots,t_n^\sigma)$
+  \item $\trad{X(\bt_1,\ldots,\bt_n)}_\rho^\sigma \defeq \rho(X)(\bt_1^\sigma,\ldots,\bt_n^\sigma)$
   \item $\trad{\varphi\to\psi}_\rho^\sigma\defeq \{t\in\Lambda\mid \forall u \in \trad{\varphi}_\rho^\sigma, t\;u\in\trad{\psi}_\rho^\sigma\}$
   \item $\trad{\varphi\land \psi}_\rho^\sigma \defeq \{t\in \Lambda\mid \pi_1\;t\in\trad{\varphi}_\rho^\sigma, \pi_2\;t\in\trad{\psi}_\rho^\sigma\}$
   \item $\displaystyle\trad{\forall x^S, \varphi}_\rho^\sigma \defeq \bigcap_{v \in \bS}\trad{\varphi}_\rho^{\sigma[x \leftarrow v]}$
@@ -549,12 +549,12 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     
     \begin{prooftree}
       \hypo{\Gamma\mid\Delta\mid\Xi \vdash t : \varphi}
-      \infer1[Aff$_1$]{\Gamma, \bx : A\mid\Delta\mid\Xi \vdash t : \varphi}
+      \infer1[Aff$_1$]{\Gamma, \bx : S\mid\Delta\mid\Xi \vdash t : \varphi}
     \end{prooftree}
     \quad
     \begin{prooftree}
       \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
-      \infer1[Aff$_2$]{\Gamma\mid\Delta, X : A_1,\ldots,A_n\mid\Xi\vdash t : \varphi}
+      \infer1[Aff$_2$]{\Gamma\mid\Delta, X : S_1,\ldots,S_n\mid\Xi\vdash t : \varphi}
     \end{prooftree}
     \quad
     \begin{prooftree}
@@ -591,26 +591,26 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     \vspace{0.5cm}
 
     \begin{prooftree}
-      \hypo{\Gamma, \bx : A\mid\Delta\mid\Xi\vdash t : \varphi}
+      \hypo{\Gamma, \bx : S\mid\Delta\mid\Xi\vdash t : \varphi}
       \infer1[$\forall^1_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^A, \varphi}
     \end{prooftree}
     \quad
     \begin{prooftree}
       \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^A, \varphi}
-      \hypo{\Gamma\vdash \bt : A}
+      \hypo{\Gamma\vdash \bt : S}
       \infer2[$\forall^1_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\bt/\bx]}
     \end{prooftree}
 
     \vspace{0.5cm}
     
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta, X^{A_1,\ldots,A_n}\mid\Xi\vdash t : \varphi}
+      \hypo{\Gamma\mid\Delta, X^{S_1,\ldots,S_n}\mid\Xi\vdash t : \varphi}
       \infer1[$\forall^2_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{A_1,\ldots,A_n}, \varphi}
     \end{prooftree}
     \quad
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{A_1,\ldots,A_n}, \varphi}
-      \hypo{\Gamma, \bx_1 : A_1,\ldots,\bx_n : A_n\mid\Delta\vdash \psi : \Propo}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{S_1,\ldots,S_n}, \varphi}
+      \hypo{\Gamma, \bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo}
       \infer2[$\forall^2_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\psi(\bx_1,\ldots,\bx_n)/X]}
     \end{prooftree}
 
@@ -693,7 +693,7 @@ On définit une notion de valuation adaptée au lemme d'adéquation.
 
 \begin{defi}[Valuation de réalisabilité]
   Soit un contexte de typage du premire ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
-  \[\forall i \in I, \sigma(x_i)\reali_\rho^\sigma\varphi_i\]
+  \[\forall i \in I, \nu(x_i)\reali_\rho^\sigma\varphi_i\]
 \end{defi}
 
 On définit aussi la substitution simultanée $t^\nu$ en remplaçant directement chaque variable libre $x$ de $t$ par $\nu(x)$ dans $t$.
@@ -747,8 +747,8 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
 \end{proof}
 
 \begin{lem}
-  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis on a, en notant $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow a_1,\ldots,\bx_n\leftarrow a_n]}$~:
-  \[t\reali_{\rho[X\leftarrow S]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
+  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis on a, en notant $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow s_1,\ldots,\bx_n\leftarrow s_n]}$~:
+  \[t\reali_{\rho[X\leftarrow F]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
 \end{lem}
 
 \begin{proof}
@@ -756,44 +756,44 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
   \begin{itemize}
   \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors
     \begin{align*}
-      \trad\varphi_{\rho[X\leftarrow S]}^\sigma &= S(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
+      \trad\varphi_{\rho[X\leftarrow F]}^\sigma &= S(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
       &= \trad\psi_\rho^{\sigma[\bx_1\leftarrow \bt_1^\sigma,\ldots,\bx_n\leftarrow \bt_n^\sigma]} \\
       &= \trad{\psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]}_\rho^\sigma\\
       &= \trad{X(\bt_1,\ldots,\bt_n)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
     \end{align*}
-  \item si $\varphi = Y(\bt_1,\ldots,\bt_p)$ où $X\neq Y$ alors $\trad{\varphi}_{\rho[X\leftarrow S]}^\sigma = \trad\varphi_\rho^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
+  \item si $\varphi = Y(\bt_1,\ldots,\bt_p)$ où $X\neq Y$ alors $\trad{\varphi}_{\rho[X\leftarrow F]}^\sigma = \trad\varphi_\rho^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
   \item si $\varphi = \chi \to \chi'$ alors
     \begin{align*}
-      \trad{\chi\to\chi'}_{\rho[X\leftarrow S]}^\sigma &= \{t\in\Lambda\mid \forall u \in \trad\chi_{\rho[X\leftarrow S]}^\sigma, t\;u\in \trad{\chi'}_{\rho[X\leftarrow S]}^\sigma\}\\
+      \trad{\chi\to\chi'}_{\rho[X\leftarrow F]}^\sigma &= \{t\in\Lambda\mid \forall u \in \trad\chi_{\rho[X\leftarrow F]}^\sigma, t\;u\in \trad{\chi'}_{\rho[X\leftarrow F]}^\sigma\}\\
       &= \{t\in\Lambda\mid \forall u \in \trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma, t\;u\in\trad{\chi'[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\}\\
       &= \trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X] \to \chi'[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
       &= \trad{(\chi\to\chi')[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
     \end{align*}
   \item si $\varphi = \chi_1\land\chi_2$ alors
     \begin{align*}
-      \trad{\chi\land\chi'}_{\rho[X\leftarrow S]}^\sigma &= \{t\in\Lambda\mid \forall i \in \trad\{1,2\}, \pi_i\;t\in \trad{\chi_i}_{\rho[X\leftarrow S]}^\sigma\}\\
+      \trad{\chi\land\chi'}_{\rho[X\leftarrow F]}^\sigma &= \{t\in\Lambda\mid \forall i \in \{1,2\}, \pi_i\;t\in \trad{\chi_i}_{\rho[X\leftarrow F]}^\sigma\}\\
       &= \{t\in\Lambda\mid \forall i \in \{1,2\}, \pi_i\;t\in\trad{\chi_i[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\}\\
       &= \trad{\chi_1[\psi(\bx_1,\ldots,\bx_n)/X] \land \chi_2[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
       &= \trad{(\chi_1\to\chi_2)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
     \end{align*}
   \item si $\varphi = \forall \bx^S, \chi$ alors
     \begin{align*}
-      \trad{\forall \bx^S, \chi}_{\rho[X\leftarrow S]}^\sigma &= \bigcap_{s\in\bS}\trad\chi_{\rho[X\leftarrow S]}^{\sigma[\bx\leftarrow s]}\\
+      \trad{\forall \bx^S, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{s\in\bS}\trad\chi_{\rho[X\leftarrow F]}^{\sigma[\bx\leftarrow s]}\\
       &= \bigcap_{s\in\bS}\trad{\chi/[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^{\sigma[\bx\leftarrow s]}\\
       &= \trad{\forall \bx^S, \chi[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma\\
       &= \trad{(\forall \bx^S, \chi)[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma
     \end{align*}
   \item si $\varphi = \forall Y^{S_1,\ldots,S_p},\chi$ alors
     \begin{align*}
-      \trad{\forall Y^{S_1,\ldots,S_p}, \chi}_{\rho[X\leftarrow S]}^\sigma &= \bigcap_{F : \bS_1\times\cdots\times\bS_p \to \SAT}\trad\chi_{\rho[X\leftarrow S, Y\leftarrow F]}^\sigma\\
-      &= \bigcap_{F : \bS_1\times\cdots\times\bS_p}\trad\chi_{\rho[Y\leftarrow F, X\leftarrow S]}^\sigma\\
-      &= \bigcap_{F : \bS_1\times\cdots\times\bS_p}\trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_{\rho[Y\leftarrow F]}^\sigma\\
+      \trad{\forall Y^{S_1,\ldots,S_p}, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{G : \bS_1\times\cdots\times\bS_p \to \SAT}\trad\chi_{\rho[X\leftarrow F, Y\leftarrow G]}^\sigma\\
+      &= \bigcap_{G : \bS_1\times\cdots\times\bS_p\to\SAT}\trad\chi_{\rho[Y\leftarrow G, X\leftarrow F]}^\sigma\\
+      &= \bigcap_{G : \bS_1\times\cdots\times\bS_p\to\SAT}\trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_{\rho[Y\leftarrow G]}^\sigma\\
       &= \trad{\forall Y^{S_1,\ldots,S_n}, \chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
       &= \trad{(\forall Y^{S_1,\ldots,S_n}, \chi)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
     \end{align*}
   \item si $\varphi = S(\bt)$ alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \varphi$ d'où le résultat.
   \end{itemize}
-  Donc, par induction, $\trad\varphi_{\rho[X\leftarrow S]}^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
+  Donc, par induction, $\trad\varphi_{\rho[X\leftarrow F]}^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
 \end{proof}
 
 \begin{lem}[Adéquation]
@@ -804,14 +804,15 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
   La preuve se fait par induction sur la relation de typage $\vdash$~:
   \begin{itemize}
   \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $t^\nu = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
+  \item Le cas d'un affaiblissement est direct aussi.
   \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $t^\nu \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $(\lambda x.t)^\nu\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $t^{\nu[x \leftarrow u]}\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $t^{\nu[x\leftarrow u]} = t^\nu[u/x]$ donc $t^\nu[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.t^\nu) u \reali_\rho^\sigma \psi$, donc $\lambda x.t^\nu\reali_\rho^\sigma \varphi\to\psi$.
   \item Supposons que $t^\nu\reali_\rho^\sigma \varphi \to \psi$ et $u^\nu\reali_\rho^\sigma \varphi$, alors par définition $(t\;u)^\nu\reali_\rho^\sigma \psi$.
   \item Supposons que $t^\nu\reali_\rho^\sigma \varphi$ et $u^\nu\reali_\rho^\sigma \psi$, alors $\pi_1\;\langle t,u\rangle^\nu \reduc t^\nu \reali_\rho^\sigma \varphi$ et $\pi_2\;\langle t,u\rangle^\nu\reduc u^\nu \reali_\rho^\sigma \psi$, donc $\langle t,u\rangle^\nu \reali_\rho^\sigma \varphi\land\psi$.
   \item Si $t^\nu \reali_\rho^\sigma \varphi_1\land\varphi_2$ alors par définition, $\pi_i\;t^\nu\reali_\rho^\sigma \varphi_i$.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : A), \Delta,\Xi$, $t^\nu\reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, alors par hypothèse pour tout $a \in \mathbb A$, $\nu\reali_\rho^{\sigma[\bx\leftarrow a]}(\Gamma, \bx : A), \Delta, \Xi$ donc $t^\nu\reali_\rho^{\sigma[\bx \leftarrow a]}\varphi$ pour tout $a\in \mathbb A$, ce qui signifie que $t^\nu \reali_\rho^\sigma \forall \bx^A, \varphi$.
-  \item On suppose que $t^\nu\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : A$, $\bt^\sigma \in \mathbb A$ donc $t^\nu\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n), \Xi$, $t^\nu \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $S : A_1\times\ldots\times A_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow S]}^\sigma \Gamma, (\Delta, X : A_1,\ldots,A_n),\Xi$ donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$. Comme cela tient pour tout $S : A_1\times\ldots\times A_n \to \SAT$, on en déduit que $t^\nu\reali_\rho^\sigma \forall X, \varphi$.
-  \item Si $t^\nu\reali_\rho^\sigma \forall X, \varphi$ et $\Gamma,x_1 : A_1,\ldots,x_n : A_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $S : (a_1,\ldots,a_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow a_1,\ldots, x_n \leftarrow a_n]}$ définit une fonction $A_1\times\ldots\times A_n \to\SAT$, donc $t^\nu\reali_{\rho[X\leftarrow S]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S), \Delta,\Xi$, $t^\nu\reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, alors par hypothèse pour tout $s \in \bS$, $\nu\reali_\rho^{\sigma[\bx\leftarrow s]}(\Gamma, \bx : S), \Delta, \Xi$ donc $t^\nu\reali_\rho^{\sigma[\bx \leftarrow s]}\varphi$ pour tout $s\in \bS$, ce qui signifie que $t^\nu \reali_\rho^\sigma \forall \bx^S, \varphi$.
+  \item On suppose que $t^\nu\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\bt^\sigma \in \mathbb S$ donc $t^\nu\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n), \Xi$, $t^\nu \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n),\Xi$ donc $t^\nu\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $t^\nu\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
+  \item Si $t^\nu\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $t^\nu\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
   \item Comme $0\reduc^* 0$ et $0\in\ceil\bZ$, on en déduit le résultat.
   \item Si $t\in\ceil{\bt^\sigma}$ où $\bt^\sigma \in \bN$, alors $t\reduc^* \overline{\bt^\sigma}$ donc $S\;t\reduc^*\overline{\bfS\;\bt^\sigma}$, donc $S\;t\in\ceil{\bfS\;\bt^\sigma}$.
   \item Supposons que $t^\nu\in\ceil{\bt^\sigma}$, $u^\nu\in\ceil{\bu^\sigma}$ et $v^\nu\in\ceil{\bv^\sigma}$. Comme $\bv^\sigma\in\bN$, on raisonne par induction sur $\bv^\sigma$~:
@@ -862,12 +863,63 @@ On peut désormais étudier les notions liées aux arbres. On donne d'abord deux
   \end{center}
 \end{rmk}
 
+Pour définir un arbre, on considère directement un prédicat sur $\List$ qui est stable par préfixe. Pour cela, introduisons la notion de préfixe~:
+
+\begin{defi}[Préfixe]
+  On définit la relation $\preceq$ de préfixe sur $\List$ par la fonction suivante~:
+  \[\ell\preceq\ell' \defeq (\rec_{\List}\;(\rec_{\List}\;\bbtt\;(\blam n.\blam l. \blam b.\bbff))\;(\blam n.\blam l.\blam b.\rec_{\List}\;\bbff\;(\blam n'.\blam l'.\blam b'.(n =? n') \land_\bB (b\;l)))\;\ell\;\ell') = \bbtt\]
+\end{defi}
+
+On peut vérifier que cette relation fait bien ce qu'on attend~:
+\begin{itemize}
+\item si $\ell = \bnil$, alors on a la fonction valant $\bbtt$ en $\bnil$ et $\bbff$ ailleurs.
+\item si $\ell = h \bcons t$ et $\ell' = h' \bcons t'$ alors la fonction vaut $h = h' \land t = t'$, et si $\ell' = \bnil$ alors la fonction vaut $\bbff$.
+\end{itemize}
+
+\begin{defi}[Arbre, prédicat monotone]
+  On définit le prédicat $\isTree(T)$ pour $T^{\List}$ par
+  \[\isTree(T)\defeq \forall \ell^{\List}\;\ell'^{\List}, T(\ell') \land \ell \preceq \ell' \to T(\ell)\]
+  On définit aussi le fait d'être monotone par
+  \[\isMono(T)\defeq \forall \ell^{\List}\;\ell'^{\List}, T(\ell) \land \ell \preceq \ell' \to T(\ell')\]
+\end{defi}
+
+\begin{nota}
+  On notera $\forall T^{\Tree}, \varphi$ et $\forall T^{\Mono}, \varphi$ pour considérer respectivement $\forall T^{\List}, \isTree(T) \to \varphi$ et $\forall T^{\List}, \isMono(T) \to \varphi$.
+\end{nota}
+
 Avec ces termes, on peut déjà définir les deux théorèmes que l'on veut étudier~:
 \begin{equation}
-  \KL \defeq \forall T^{\List}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
+  \KL \defeq \forall T^{\Tree}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
 \end{equation}
 \begin{equation}
-  \FT \defeq \forall T^{\List}, (\exists f^{\{(\Nat\to\Nat)\to\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_{f(\alpha)})) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
+  \FT \defeq \forall T^{\Mono}, (\forall \alpha^{\{\Nat \to \Nat\}},\exists n^{\{\Nat\}}, T(\alpha_n)) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
 \end{equation}
+\begin{equation}
+  \FT' \defeq \forall T^{\Mono}, (\exists f^{\{(\Nat\to\Nat)\to\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_{f(\alpha)})) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
+\end{equation}
+
+\begin{them}[FAN]
+  Il existe $t\in \Lambda$ tel que
+  \[t\reali \FT\]
+\end{them}
+
+\begin{proof}
+  On définit une interprétation des sortes et termes du premier ordre dans la catégorie $\Cpo$. Par induction~:
+  \begin{itemize}
+  \item $\trad{\Nat}_{\Cpo} \defeq \bN_\bot$
+  \item $\trad{\Bool}_{\Cpo} \defeq \bB_\bot$
+  \item $\trad{\List}_{\Cpo} \defeq \mathcal K\left(\bN_\bot^{(\bN_\bot)}\right)$
+  \item $\trad{S \to S'}_{\Cpo} \defeq \bS'^{\bS}$
+  \end{itemize}
+  L'interprétation des termes du premier ordre est définie naturellement comme l'interprétation de système T dans $\Cpo$ (les paires, les abstraction et applications viennent directement de la structure de catégorie cartésienne fermée, les constructeurs de $\Nat$ d'un objet entier naturel \textit{etc}.)
+
+  Supposons alors qu'on a $r\reali \forall f^{\{\Nat \to \Nat\}}, \exists n^{\{\Nat\}}, f_n \in T$. L'argument classique montrant que l'axiome du choix avec des quantifications fortes est vrai en théorie des types fonctionne aussi ici (dans le cas de quantifications relativisées), on trouve donc
+  \[t\reali \forall X^{\{S,S'\}}, (\forall x^{\{S\}}, \exists y^{\{S'\}}, X(x,y))\to \exists f^{\{S \to S'\}}, \forall x^{\{S\}}, X(x,f(x))\]
+  d'où
+  \[t\;r\reali \exists f^{\{(\Nat\to\Nat)\to\Nat\}}, \forall \alpha^{\{\Nat\to\Nat\}}, \alpha_{f(\alpha)}\in T\]
+  On en déduit donc, par notre interprétation des termes du premier ordre, qu'il existe $f : (\bN_\bot\to\bN_\bot)\to\bN_\bot$ continue. Ainsi, si on a un chemin $\alpha$ on peut trouver un préfixe fini $n_\alpha$ tel que
+  \[\forall \gamma, \gamma_{n_\alpha} = \alpha_{n_\alpha} \implies f(\gamma) = f(\alpha)\]
+  et on peut trouver un code pour $\alpha_{n_\alpha} 0^\infty$.
+\end{proof}
 
 \end{document}
