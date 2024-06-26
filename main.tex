@@ -23,21 +23,21 @@ L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétatio
 
 La volonté derrière l'interprétation BHK est de définir une logique constructiviste, en ce qu'une preuve d'une proposition doit explicitement construire les outils auxquels elle fait appel (en particulier, on cherche à avoir la propriété du témoin, qui dit que si $\vdash \exists x, \varphi$ alors il existe $t$ tel que $\vdash \varphi[t/x]$). Comme le principe du tiers exclu est non constructif, on se place dans le cadre de la logique intuitionniste.
 
-On suppose qu'on a un ensemble de propositions $\Phi$ et un ensemble de témoins, $X$. L'interprétation BHK donne une façon de penser une relation signifiant \textit{être une preuve de}, qu'on notera $x\reali \varphi$~:
+On suppose qu'on a un ensemble de propositions $\Phi$ et un ensemble de témoins, $\bX$. L'interprétation BHK donne une façon de penser une relation signifiant \textit{être une preuve de}, qu'on notera $x\reali \varphi$~:
 \begin{itemize}
 \item on suppose qu'on a défini ce que signifie $x\reali\varphi$ pour $\varphi$ atomique
 \item on n'a jamais $x\reali \bot$
-\item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ représente une fonction qui, pour tout $y\reali\psi$, associe $x(y)\reali\chi$. Prouver que $\psi$ implique $\chi$ est donc une fonction qui peut renvoyer une preuve de $\chi$ dès qu'on a une preuve de $\psi$.
-\item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x = \langle y,z\rangle$ où $y\reali \psi$ et $z\reali \chi$. Ainsi être une preuve d'une conjonction est une paire de preuves, donnant la preuve de chaque composante.
-\item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x = \langle i,y\rangle$ où $i\in\{1,2\}$ et, de plus, si $i = 1$ alors $y\reali \psi$ et si $i = 2$ alors $y\reali \chi$. Être une preuve d'une disjonction est donc une preuve d'une des deux propositions, accompagnée de l'information de laquelle des propositions est prouvée (c'est une union disjointe en terme ensembliste).
-\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une foncion qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
-\item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x = \langle t,y\rangle$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
+\item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ est une fonction (en un sens intuitif pour le moment) qui à $y\in \bX$ tel que $y\reali \psi$, associe $x(y)\in \bX$ tel que $x(y)\reali \chi$.
+\item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x$ est une paire de deux éléments $y\reali \psi$ et $z\reali \chi$~: prouver la conjonction de deux formules signifie avoir une preuve de chaque formule.
+\item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x$ s'écrit $(i,y)$ où, si $i = 1$, $y\reali \psi$ et si $i = 2$, $y\reali \chi$. Cela correspond à une union disjointe (en particulier, une preuve d'une disjonction garde la trace de laquelle des deux propositions est prouvée).
+\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une foncion qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
+\item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x$ s'écrit comme une paire $(t,y)$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
 \end{itemize}
 
-On voudrait alors que la relation $\reali\subseteq X \times \Phi$ ainsi construite définisse une théorie
-\[\mathcal T_\reali \defeq \{\varphi\in\Phi\mid \exists x \in X, x\reali \varphi\}\]
+On voudrait alors que la relation $\reali\subseteq \bX \times \Phi$ ainsi construite définisse une théorie
+\[\mathcal T_\reali \defeq \{\varphi\in\Phi\mid \exists x \in \bX, x\reali \varphi\}\]
 
-En fait, on voit que cette théorie est close par les règles de la déduction naturelle intuitionnistes sous quelques hypothèses sur la structure de $X$~:
+En fait, on voit que cette théorie est close par les règles de la déduction naturelle intuitionnistes sous quelques hypothèses sur la structure de $\bX$~:
 \begin{itemize}
 \item si on suppose qu'on a des preuves de $\varphi_1,\ldots,\varphi_n$ alors on a évidemment une preuve de $\varphi_i$ pour chaque $i\in\{1,\ldots,n\}$, d'où \begin{center}\begin{prooftree}\hypo{\varphi\in\Gamma}\infer1{\Gamma\vdash \varphi}\end{prooftree}\end{center}
 \item si dans le contexte $\varphi_1,\ldots,\varphi_n$ on a une preuve de $\bot$, comme il n'y a pas de preuve de $\bot$ alors par principe d'explosion on déduit qu'on a une preuve de n'importe quelle proposition
@@ -45,12 +45,12 @@ En fait, on voit que cette théorie est close par les règles de la déduction n
 \item si dans le contexte $\Gamma$ on a une preuve de $\varphi \to \psi$ et une preuve de $\varphi$, comme une preuve de $\varphi\to\psi$ est une fonction, on peut l'appliquer en la preuve de $\varphi$ pour obtenir une preuve de $\psi$, d'où \begin{center}\begin{prooftree}\hypo{\Gamma\vdash \varphi\to\psi}\hypo{\Gamma\vdash\varphi}\infer2{\Gamma\vdash \psi}\end{prooftree}\end{center}
 \end{itemize}
 
-On peut faire de même pour $\land$, $\lor$, $\forall$ et $\exists$. Pour pouvoir construire notre interprétation, il nous faut donc un ensemble $X$ muni de structure~:
+On peut faire de même pour $\land$, $\lor$, $\forall$ et $\exists$. Pour pouvoir construire notre interprétation, il nous faut donc un ensemble $\bX$ muni de structure~:
 \begin{itemize}
-\item chaque $x\in X$ doit pouvoir se voir comme une forme de fonction dont on peut abstraire les entrées, au sens où si $t\in X$ possède des entrées $a_1,\ldots,a_n$ alors on veut avoir $\lambda a_i. t\in X$ qui est une entrée sur $a_1,\ldots,a_n \setminus a_i$ donnant la fonction $a_i \mapsto t$. En ayant cela, l'introduction et l'élimination de $\to$ devient automatique.
-\item on doit être capable de créer des paires $\langle x,y\rangle \in X$ d'éléments de $X$, et des projections pour récupérer les informations sur chaque coordonnée. Dans ce cas l'introduction et l'élimination de $\land$ est directe.
+\item chaque $x\in \bX$ doit pouvoir se voir comme une forme de fonction dont on peut abstraire les entrées, au sens où si $t\in \bX$ possède des entrées $a_1,\ldots,a_n$ alors on veut avoir $\lambda a_i. t\in \bX$ qui est une entrée sur $a_1,\ldots,a_n \setminus a_i$ donnant la fonction $a_i \mapsto t$. En ayant cela, l'introduction et l'élimination de $\to$ devient automatique.
+\item on doit être capable de créer des paires $\langle x,y\rangle \in \bX$ d'éléments de $\bX$, et des projections pour récupérer les informations sur chaque coordonnée. Dans ce cas l'introduction et l'élimination de $\land$ est directe.
 \item on doit pouvoir représenter au moins un ensemble $\{0,1\}$ pour pouvoir définir l'introduction de $\lor$. Pour l'élimination de $\lor$, il nous faut une instruction if / then / else sur cet ensemble $\{0,1\}$ représenté pour faire une disjonction de cas sur la première coordonnée d'une preuve de $\varphi\lor \psi$.
-\item on doit pouvoir représenter les termes du premier ordre au sein même de $X$, pour pouvoir considérer une fonction qui à un terme du premier ordre associe un élément de $X$ et avoir des paires dont une coordonnée est un terme du premier ordre.
+\item on doit pouvoir représenter les termes du premier ordre au sein même de $\bX$, pour pouvoir considérer une fonction qui à un terme du premier ordre associe un élément de $\bX$ et avoir des paires dont une coordonnée est un terme du premier ordre.
 \end{itemize}
 
 Ces conditions donnent une estimation assez fidèle de ce que l'on va rechercher dans un modèle de réalisabilité. On va maintenant voir le premier exemple de réalisabilité, qui est une interprétation comme on l'a définie ici utilisant les fonctions calculables~: la réalisabilité de Kleene.
@@ -59,24 +59,24 @@ Ces conditions donnent une estimation assez fidèle de ce que l'on va rechercher
 
 Ce modèle de réalisabilité est en fait le point de départ même de la réalisabilité. Il se base sur le fait que pour raisonner sur les entiers, les fonctions calculables donnent une classe de fonctions largement raisonnable. Cependant, on a vu qu'il fallait, en plus de fonctions, pouvoir internaliser les termes du premier ordre. Heureusement, un théorème de calculabilité nous dit qu'il existe une fonction de codage $\varphi$ qui est surjective dans les fonctions calculables (et prend un entier en paramètre).
 
-On considère donc $X = \bN$, et on peut vérifier que les conditions sont vérifiées~:
+On considère donc $\bX = \bN$, et on peut vérifier que les conditions sont vérifiées~:
 \begin{itemize}
 \item si $e$ représente une fonction calculable sur $n + m$ entrées, on peut construire un code $e'$ représentant cette fonction calculable sur $n$ entrées dont les autres $m$ entrées ont été abstraites~: c'est le théorème $S_m^n$. De plus, on a une opération d'application d'une fonction calculable à un argument.
 \item la bijection de Cantor nous donne une fonction $(n,m) \mapsto \langle n,m\rangle$ calculable dont les projections sont calculables.
 \item l'ensemble $\{0,1\}$ est un sous-ensemble de $\bN$, il est donc évident qu'on peut l'utiliser. Pour la construction if / then / else, c'est une construction élémentaire en programmation, et on peut la combiner à l'égalité à $0$ pour obtenir l'élimination de $\lor$.
-\item on peut représenter l'entier $n\in \bN$ dans $X$, par $n \in \bN$.
+\item on peut représenter l'entier $n\in \bN$ dans $\bX$, par $n \in \bN$.
 \end{itemize}
 
 On peut donc construire une interprétation de $\bN$ comme un ensemble de preuves pour le langage de l'arithmétique. Il se trouve qu'on obtient alors un modèle de l'arithmétique de Heyting (qui est l'arithmétique de Peano mais dans la logique intuitionniste).
 
 \subsection{Ordre supérieur}
 
-Les conditions décrites plus haut peuvent se simplifier grandement dans le cas où l'on étudie une théorie non pas d'ordre $1$, mais d'ordre $2$ (ou d'ordre supérieur). Présentons succinctement la syntaxe d'une théorie d'ordre $2$ (avec des termes d'ordre 1).
+Les conditions décrites plus haut peuvent se simplifier grandement dans le cas où l'on étudie une théorie non pas d'ordre $1$, mais d'ordre $2$ (ou d'ordre supérieur). En effet, il suffit d'introduire une construction $\forall$ portant sur les propositions pour, à partir de la logique minimale (ne contenant que $\to$ et ses règles en plus de la quantification précédemment mentionnée) de coder toute la logique propositionnelle, et les quantifications du premier ordre se limitent à la quantification universelle, la quantification existentielle pouvant s'encoder à partir de celle-ci. Présentons succinctement la syntaxe d'une théorie d'ordre $2$ (avec des termes d'ordre 1).
 
 On ajoute un ensemble de variables du second ordre, qu'on notera par des lettres majuscules, chacune ayant une arité. Une variable $X$ d'arité $n$ représente un prédicat à $n$ variables libres quelconque. On construit alors nos propositions comme pour celle du premier ordre, mais en ajoutant la prise en compte (et la quantification) du deuxième ordre~:
 \[\varphi,\psi ::= \cdots\mid X(t_1,\ldots,t_n)\mid \forall^2 X, \varphi\mid \exists^2 X, \varphi\]
 
-En fait, on se rend compte qu'il est possible de largement diminuer le nombre de constructeurs pour nos propositions en encodant par exemple $\land$ et $\lor$ à partir de $\to$ et de $\forall^2$. On définit donc simplement
+Comme dit précédemment, il est possible de largement diminuer le nombre de constructeurs pour nos propositions en encodant par exemple $\land$ et $\lor$ à partir de $\to$ et de $\forall^2$. On définit donc simplement
 \[\varphi,\psi ::= X(t_1,\ldots,t_n)\mid \varphi\to\psi\mid \forall^1 x, \varphi\mid \forall^2 X, \varphi\]
 
 On donne l'ensemble des encodages qu'on peut alors faire~:
@@ -88,11 +88,11 @@ On donne l'ensemble des encodages qu'on peut alors faire~:
 \item $\exists X, \varphi \defeq \forall Y, (\forall X, \varphi \to Y) \to Y$
 \end{itemize}
 
-Ainsi, si l'on arrive à avoir une interprétation de l'ordre $2$, il nous suffit seulement d'interpréter $\to$, $\forall^1$ et $\forall^2$. Remarquons que l'interprétation de $\to$ force $X$ à pouvoir internaliser une notion de fonction (avec un procédé d'abstraction et d'application).
+Ainsi, si l'on arrive à avoir une interprétation de l'ordre $2$, il nous suffit seulement d'interpréter $\to$, $\forall^1$ et $\forall^2$.
 
 \subsection{Intersection et relativisation}
 
-On a vu qu'il était nécessaire de représenter les termes du premier ordre dans $X$, mais ceci peut être évité en changeant notre façon de considérer la quantification universelle. Plutôt que de voir $\forall x, \varphi$ comme une fonction, on peut aussi considérer cela comme une intersection. Dans ce cas, il nous faut pouvoir définir ce que signifie $t\reali\varphi$ avec $x\leftarrow n$ pour un certain $n$, ce qui nous pousse à généraliser notre relation $\reali$ avec des contextes. On notera $t\reali^\sigma \varphi$ pour dire que $t$ est une preuve de $\varphi$ dans le cas où $\sigma$ est utilisé pour interpréter $\varphi$. Dans ce cas, $\sigma$ va associer un entier à chaque variable libre dans $\varphi$. On introduit de même un contexte pour les variables du second ordre qui pourraient être libres dans $\varphi$, qu'on notera $\rho$, et où une variable $X$ d'arité $n$ est associée à une fonction $\bN^n \to \mathcal P(X)$. On notera alors $t\reali_\rho^\sigma \varphi$ pour noter nos deux contextes.
+On a vu qu'il était nécessaire de représenter les termes du premier ordre dans $\bX$, mais ceci peut être évité en changeant notre façon de considérer la quantification universelle. Plutôt que de voir $\forall x, \varphi$ comme une fonction, on peut aussi considérer cela comme une intersection. Dans ce cas, il nous faut pouvoir définir ce que signifie $t\reali\varphi$ avec $x\leftarrow n$ pour un certain $n$, ce qui nous pousse à généraliser notre relation $\reali$ avec des contextes. On notera $t\reali^\sigma \varphi$ pour dire que $t$ est une preuve de $\varphi$ dans le cas où $\sigma$ est utilisé pour interpréter $\varphi$. Dans ce cas, $\sigma$ va associer un entier à chaque variable libre dans $\varphi$. On introduit de même un contexte pour les variables du second ordre qui pourraient être libres dans $\varphi$, qu'on notera $\rho$, et où une variable $\bX$ d'arité $n$ est associée à une fonction $\bN^n \to \mathcal P(X)$. On notera alors $t\reali_\rho^\sigma \varphi$ pour noter nos deux contextes.
 
 On arrive alors à une définition alternative de $\reali$ considérant les quantifications comme des preuves uniformes~:
 \begin{itemize}
@@ -112,8 +112,13 @@ En fait, on verra que la notion de relativisation peut se voir comme un cas part
 
 \subsection{Lambda-calcul et saturation}
 
-On a mentionné plus tôt qu'il était naturel, dans le contexte donné, de considérer le $\lambda$-calcul comme candidat pour faire un modèle de réalisabilité. En reprenant ce qui a été dit plus tôt, en considérant comme langage l'arithmétique du second ordre, on définit donc une interprétation en utilisant pour $X$ l'ensemble $\Lambda$ des $\lambda$-termes, engendré par
-\[t,u ::= x\mid \lambda x. t\mid t\;u\]
+On a mentionné plus tôt qu'il était naturel, dans le contexte donné, de considérer le $\lambda$-calcul comme candidat pour faire un modèle de réalisabilité. En reprenant ce qui a été dit plus tôt, en considérant comme langage l'arithmétique du second ordre, on définit donc une interprétation en utilisant pour $X$ un $\lambda$-calcul, qu'on prendra donc le plus simple possible pour l'instant.
+
+\begin{defi}
+  On se fixe un ensemble dénombrable $\mathcal X_\Lambda$ de variables de $\lambda$-termes. On définit l'ensemble $\Lambda$ des $\lambda$-termes par la grammaire~:
+  \[t,u ::= x\mid \lambda x.t\mid t\;u\]
+  où $x\in\mathcal X_\Lambda$. On définit de la façon habituelle l'$\alpha$-conversion, la substitution simultannée $t[t_1/x_1,\ldots,t_n/x_n]$ et la $\beta$-réduction.
+\end{defi}
 
 On donne donc une première tentative de définition de $t\reali_\rho^\sigma \varphi$ où $\rho$ associe toute variable libre du premier ordre de $\varphi$ à une fonction $\bN^n \to \mathcal P(\Lambda)$ et $\sigma$ associe toute variable libre du premier ordre de $\varphi$ à un entier $n \in \bN$. On utilisera la notation $\trad\varphi_\rho^\sigma \defeq \{t\in\Lambda\mid t \reali_\rho^\sigma \varphi\}$~:
 \begin{itemize}
@@ -126,7 +131,7 @@ On donne donc une première tentative de définition de $t\reali_\rho^\sigma \va
 Tout semble bien fonctionner, mais il y a en fait un problème~: notre interprétation précédente considérait $X$ comme un objet sémantique et non syntaxique. On entend par cela que dans $\Lambda$, il y a une différence entre $(\lambda x.t)u$ et $t[u/x]$ qui sont des termes différents, mais sont dans la même classe de $\Lambda/=_\beta$. On pourrait donc décider de ne considérer non pas $\Lambda$ mais $\Lambda/=_\beta$, mais il existe une façon plus élégante de régler ce problème.
 
 L'endroit où cette distinction apparait est dans la preuve que les règles de la déduction naturelle intuitionniste sont vérifiées par notre interprétation de réalisabilité, plus précisément dans la règle d'introduction de $\to$. En considérant un système de types associant une proposition à un terme, de la forme $x_1 : \varphi_1,\ldots,x_n : \varphi_n \vdash t : \varphi$. Dans ce cas, la validité d'un tel séquent est
-\[t_1\reali_\rho^\sigma \varphi_1,\ldots,t_n \reali_\rho^\sigma \varphi_n \implies t^{x_1 \leftarrow t_1,\ldots, x_n\leftarrow t_n}\reali_\rho^\sigma \varphi\]
+\[t_1\reali_\rho^\sigma \varphi_1,\ldots,t_n \reali_\rho^\sigma \varphi_n \implies t[t_1/x_1,\ldots, t_n/ x_n]\reali_\rho^\sigma \varphi\]
 et on peut réécrire $\to_\mathrm i$ par la règle
 \begin{center}
   \begin{prooftree}
@@ -135,7 +140,7 @@ et on peut réécrire $\to_\mathrm i$ par la règle
   \end{prooftree}
 \end{center}
 
-On veut donc unifier d'un côté $t^{x_1\leftarrow t_1,\ldots,x_n\leftarrow t_n, x\leftarrow u}$ et $(\lambda x.t^{x_1\leftarrow t_1,\ldots,x_n\leftarrow t_n})u$, ce qui (à des questions d'$\alpha$-conversion près) est une antéréduction~: le second terme se réduit en le premier terme.
+On veut donc unifier d'un côté $t[t_1/ x_1,\ldots,t_n/ x_n, u/ x]$ et de l'autre $(\lambda x.t[t_1/x_1,\ldots,t_n/x_n])u$, ce qui (à des questions d'$\alpha$-conversion près) est une anti-réduction~: le second terme se réduit en le premier terme.
 
 Ainsi la validité de cette règle a besoin d'un élément supplémentaire qui peut être satisfait par la condition suivante~: il faut qu'à chaque $\varphi$, si $t\reduc u$ et $u\reali \varphi$ alors $t\reali \varphi$. En fait, on peut montrer qu'il suffit pour cela d'assurer cette condition sur les $\rho(X)$. Donnons donc un peu de vocabulaire.
 
@@ -146,6 +151,8 @@ Ainsi la validité de cette règle a besoin d'un élément supplémentaire qui p
   On note
   \[\SAT \defeq \{S\subseteq \Lambda\mid S\;\text{est saturée}\}\]
 \end{defi}
+
+Un lemme qui se prouve de façon très simple est utile ici, puisqu'il nous assure que toutes les constructions à base d'intersection et/ou d'union vont se comporter correctement vis à vis de la saturation.
 
 \begin{lem}
   $(\SAT,\subseteq,\Lambda,\varnothing,\bigcap,\bigcup)$ est un treillis complet.
@@ -171,11 +178,15 @@ On décide maintenant de modifier l'interprétation au-dessus en disant juste qu
   Donc par induction $\trad\varphi_\rho^\sigma\in\SAT$.
 \end{proof}
 
-On peut alors déduire le lemme d'adéquation (on le montrera plus tard pour une version enrichie du $\lambda$-calcul).
+Ici, on voit que notre lemme dépend assez directement de la réduction qui est utilisée. C'est en effet selon le choix de notre réduction que notre choix de quelles parties sont sémantiquement significatives doit se faire. Dans ce modèle simple avec le $\lambda$-calcul et la réduction cbn, les définitions sont simples, mais le passage sur la saturation peut être grandement modifié selon les changements qu'on apporte à la sémantique opérationnelle de notre langage.
+
+\subsection{Le lemme d'adéquation}
+
+En utilisant notre modèle simplifié basé sur le $\lambda$-calcul, nous allons montrer le lemme d'adéquation, qui a deux utilitées principales. La première est de montrer que la théorie $\mathcal T_\reali$ est bien une théorie au sens où elle est close par déduction logique (c'est-à-dire que les règles de la déduction naturelle sont valides dans cette théorie). La deuxième est de donner une façon syntaxique de construire des preuves de réalisabilité.
 
 \subsection{Conclusion sur la réalisabilité}
 
-Notre situation de base pour la réalisabilité est donc de pouvoir construire des théories cohérentes sur l'arithmétique du second ordre, en se basant sur un $\lambda$-calcul. On verra plus tard que les effets qu'on ajoute à notre $\lambda$-calcul peuvent grandement changer la théorie engendrée.
+On peut déjà construire un premier modèle de réalisabilité, simple, basé sur le $\lambda$-calcul.
 
 \section{Mathématiques à rebours}
 
@@ -209,7 +220,7 @@ L'axiome du choix, connu pour être un axiome indépendant de ZF et pour avoir �
 \item \textit{Axiome du choix} (AC)~: toute surjection admet une section.
 \end{itemize}
 
-On sait que dans le cas classique, cette hiérarchie est strictement croissante. Dans le cas intuitionniste, plus faible, la hiérarchie est donc encore stricte. Par contre, elle n'est pas croissante, puisqu'on peut par exemple avoir DC sans avoir KL.
+On sait que dans le cas classique, cette hiérarchie est strictement croissante, sauf pour FT qui est équivalent à WKL. Dans le cas intuitionniste, plus faible, la hiérarchie devient stricte aussi entre FT et WKL. Par contre, elle n'est pas croissante, puisqu'on peut par exemple avoir DC sans avoir KL.
 
 En fait, on peut distinguer deux principes importants dans les premières versions~: l'omniscience et le choix. Dans le cas de DC, on peut construire notre suite simplement en considérant la suite jusqu'à un rang $n$ et en appliquant un oracle permettant de trouver un élément en relation avec le dernier construit. On passe donc simplement d'une fonction locale à une fonction globale par itération. Dans le cas de KL, il nous faut traiter l'infinité de données des chemins potentiels pour trouver le sommet suivant dans le chemin, en pouvant savoir à l'avance de quel côté se trouve un chemin infini. En logique classique, l'omniscience est toujours vérifiée, mais pas en intuitionniste, d'où cette cassure de monotonie au passage de KL à ACN.
 
@@ -253,14 +264,12 @@ Le $\lambda$-calcul est connu pour permettre de représenter n'importe quelle fo
 
 \begin{defi}[$\Lambda$]
   On se donne un ensemble $\mathcal X_\Lambda$ de variables de termes. On définit l'ensemble des $\lambda$-termes, $\Lambda$, par la grammaire suivante~:
-  \[t,u ::= x\mid\lambda x. t\mid t\;u\mid \langle t,u\rangle\mid \pi_1\;t\mid \pi_2\;t\mid 0\mid S\;t\mid \rec_\bN\;t\;u\;u\mid \btt\mid\bff\mid\rec_\bB\;t\;u\;v\mid [\;]\mid t:: u\mid \rec_\bL\;t\;u\;v\]
+  \[t,u ::= x\mid\lambda x. t\mid t\;u\mid \langle t,u\rangle\mid \pi_1\;t\mid \pi_2\;t\mid Y \mid 0\mid S\mid \rec_\bN \mid \btt\mid\bff\mid\rec_\bB\mid [\;]\mid t:: u\mid \rec_\bL\]
 \end{defi}
 
 \begin{defi}[Contexte]
   On définit l'ensemble $\Lambda_{\bnnbr{\;}}$ des contextes, définit récursivement par~:
-  \begin{multline*}
-    E,F::= \bnnbr{\ }\mid \lambda x.E\mid E\;t\mid t\;E\mid \langle E,t\rangle\mid \langle t,E\rangle\mid \pi_1\;E\mid\pi_2\;E\mid\bfS\;\mid \rec_\bN\;E\;t\;u\mid \rec_\bN\;t\;E\;u\mid\rec_\bN\;t\;u\;E\\\mid\rec_\bB\;E\;t\;u\mid\rec_\bB\;t\;E\;u\mid\rec_\bB\;t\;u\;E\mid E::t\mid t::E\mid \rec_\bL\;E\;t\;u\mid \rec_\bL\;t\;E\;u\mid\rec_\bL\;t\;u\;E
-  \end{multline*}
+  \[E,F::= \bnnbr{\ }\mid \lambda x.E\mid E\;t\mid t\;E\mid \langle E,t\rangle\mid \langle t,E\rangle\]
 
   Si $C$ est un contexte et $t$ un $\lambda$-terme, on note $C\bnnbr{t}$ le terme obtenu en substituant $\bnnbr{}$ par $t$ dans l'écriture de $C$.
 \end{defi}
@@ -278,6 +287,12 @@ On définit de façon usuelle la substitution ainsi que la relation d'$\alpha$-�
       \infer0{\forall i\in\{1,2\}, \pi_1\;\langle t_1,t_2\rangle \mapsto t_i}
     \end{prooftree}
     \quad
+    \begin{prooftree}
+      \infer0{Y\;t \mapsto t\;(Y\;t)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
     \begin{prooftree}
       \infer0{\rec_\bN\;t\;u\;0\mapsto t}
     \end{prooftree}
@@ -319,17 +334,117 @@ On introduit la notion d'ensemble saturé, qui peut se considérer comme une par
   \[\SAT \defeq \{S\subseteq \Lambda\mid S\;\text{est saturée}\}\]
 \end{defi}
 
+On définit de plus un sous-système de $\Lambda$, typé, qui est une variante de PCF.
+
+\begin{defi}[$\LamP$]
+  On définit l'ensemble des types de $\LamP$ par
+  \[S,S' ::= \Nat\mid\Bool\mid\List\mid S \to S' \mid S \times S'\]
+  Les règles de typage sont les suivantes~:
+  \begin{center}
+    \begin{prooftree}
+      \infer0{\Gamma, x : S \vdash x : S}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, x : S \vdash t : S'}
+      \infer1{\Gamma\vdash \lambda x.t : S \to S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S \to S'}
+      \hypo{\Gamma\vdash u : S}
+      \infer2{\Gamma\vdash t\;u : S'}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : S'}
+      \infer2{\Gamma\vdash \langle t,u\rangle S \times S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S_1\times S_2}
+      \infer1{\Gamma\vdash \pi_i\;t : S_i}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S \to S}
+      \infer1{\Gamma\vdash Y\;t : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0{\Gamma\vdash 0 : \Nat}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : \Nat}
+      \infer1{\Gamma\vdash S\;t : \Nat}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : \Nat \to S \to S}
+      \hypo{\Gamma\vdash v : \Nat}
+      \infer3{\Gamma\vdash \rec_\bN\;t\;u\;v}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \btt : \Bool}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bff : \Bool}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : S}
+      \hypo{\Gamma\vdash v : \Bool}
+      \infer3{\Gamma\vdash \rec_\bB\;t\;u\;v : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0{\Gamma\vdash [\:] : \List}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : \Nat}
+      \hypo{\Gamma\vdash u : \List}
+      \infer2{\Gamma\vdash t :: u : \List}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : \Nat \to \List \to S \to S}
+      \hypo{\Gamma\vdash v : \List}
+      \infer3{\Gamma\vdash \rec_\bL\;t\;u\;v : S}
+    \end{prooftree}
+  \end{center}
+
+  Les règles de réduction sont celles induites par $\Lambda$. On définit aussi $\SATP$ comme l'ensemble des parties saturées de $\LamP$.
+
+  Pour chaque type $S$, on définit
+  \[\LamS{S}\defeq \{t\in\LamP\mid \vdash t : S\}\]
+\end{defi}
+
 \subsubsection{Partie logique}
 
-On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, dont les sortes sont données par la grammaire suivante~:
-\[S,S' ::= \Nat\mid\Bool\mid\List\mid S \to S'\]
+On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, dont les sortes sont données par les types de $\LamP$,
 représentant respectivement les entiers, les booléens, les listes d'entiers et les fonctions d'une sorte à une autre. On notera $\Sort$ l'ensemble des sortes. On définit maintenant les termes du premier ordre (qui sont donc typés).
 
 \begin{defi}[Termes du premier ordre]
   On se donne un ensemble dénombrable $\mathcal X_1$ de variables du premier ordre. Un contexte de typage du premier ordre $\Gamma$ est une liste de paires $(x,\tau)\in \mathcal X_1\times \Sort$. On définit l'ensemble des termes du premier ordre bien typés par les règles suivantes~:
   \begin{center}
     \begin{prooftree}
-      \infer0{\Gamma, x : S \vdash x : S}
+      \infer0{\Gamma, \bx : S \vdash \bx : S}
     \end{prooftree}
     \quad
     \begin{prooftree}
@@ -394,10 +509,25 @@ représentant respectivement les entiers, les booléens, les listes d'entiers et
     \begin{prooftree}
       \hypo{\Gamma\vdash \bt : S \to S'}
       \hypo{\Gamma\vdash \bu : S}
-      \infer2{\Gamma\vdash \bt(\bu) : S'}
+      \infer2{\Gamma\vdash \bt\;\bu : S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bu : S'}
+      \infer2{\Gamma\vdash \langle \bt,\bu \rangle : S \times S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S_1 \times S_2}
+      \infer1{\Gamma\vdash \bpi_i\;\bt : S_i}
     \end{prooftree}
   \end{center}
 \end{defi}
+
+\begin{rmk}
+  Pour tout terme $\bt : S$ du premier ordre, il existe canoniquement un terme $\hat{\bt} : S$ dans $\LamP$ (l'ajout du constructeur $Y$ empêche d'avoir la réciproque).
+\end{rmk}
 
 On peut maintenant définit les formules de notre HA2 enrichi.
 
@@ -451,12 +581,12 @@ L'idée des prédicats de la forme $S(\bt)$ avec une sorte $S$ est de donner un 
 
 \subsubsection{Relation de réalisabilité}
 
-On définit par induction sur la structure des sortes une interprétation ensembliste $\trad S$ (aussi notée $\bS$) pour chaque $S$, et pour chaque $x \in \bS$ un ensemble (possiblement vide) $\ceil x\in \SAT$ de codes de $x$~:
+On définit par induction sur la structure des sortes une interprétation ensembliste $\trad S$ (aussi notée $\bS$) pour chaque $S$, et pour chaque $x \in \bS$ un ensemble (possiblement vide) $\ceil x\in \SATP$ de codes de $x$~:
 \begin{itemize}
-\item $\trad{\Nat} = \bN$, et $\ceil n = \{t\in\Lambda\mid t \reduc^* S^n\;0\}$.
-\item $\trad{\Bool} = \{0,1\}$, $\ceil{0} = \{t\in\Lambda\mid t \reduc^*\bff\}$ et $\ceil 1 = \{t\in\Lambda\mid t \reduc^*\btt\}$.
-\item $\trad{\List} = \bN^*$, $\ceil{\varepsilon} = \{t\in\Lambda\mid t \reduc^*[\:]\}$ et $\ceil{u\star a} = \{t \in \Lambda\mid \exists t',t'' \in \Lambda, t' \in \ceil a, t'' \in \ceil u, t \reduc^* t' :: t''\}$
-\item $\trad{S \to S'} = \{f : \trad S \to \trad{S'}\}$ et $\ceil f = \{t\in \Lambda\mid \forall s \in \trad S, \forall e \in \ceil s, t\;e \in \ceil{f(s)}\}$
+\item $\trad{\Nat} = \bN$, et $\ceil n = \{t\in\LamS{\Nat}\mid t \reduc^* S^n\;0\}$.
+\item $\trad{\Bool} = \{0,1\}$, $\ceil{0} = \{t\in\LamS{\Bool}\mid t \reduc^*\bff\}$ et $\ceil 1 = \{t\in\LamS{\Bool}\mid t \reduc^*\btt\}$.
+\item $\trad{\List} = \bN^*$, $\ceil{\varepsilon} = \{t\in\LamS{\List}\mid \vdash t \reduc^*[\:]\}$ et $\ceil{u\star a} = \{t \in \LamS{\List}\mid \exists t',t'' \in \LamP, t' \in \ceil a, t'' \in \ceil u, t \reduc^* t' :: t''\}$
+\item $\trad{S \to S'} = \{f : \trad S \to \trad{S'}\}$ et $\ceil f = \{t\in \LamS{S\to S'}\mid \forall s \in \trad S, \forall e \in \ceil s, t\;e \in \ceil{f(s)}\}$
 \end{itemize}
 
 \begin{lem}
@@ -494,7 +624,7 @@ On peut maintenant définir la fonction $\trad{-}_\rho^\sigma : \Propo \to \math
   \item $\trad{\varphi\land \psi}_\rho^\sigma \defeq \{t\in \Lambda\mid \pi_1\;t\in\trad{\varphi}_\rho^\sigma, \pi_2\;t\in\trad{\psi}_\rho^\sigma\}$
   \item $\displaystyle\trad{\forall x^S, \varphi}_\rho^\sigma \defeq \bigcap_{v \in \bS}\trad{\varphi}_\rho^{\sigma[x \leftarrow v]}$
   \item $\displaystyle\trad{\forall X^{S_1,\ldots,S_n}, \varphi}_\rho^\sigma\defeq\bigcap_{F : \prod_i \bS_i \to \SAT}\trad{\varphi}_{\rho[X \leftarrow F]}^\sigma$
-  \item $\trad{S(\bt)}_\rho^\sigma \defeq \ceil{\bt^\sigma}$
+  \item $\trad{S(\bt)}_\rho^\sigma \defeq \{t \in\Lambda\mid \exists u \in \ceil{\bt^\sigma}, t\reduc^* u\}$
   \end{itemize}
 \end{defi}
 
@@ -528,7 +658,7 @@ On commence par montrer que $\SAT$ est un treillis complet.
   \item supposons que $\trad{\varphi_1}_\rho^\sigma$ et $\trad{\varphi_2}_\rho^\sigma$ sont des ensembles saturés, soient alors $t, u \in \Lambda$ tels que $t\reduc u$ et $u \in \trad{\varphi_1\land \varphi_2}_\rho^\sigma$. On sait donc que pour tout $i\in\{1,2\}$, $\pi_i\;u \reali_\rho^\sigma \varphi_i$ et $\pi_i\;t\reduc\pi_i\;u$, donc par hypothèse d'induction et saturation $\pi_i\;t\reali_\rho^\sigma\varphi_i$. Donc $\trad{\varphi_1\land\varphi_2}_\rho^\sigma\in\SAT$.
   \item si tous les $\trad\varphi_\rho^{\sigma[x\leftarrow v]}$ sont saturés, comme $\SAT$ est un treillis complet, on en déduit directement que $\bigcap \trad\varphi_\rho^{\sigma[x\leftarrow v]}$ est saturé.
   \item de même que précédemment, le fait que $\SAT$ est un treillis complet assure que ce cas passe à l'induction.
-  \item un lemme précédent nous dit que $\ceil{t^\sigma}$ est bien saturé.
+  \item la construction de $\trad{S(\bt)}$ nous donne directement la saturation.
   \end{itemize}
 
   Ainsi, par induction, si $t\reduc u$ et $u\reali_\rho^\sigma \varphi$ alors $t\reali_\rho^\sigma\varphi$.
@@ -628,10 +758,7 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     \vspace{0.5cm}
     
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : S(\bt)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : (\Nat\to S \to S)(\bu)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash v : \Nat(\bv)}
-      \infer3[$\bN_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_\bN\;t\;u\;v : S(\rec_{\Nat}\;\bt\;\bu\;\bv)}
+      \infer0[$\bN_\mathrm e$]{\Gamma\mid\Delta, X : \Nat\mid\Xi\vdash \rec_\bN : X(\bZ) \to (\forall \bx^{\{\Nat\}}, X(\bx) \to X(\bfS\;\bx)) \to \forall \bx^{\{\Nat\}}, X(\bx)}
     \end{prooftree}
 
     \vspace{0.5cm}
@@ -647,10 +774,7 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     \vspace{0.5cm}
     
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Bool(\bt)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : S(\bu)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash v : S(\bv)}
-      \infer3[$\bB_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_\bB\;t\;u\;v : S(\rec_{\Bool}\;\bt\;\bu\;\bv)}
+      \infer0[$\bB_\mathrm e$]{\Gamma\mid\Delta, X : \Bool\mid\Xi\vdash \rec_\bB : X(\bbtt) \to X(\bbff) \to \forall \bx^{\{\Bool\}}, X(\bx)}
     \end{prooftree}
 
     \vspace{0.5cm}
@@ -668,10 +792,7 @@ On définit un système de typage pour $\Lambda$, dont les types sont des propos
     \vspace{0.5cm}
     
     \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : S(\bt)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : (\Nat\to \List \to S \to S)(\bu)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash v : \List(\bv)}
-      \infer3[$\bL_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_\bL\;t\;u\;v : S(\rec_{\List}\;\bt\;\bu\;\bv)}
+      \infer0[$\bL_\mathrm e$]{\Gamma\mid\Delta, X : \List\mid\Xi\vdash \rec_\bL : X(\bnil) \to (\forall \bn^{\{\Nat\}}\;\bx^{\{\List\}}, X(\bx) \to X(\bn \bcons \bx)) \to \forall \bx^{\{\List\}},X(\bx)}
     \end{prooftree}
 
     \vspace{0.5cm}
@@ -815,17 +936,24 @@ On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
   \item Si $t^\nu\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $t^\nu\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
   \item Comme $0\reduc^* 0$ et $0\in\ceil\bZ$, on en déduit le résultat.
   \item Si $t\in\ceil{\bt^\sigma}$ où $\bt^\sigma \in \bN$, alors $t\reduc^* \overline{\bt^\sigma}$ donc $S\;t\reduc^*\overline{\bfS\;\bt^\sigma}$, donc $S\;t\in\ceil{\bfS\;\bt^\sigma}$.
-  \item Supposons que $t^\nu\in\ceil{\bt^\sigma}$, $u^\nu\in\ceil{\bu^\sigma}$ et $v^\nu\in\ceil{\bv^\sigma}$. Comme $\bv^\sigma\in\bN$, on raisonne par induction sur $\bv^\sigma$~:
+  \item On veut montrer que $\rec_\bN \reali_\rho^\sigma X(\bZ) \to (\forall \bn^{\{\Nat\}}, X(\bn) \to X(\bfS\;\bn))\to \forall \bn^{\{\Nat\}}, X(\bn)$. Soient donc $t,u,v\in\Lambda$ tel que $t^\nu \reali_\rho^\sigma X(\bZ)$, $u^\nu \reali_\rho^\sigma \forall \bn^{\{\Nat\}}, X(\bn) \to X(\bfS\;\bn)$ et $v^\nu \reali_\rho^\sigma \Nat(\bn)$, montrons que $\rec_\bN\;t\;u\;v\reali_\rho^\sigma X(\bn)$. Par définition de $v^\nu\reali_\rho^\sigma \Nat(\bn)$, on sait que $v^\nu \reduc^* S^m\;0$ pour un certain $m\in\bN$. On raisonne par induction sur ce $m$~:
     \begin{itemize}
-    \item si $\bv^\sigma = 0$, alors comme la fonction $\rec_\bN\;\bt\;\bu$ vaut $\bt$ en $0$, $(\rec_\bN\;\bt\;\bu\;\bv)^\sigma = \bt^\sigma$ et $v^\nu \reduc^* 0$, donc $(\rec_\bN\;t\;u\;v)^\nu \reduc^* t^\nu \in \ceil{\bt^\sigma}$, donc $\rec_\bN\;t\;u\;v \in \ceil{(\rec_\bN\;\bt\;\bu\;\bv)^\sigma}$.
-    \item si $\bv^\sigma = n + 1$, comme on sait que la fonction $\rec_\bN\;\bt\;\bu$ vaut $\bu(n)(\rec_\bN\;\bt\;\bu\;n)$ en $n+1$, on en déduit que $(\rec_\bN\;\bt\;\bu\;\bv)^\sigma = \bu^\sigma\;n\;(\rec_\bN\;\bt^\sigma\;\bu^\sigma\;n)$. De plus, $v^\nu \reduc^* S\;n$, donc
+    \item si $v^\nu\reduc^* 0$, alors
       \begin{align*}
-        (\rec_\bN\;t\;u\;v)^\sigma &\reduc^* \rec_\bN\;t^\nu\;u^\nu\;(S\;n)\\
-        &\reduc u^\nu\;n\;(\rec_\bN\;t^\nu\;u^\nu\;n)
+        (\rec_\bN\;t\;u\;v)^\nu &= \rec_\bN\;t^\nu\;u^\nu\;v^\nu\\
+        &\reduc^* \rec_\bN\;t^\nu\;u^\nu\;0\\
+        &\reduc t^\nu \reali_\rho^\sigma X(\bZ)
       \end{align*}
-      or on sait que $\rec_\bN\;t^\nu\;u^\nu\;n\in\ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\overline n}$ par hypothèse d'induction. Comme $u^\nu \in \ceil{\bu^\sigma}$ et en considérant le type de $\bu^\sigma$, on en déduit que $(\rec_\bN\;t\;u\;(S\;n))^\nu \in \ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;(\overline{n+1})}$, donc par saturation, $\rec_\bN\;t\;u\;v\in\ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\overline{n+1}}$.
+      donc par saturation $(\rec_\bN\;t\;u\;v)\reali_\rho^\sigma X(\bn)$ dans le cas où $\bn^\sigma = 0$.
+    \item si $v^\nu\reduc^* S\;n'$ et, par hypothèse d'induction, que pour tout $w\in\Lambda$, $w \reduc^* n' \implies (\rec_\bN\;t\;u\;w)^\nu\reali_\rho^\sigma X(n')$, alors
+      \begin{align*}
+        (\rec_\bN\;t\;u\;v)^\nu&= \rec_\bN\;t^\nu\;u^\nu\;v^\nu\\
+        &\reduc^* \rec_\bN\;t^\nu\;u^\nu\;(S\;n')\\
+        &\reduc^* u^\nu\;n'\;(\rec_\bN\;t^\nu\;u^\nu\;n')
+      \end{align*}
+      or comme $u^\nu\reali_\rho^\sigma \Nat(n') \to X(n') \to X(\bfS\;n')$ et par hypothèse d'induction, on en déduit par saturation que $(\rec_\bN\;t\;u\;v)^\nu\reali_\rho^\sigma X(\bfS\;n')$
     \end{itemize}
-    Ainsi, par induction, $\rec_\bN\;t^\nu\;u^\nu\;v^\nu \in \ceil{\rec_\bN\;\bt^\sigma\;\bu^\sigma\;\bv^\sigma}$.
+    Donc par induction, pour tout $\bn : \Nat$ et $v\reali_\rho^\sigma \Nat(\bn)$, on a $(\rec_\bN\;t\;u\;v)^\nu\reali_\rho^\sigma X(\bn)$, donc $\rec_\bN\reali_\rho^\sigma X(\bZ) \to (\forall \bn^{\{\Nat\}}, X(\bn) \to X(\bfS\;\bn)) \to \forall \bn^{\{\Nat\}}, X(\bn)$.
   \item les cas de $\bB$ et $\bL$ sont analogues.
   \item supposons que $t^\nu\in\ceil{S'(\bt^\sigma)}$ pour $\nu\reali_\rho^\sigma (\Gamma, \bx : S), \Delta,(\Xi, x : S(\bt))$. Soit alors $s\in\bS$ et $e\in \ceil s$. On sait que $t^{\nu[x\leftarrow e]}\in\ceil{S'(\bt^{\sigma[\bx\leftarrow s]})}$, donc $(\lambda x.t)^\nu e \in \ceil{S'(\bt^{\sigma[x\leftarrow s]})}$ par saturation, donc $\lambda x.t\in\ceil{(S\to S')(\blam x.\bt)}$.
   \item supposons que $t^\nu \in\ceil{(S\to S')(\bt^\sigma)}$ et $u^\nu \in\ceil{S(\bu^\sigma)}$, alors par définition de $\trad{S\to S'}$ on en déduit que $(t\;u)^\nu\in\ceil{S'(\bt(\bu))^\sigma}$.
@@ -887,9 +1015,15 @@ On peut vérifier que cette relation fait bien ce qu'on attend~:
   On notera $\forall T^{\Tree}, \varphi$ et $\forall T^{\Mono}, \varphi$ pour considérer respectivement $\forall T^{\List}, \isTree(T) \to \varphi$ et $\forall T^{\List}, \isMono(T) \to \varphi$.
 \end{nota}
 
+On définit aussi $\BinTree$ par~:
+\[\BinTree(T) \defeq \forall \ell, T(\ell) \implies \forall n, n \in \ell \implies n \leq 1\]
+
 Avec ces termes, on peut déjà définir les deux théorèmes que l'on veut étudier~:
 \begin{equation}
   \KL \defeq \forall T^{\Tree}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
+\end{equation}
+\begin{equation}
+  \WKL \defeq \forall T^{\BinTree}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
 \end{equation}
 \begin{equation}
   \FT \defeq \forall T^{\Mono}, (\forall \alpha^{\{\Nat \to \Nat\}},\exists n^{\{\Nat\}}, T(\alpha_n)) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
@@ -908,10 +1042,13 @@ Avec ces termes, on peut déjà définir les deux théorèmes que l'on veut étu
   \begin{itemize}
   \item $\trad{\Nat}_{\Cpo} \defeq \bN_\bot$
   \item $\trad{\Bool}_{\Cpo} \defeq \bB_\bot$
-  \item $\trad{\List}_{\Cpo} \defeq \mathcal K\left(\bN_\bot^{(\bN_\bot)}\right)$
+  \item $\trad{\List}_{\Cpo} \defeq (\List(\bN))_\bot$
   \item $\trad{S \to S'}_{\Cpo} \defeq \bS'^{\bS}$
+  \item $\trad{S\times S'}_{\Cpo} \defeq \bS\times \bS'$
   \end{itemize}
   L'interprétation des termes du premier ordre est définie naturellement comme l'interprétation de système T dans $\Cpo$ (les paires, les abstraction et applications viennent directement de la structure de catégorie cartésienne fermée, les constructeurs de $\Nat$ d'un objet entier naturel \textit{etc}.)
+
+  De plus, on peut interpréter chaque terme $t\in\LamS{S}$ par un élément $\hat t$ de $\bS$. On peut prouver que si $t\reali_\rho^\sigma S(\bt)$ alors $\hat t = \bt^\sigma$.
 
   Supposons alors qu'on a $r\reali \forall f^{\{\Nat \to \Nat\}}, \exists n^{\{\Nat\}}, f_n \in T$. L'argument classique montrant que l'axiome du choix avec des quantifications fortes est vrai en théorie des types fonctionne aussi ici (dans le cas de quantifications relativisées), on trouve donc
   \[t\reali \forall X^{\{S,S'\}}, (\forall x^{\{S\}}, \exists y^{\{S'\}}, X(x,y))\to \exists f^{\{S \to S'\}}, \forall x^{\{S\}}, X(x,f(x))\]
@@ -919,7 +1056,53 @@ Avec ces termes, on peut déjà définir les deux théorèmes que l'on veut étu
   \[t\;r\reali \exists f^{\{(\Nat\to\Nat)\to\Nat\}}, \forall \alpha^{\{\Nat\to\Nat\}}, \alpha_{f(\alpha)}\in T\]
   On en déduit donc, par notre interprétation des termes du premier ordre, qu'il existe $f : (\bN_\bot\to\bN_\bot)\to\bN_\bot$ continue. Ainsi, si on a un chemin $\alpha$ on peut trouver un préfixe fini $n_\alpha$ tel que
   \[\forall \gamma, \gamma_{n_\alpha} = \alpha_{n_\alpha} \implies f(\gamma) = f(\alpha)\]
-  et on peut trouver un code pour $\alpha_{n_\alpha} 0^\infty$.
+
+  On construit le prédicat décidable $C : \List \to \Bool$ dont l'idée est de parcourir tous les chemins les uns à la suite des autres en ajoutant chaque fois pour une liste $\ell$ la liste obtenue en appliquant $r$ à $\ell 0^\infty$. On a donc besoin d'une fonction d'énumération des listes~:
+  \[\enumer \defeq A FAIRE\]
+
+  On a aussi besoin d'une fonction transformant une liste $\ell$ en la fonction $\bN \to \bN$ définie par $\ell 0^\infty$~:
+  \[\toinfty \defeq \rec_{\List}\;(\lambda n.0)\;(\lambda n.\lambda x.\lambda f.\rec_{\Nat}\;n\;(\lambda m.\lambda g.f\;m))\]
+
+  La construction de $C$ est alors la suivante~:
+  \[C \defeq \lambda b. Y(\lambda f. \lambda \ell. \rec_{Bool}\;(\ell << b)\;(\rec_{\Bool}\;(r\;(\toinfty\;\ell)\preceq b)\;\top\;(f\;(\enumer\;\ell)))\;(r\;(\toinfty\;\ell) \preceq b))\]
+
+  Pour trouver le $n$ correspondant, il nous suffit alors de regarder pour chaque $n$ si toutes les listes de taille $n$ sont dans
+  $C$~:
+  \[fan\defeq Y (\lambda f\;i. \rec_{\Bool}\;(\forall \ell, |\ell| = i \implies C(\ell))\;i\;(f\;(i+1)))\;0\]
+
+  Il nous suffit alors de montrer que cet algorithme finit par trouver une bar uniforme. Par l'asurde, supposons que ça n'est pas le cas. On trouve donc pour chaque $n$ une liste $\ell_n\notin C$ de taille $n$. Par le lemme de König (dans la méta-théorie), on en déduit l'existence d'un chemin $\alpha : \bN \to \bN$ tel que $\forall n, \alpha_n \notin C$. Ce chemin donne lieu à l'existence d'une fonction $\alpha_\bot : \bN_\bot \to \bN_\bot$ continue (en prenant la version stricte de $\alpha$, qui est continue puisque stricte entre deux domaines plats), donc d'après notre laïus précédent, on peut trouver un nombre $n$ tel que tout chemin coïncidant avec $\alpha$ sur ses $n$ premières valeurs est associé à la même valeur. Ainsi, $\alpha_n 0^\infty$ renvoie $r(\alpha)$. Mais comme $r(\alpha)$ est un préfixe de $\alpha$, on en déduit que $\alpha \in C$, ce qui est absurde. Donc $C$ est un algorithme qui termine.
+\end{proof}
+
+On montre maintenant que $\KL$ n'est pas vérifié, même sous sa forme faible $\WKL$.
+
+\begin{them}
+  Il n'existe pas de $t\in \Lambda$ tel que
+  \[t\reali \WKL\]
+\end{them}
+
+\begin{proof}
+  La démonstration repose sur l'argument classique de l'arbre de Kleene. Pour pouvoir l'utiliser, on commence par admettre le résultat habituel de l'existence d'une machine universelle, ce que l'on peut écrire par le résultat suivant~:
+  \[\exists U^{\{\Nat\to\Nat\to\Nat\to\Nat\}}, \forall f^{\{\Nat\to\Nat\}}, \exists e^{\Nat}, \forall x^{\{\Nat\}}, \exists t^{\Nat},
+  \left\{\begin{array}{c}
+  \forall t' < t, U(e,x,t') = 0\\
+  U(e,x,t) = S(f(x))\\
+  \forall t' > t, U(e,x,t') = U(e,x,t)
+  \end{array}\right.\]
+  Cela repose principalement sur l'argument qu'une fonction $f^{\{\Nat\to\Nat\}}$ est encodée par un terme, et les termes sont dénombrables~: on peut donc simuler $f(x)$ par l'exécution de la réduction de $t(x)$ où $t$ est le terme qui représente $f$.
+
+  On définit alors la fonction $d : \Nat\to\Nat\to\Nat$ qui représente la fonction diagonalement non récursive obtenue en tronquant le calcul à une étape donnée~:
+  \[d \defeq \lambda x.\lambda t. \rec_{\Nat}\;2\;(\lambda x\;n.\rec_{\Nat}\;1\;(\lambda\;\_\;\_.0)\;n)\;(U(x,x,t))\]
+
+  Si $\varphi_e(e)[t]\downarrow$ alors $d(e,t) \rhd^* \rec_{\Nat}\;1\;(\lambda\;\_\;\_.0)\;(\varphi_e(e))$, ce qui se réduit vers $0$ si $\varphi_e(e) > 0$ et vers $1$ si $\varphi_e(e) = 0$. Si $\varphi_e(e)[t]\uparrow$; alors $d(e,t) \rhd^* 2$.
+
+  On définit maintenant
+  \[\surd(n,k,a) \defeq \rec_{\Bool}\;\btt\;(d(k,t) =? a)\;(d(k,t) =? 2)\]
+  et l'arbre de Kleene~:
+  \[K \defeq \lambda \ell. [\rec_{\List}(\lambda n\;k.\btt)\;(\lambda h\;t\;f\;n\;k.\surd(n,k,h) \&\& f\;n\;(k+1)\;t)]\;|\ell|\;0\]
+
+  On voit que $K$ est clos par préfixe. De plus, pour tout $n\in \mathbb N$, on peut effectivement trouver une liste de taille $n$ appartenant à $K$~: $d(-,n)_n \in K$ et $|d(-,n)_n| = n$.
+
+  Cependant, supposons qu'il existe un chemin infini dans l'arbre, $\alpha$, alors on trouve $j$ tel que $\alpha = \varphi_j$. On sait donc que pour $t$ suffisamment grand, $d(j,t) \neq \varphi_j(j) = \alpha_j$, donc $\alpha_j \notin K$, ce qui est une contradiction. On voit donc que $K$ ne possède pas de chemin infini.
 \end{proof}
 
 \end{document}
