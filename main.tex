@@ -13,9 +13,26 @@
 
 \tableofcontents
 
-\section{Réalisabilité}
+\section{Introduction}
 
-L'élément central de ce stage est la réalisabilité. Nous nous devons donc d'en donner une présentation un peu détaillée. Pour cela, nous allons faire un détour légèrement historique en présentant l'idée à l'origine de ce concept.
+Les mathématiques usuelles se déroulent dans $\ZFC$. Dans cette pratique des mathématiques, l'objectif est de démontrer un maximum de résultats, sans considération pour les moyens logiques employés (sous réserve que ceux-ci soient cohérents). Le cadre de ce rapport, celui des mathématiques à rebours, cherche au contraire à étudier la force logique de résultats déjà démontrés~: quels principes doit-on admettre pour les démontrer ?
+
+Cette question est renouvelée dans le cadre de la logique intuitionniste et des mathématiques constructivistes (qui n'acceptent que les procédés démonstratifs explicites), puisque l'on peut étudier le caractère constructif des principes en plus de leur force logique. Dans cette étude, une famille de formules a un rôle privilégié : les principes de choix. Leur forme générale est
+\[\forall x^A, \exists y^B, R(x,y) \implies \exists f^{A\to B}, \forall x^A, R(x,f(x))\]
+Où $R$ est une relation binaire entre $A$ et $B$. Suivant le choix de $A,B$ et des formes que peut prendre $R$, on obtient de nombreux principes de choix. On peut, de plus, étudier une variante de ces principes en en prenant la contraposée~: en logique intuitionniste, ces ``principes de co-choix'' sont plus faibles, souvent strictement.
+
+Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem. Sans rentrer dans les détails, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante~:
+\[\KL \defeq (\forall n^{\bN}, \exists u^{\bN^*}, |p| = n \land p \in T) \implies \exists \alpha^{\bN\to\bN}, \forall n^{\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
+\[\FT \defeq (\forall \alpha^{\bN\to\bN}, \exists n^\bN, \alpha_0\ldots \alpha_{n-1}\in C)\implies \exists n^\bN, \forall \alpha^{\bN\to\bN}\]
+L'écriture $\exists p^{\bN^*},|p| = n \land p \in T$ est équivalente à $\exists \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T$, mais plus naturelle à considérer. On suppose ici que $T$ est clos par préfixe et $C$ par extension, nous donnant donc que $\FT$ est la contraposée de $\KL$.
+
+Mentionnons que $\KL$ comme $\FT$ sont toujours vrais dans $\ZFC$, et même dans $\ZF$~: on travaille donc dans une théorie plus faible dans laquelle on peut étudier l'ajout de $\FT$ ou $\KL$ comme non trivial. La théorie habituellement utilisée en mathématiques à rebours est un fragment faible de l'arithmétique du second ordre nommée $\RCAO$. Cette théorie est très expressive car elle permet de décrire les réels ainsi que les fonctions continues voire mesurables. Cependant, cette expressivité se fait au coût d'une grande quantité de codages, qui nous intéressent peu. Nous faisons donc le choix de travailler dans une version de l'arithmétique dans laquelle on peut parler de façon interne de fonctions, de paires et d'autres outils primitifs en plus des entiers, le tout avec une logique du second ordre.
+
+Maintenant que le contexte est plus clair, nous pouvons décrire l'objectif du stage présenté dans ce rapport~: il s'agit de mesurer le contenu logique de $\FT$, en le séparant entre autre de $\KL$. Pour ce faire, nous utilisons la réalisabilité, qui est un outil reliant les langages de programmation et la logique.
+
+Partant d'un langage simple (le $\lambda$-calcul), nous allons construire un modèle de réalisabilité vérifiant Fan theorem mais invalidant le lemme de König (sous une forme faible). La preuve que ce modèle vérifie $\FT$ nous servira ensuite à chercher une présentation plus générale de l'argument qu'une forme de continuité des fonctions calculables implique $\FT$.
+
+\section{Construire un modèle de réalisabilité}
 
 \subsection{L'interprétation BHK}
 
@@ -30,9 +47,551 @@ On suppose qu'on a un ensemble de propositions $\Phi$ et un ensemble de témoins
 \item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ est une fonction (en un sens intuitif pour le moment) qui à $y\in \bX$ tel que $y\reali \psi$, associe $x(y)\in \bX$ tel que $x(y)\reali \chi$.
 \item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x$ est une paire de deux éléments $y\reali \psi$ et $z\reali \chi$~: prouver la conjonction de deux formules signifie avoir une preuve de chaque formule.
 \item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x$ s'écrit $(i,y)$ où, si $i = 1$, $y\reali \psi$ et si $i = 2$, $y\reali \chi$. Cela correspond à une union disjointe (en particulier, une preuve d'une disjonction garde la trace de laquelle des deux propositions est prouvée).
-\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une foncion qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
+\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une fonction qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
 \item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x$ s'écrit comme une paire $(t,y)$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
 \end{itemize}
+
+Dans cette interprétation, dire qu'une formule $\varphi$ est vraie signifie
+\[\exists x \in \bX, x \reali \varphi\]
+On souhaite donc que cette notion de vérité définisse une théorie logique, c'est-à-dire que la propriété ``être vraie'' soit stable par déduction naturelle. On appellera adéquation la propriété correspondant à cette stabilité par déduction naturelle.
+
+\subsection{Sur l'adéquation}
+
+Rappelons les règles de déduction naturelle, et profitons-en pour clarifier les choix syntaxiques que nous faisons. Tout d'abord, on considère une logique multi-sortée, d'où une définition un peu plus chargée d'une signature~:
+\begin{defi}[Signature]
+    Une signature $\Sigma$ est la donnée~:
+    \begin{itemize}
+    \item d'un ensemble $\mathcal S$ de sortes.
+    \item d'un ensemble $\mathcal F$ de symboles de fonctions, et d'une fonction $\alpha : \mathcal F\to \mathcal S^* \times \mathcal S$ donnant à chaque symbole son arité.
+    \item d'un ensemble $\mathcal R$ de symboles de fonctions, et d'une fonction $\alpha : \mathcal R \to \mathcal S^*$ donnant à chaque symbole son arité.
+    \end{itemize}
+\end{defi}
+
+On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(x,S)$ où $x \in \mathcal X_1$ et $S\in\mathcal S$)~:
+\begin{center}
+    \begin{prooftree}
+        \infer0{\Gamma, \bx : S \vdash \bx : S}
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+        \hypo{\Gamma\vdash \bt_1 : S_1}
+        \hypo{\cdots}
+        \hypo{\Gamma\vdash \bt_n : S_n}
+        \hypo{\alpha(f) = (S_1,\ldots,S_n,S)}
+        \infer4{\Gamma\vdash f(\bt_1,\ldots,\bt_n) : S}
+    \end{prooftree}
+\end{center}
+
+On définit maintenant les propositions, mais comme celles-ci contiennent des constructions d'ordre $2$, on doit d'abord introduire des variables d'ordre $2$. On notera $\mathcal X_2$ l'ensemble des variables d'ordre $2$ (ces variables seront notées en majuscules), et on appellera contexte de typage d'ordre deux une liste de couples $(X,S)$ où $X \in \mathcal X_2$ et $S \in \mathcal S^*$.
+
+\begin{defi}[Propositions]
+    On définit les propositions (bien formées) par les règles de typage suivantes~:
+    \begin{center}
+        \begin{prooftree}
+            \hypo{\Gamma\vdash \bt_1 : S_1}
+            \hypo{\cdots}
+            \hypo{\Gamma\vdash \bt_n : S_n}
+            \infer3{\Gamma\mid\Delta, X : (S_1,\ldots,S_n) \vdash X(\bt_1,\ldots,\bt_n) : \Propo}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+            \hypo{\Gamma\vdash \bt_1 : S_1}
+            \hypo{\cdots}
+            \hypo{\Gamma\vdash \bt_n : S_n}
+            \hypo{\alpha(r) = (S_1,\ldots,S_n)}
+            \infer4{\Gamma\mid\Delta\vdash r(\bt_1,\ldots,\bt_n) : \Propo}
+        \end{prooftree}
+
+        \vspace{0.5cm}
+        
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\vdash\varphi : \Propo}
+            \hypo{\Gamma\mid\Delta\vdash \psi : \Propo}
+            \infer2{\Gamma\mid\Delta\vdash \varphi\to\psi : \Propo}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+            \hypo{\Gamma, \bx : S\mid \Delta\vdash \varphi : \Propo}
+            \infer1{\Gamma\mid\Delta\vdash \forall \bx^S, \varphi : \Propo}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+            \hypo{\Gamma\mid \Delta, X : (S_1,\ldots,S_n)\vdash \varphi : \Propo}
+            \infer1{\Gamma\mid\Delta\vdash \forall X^{S_1,\ldots,S_n}, \varphi : \Propo}
+        \end{prooftree}
+    \end{center}
+\end{defi}
+
+On définit de façon évidente les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$.
+
+On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
+
+\begin{defi}[Substitution du premier ordre]
+    Soit $\Gamma, \bx : S\vdash \bt : S'$ et $\Gamma\vdash \bu : S$, on définit alors $\Gamma\vdash \bt[\bu/\bx] : S'$ par induction sur $\bt$~:
+    \begin{itemize}
+        \item si $\bt = \bx$ alors $\bt[\bu/\bx] = \bu$.
+        \item si $\bt = \by$, où $\by \neq \bx$, alors $\bt[\bu/\bx] = \bt$.
+        \item si $\bt = f(\bt_1,\ldots,\bt_n)$ alors $\bt[\bu/\bx] = f(\bt_1[\bu/\bx],\ldots,\bt_n[\bu/\bx]$.
+    \end{itemize}
+    On peut maintenant, pour $\Gamma, \bx : S\mid\Delta\vdash \varphi : \Propo$ et $\Gamma\vdash \bt : S$, définir $\Gamma\mid\Delta\vdash\varphi[\bt/\bx] : \Propo$~:
+    \begin{itemize}
+        \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = X(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
+        \item si $\varphi = r(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = r(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
+        \item si $\varphi = \psi \to \chi$ alors $\varphi[\bt/\bx] = \psi[\bt/\bx] \to \chi[\bt/\bx]$.
+        \item si $\varphi = \forall \by^{S'}, \psi$ et que $\by\notin \varlib{\bt}$, alors $\varphi[\bt/\bx] = \forall \by^{S'}, \psi[\bt/\bx]$.
+        \item si $\varphi = \forall X^{S_1,\ldots,S_n}, \psi$ alors $\varphi[\bt/\bx] = \forall X^{S_1,\ldots,S_n}, \psi[\bt/\bx]$.
+    \end{itemize}
+\end{defi}
+
+Par une induction sur les termes et les propositions, on peut montrer que la substitution préserve le typage, c'est-à-dire qu'on a bien la relation de typage décrite dans la définition~: $\Gamma\vdash \bt[\bu/\bx] : S'$ et $\Gamma\mid\Delta\vdash \varphi[\bt/\bx] : \Propo$.
+
+\begin{defi}[Substitution du second ordre]
+    Soit $\Gamma\mid \Delta, X : S_1,\ldots,S_n\vdash \varphi : \Propo$ et $\Gamma, \bx_1 : S_1,\ldots, \bx_n : S_n\mid\Delta\vdash \psi : \Propo$, alors on définit $\Gamma\mid\Delta\vdash\varphi[X/\psi(\bx_1,\ldots,\bx_n)]$ par induction sur $\varphi$~:
+    \begin{itemize}
+        \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]$.
+        \item si $\varphi = Y(\bt_1,\ldots,\bt_n)$
+        \item si $\varphi = r(\bt_1,\ldots,\bt_n$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \varphi$.
+        \item si $\varphi = \chi \to \theta$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \chi[X/\psi(\bt_1,\ldots,\bt_n)] \to \theta[X/\psi(\bt_1,\ldots,\bt_n)]$.
+        \item si $\varphi = \forall \bx^S, \chi$ et $\bx \notin \varlib{\psi}$, alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \forall \bx^S, \chi[X/\psi(\bt_1,\ldots,\bt_n)]$.
+        \item si $\varphi = \forall Y^{S'_1,\ldots,S'_n}, \chi$ et $Y\notin\varlib{\psi}$, alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \forall Y^{S'_1,\ldots,S'_n}, \chi[X/\psi(\bx_1,\ldots,\bx_n)]$.
+    \end{itemize}
+\end{defi}
+
+Là encore, une induction nous permet de vérifier que cette substitution interagit correctement avec le typage.
+
+Cela nous permet enfin d'introduire la déduction naturelle. Les règles que nous présentons sont particulièrement chargées, puisqu'elles utilisent trois contexte (un contexte de typage du premier ordre, un du second ordre et un contexte logique), mais elles sont globalement les mêmes que les règles habituelles de la déduction naturelle.
+
+\begin{defi}[Déduction naturelle]
+    On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash\varphi$, où $\Gamma$ est un contexte de typage du premier ordre, $\Delta$ du second ordre, $\Xi$ un contexte logique, c'est-à-dire ici une liste de propositions, et $\varphi$ une proposition, par les règles suivantes~:
+    \begin{center}
+        \begin{prooftree}
+            \infer0[Ax]{\Gamma\mid\Delta\mid\Xi, \varphi\vdash \varphi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi, \varphi\vdash \psi}
+            \infer1[$\to_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \varphi \to \psi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash \varphi\to \psi}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash \varphi}
+            \infer2[$\to_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \psi}
+        \end{prooftree}
+
+        \vspace{0.5cm}
+
+        \begin{prooftree}
+            \hypo{\Gamma, \bx : S\mid\Delta\mid\Xi\vdash\varphi}
+            \infer1[$\forall_\mathrm i^1$]{\Gamma\mid\Delta\mid\Xi\vdash \forall \bx^S, \varphi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash \forall x^S, \varphi}
+            \hypo{\Gamma\vdash \bt : S}
+            \infer2[$\forall_\mathrm e^1$]{\Gamma\mid\Delta\mid\Xi\vdash \varphi[\bt/\bx]}
+        \end{prooftree}
+
+        \vspace{0.5cm}
+
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta, X : S_1,\ldots,S_n\mid\Xi\vdash \varphi}
+            \infer1[$\forall_\mathrm i^2$]{\Gamma\mid\Delta\mid\Xi\vdash \forall X^{S_1,\ldots,S_n}, \varphi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash \forall X^{S_1,\ldots,S_n}, \varphi}
+            \hypo{\Gamma, \bx_1 : S_1,\ldots, \bx_n : S_n\mid \Delta\vdash \psi : \Propo}
+            \infer2[$\forall_\mathrm e^2$]{\Gamma\mid\Delta\mid\Xi\vdash \varphi[X/\psi(\bx_1,\ldots,\bx_n)]}
+        \end{prooftree}
+    \end{center}
+\end{defi}
+
+Dire que notre interprétation est adéquate signifie alors que $\reali$ est stable par les mêmes règles. Cependant, il n'est pas clair comment interpréter au niveau de la relation $\reali$ le séquent $\Xi\vdash \varphi$ (le contexte de typage, lui, peu être considéré comme extérieur à l'étude logique). Pour l'interpréter, on va considérer que nos éléments $x$ de $\bX$ s'interprètent comme des fonctions $f_x$, $n$-aires (où $\Xi = \varphi_1,\ldots,\varphi_n$), telles que
+\[\forall x_1,\ldots,x_n, (\forall i \in \{1,\ldots,n\}, x_i \reali \varphi_i)\implies f_x(x_1,\ldots,x_n)\reali\varphi\]
+
+Dans ce contexte, l'adéquation signifie que notre langage a besoin des constructions suivantes~:
+\begin{itemize}
+    \item il doit y avoir un moyen d'abstraire une variable et d'en instancier une, permettant de transformer un élément $x\in\bX$ interprété comme une fonction $(x_1,\ldots,x_n) \mapsto f_x(x_1,\ldots,x_n)$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto (y\mapsto f_x(x_1,\ldots,x_{n-1},y))$ et une fonction $(x_1,\ldots,x_n)\mapsto f_x(x_1,\ldots,x_n)$ avec un objet $y\in\bX$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto f_x(x_1,\ldots,x_{n-1},y)$.
+    \item les règles sur $\forall^1$ suggèrent de pouvoir représenter nos termes à l'intérieur même de notre ensemble $\bX$~: on veut par exemple avoir un objet de $\bX$ pour chaque entier $n\in\bN$.
+    \item nous reviendrons plus tard sur les quantification du second ordre, qui seront interprétées par des contextes supplémentaires.
+\end{itemize}
+
+Un élément important de cette façon de faire est la modularité~: dans ce qui est prescrit ici, on ne donne aucune condition sur la forme globale de $\bX$ mais seulement sur des constructions qui doivent exister, ce qui signifie que l'on pourra modifier $\bX$ en gardant la propriété d'adéquation tant que nos constructions restent présentes. Comme on veut considérer $\bX$ comme un langage de programmation, ce point est essentiel, puisqu'on a très souvent envie d'ajouter des constructions ou des primitives à un langages en souhaitant préserver les propriétés déjà établies.
+
+\subsection{A propos du second ordre}
+
+Le choix de la logique du second ordre nous a permis d'alléger considérablement le nombre de constructeurs introduits pour construire des formules. En effet, la combinaison de $\to$ et $\forall^2$ permet de récupérer les constantes $\top$ et $\bot$ ainsi que $\lor$ et $\land$, mais aussi les quantifications existentielles.
+
+Donnons donc ces différents encodages~:
+\begin{align*}
+    \top &\defeq \forall X, X \to X\\
+    \bot &\defeq \forall X, X\\
+    \varphi \land \psi &\defeq \forall X, (\varphi \to \psi \to X) \to X\\
+    \varphi \lor \psi &\defeq \forall X, (\varphi \to X) \to (\psi \to X) \to X\\
+    \exists x^S, \varphi &\defeq \forall X, (\forall x^S, (\varphi \to X)) \to X\\
+    \exists X^{S_1,\ldots,S_n}, \varphi &\defeq \forall Y, (\forall X^{S_1,\ldots,S_n}, (\varphi \to Y))\to Y
+\end{align*}
+
+\begin{rmk}
+    On n'écrit pas d'arité sur les $X$ et $Y$ dans ces définitions car ceux-ci sont d'arité nulle~: ils sont remplacés par des formules closes.
+\end{rmk}
+
+Nous ne donnons pas ici les règles liées à ces différents constructeurs, mais on peut prouver que les règles logique usuelles sont dérivables à partir de notre encodage et des règles déjà introduites. Donnons au moins un exemple avec $\exists_\mathrm e^1$~:
+
+\begin{center}
+    \begin{prooftree}
+        \hypo{\Gamma\mid\Delta\mid\Xi\vdash \exists x^S, \varphi}
+        \infer0{\Gamma\mid\Delta\vdash \psi : \Propo}
+        \infer2[$\forall_\mathrm e^2$]{\Gamma\mid\Delta\mid\Xi\vdash (\forall x^S, \varphi \to \psi)\to \psi}
+        \hypo{\Gamma, x : S\mid\Delta\mid\Xi, \varphi\vdash \psi}
+        \infer1[$\to_\mathrm i$]{\Gamma, x : S\mid\Delta\mid\Xi\vdash \varphi\to\psi}
+        \infer1[$\forall_\mathrm i^1$]{\Gamma\mid\Delta\mid\Xi\vdash \forall x^S, \varphi\to\psi}
+        \infer2[$\to_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \psi}
+    \end{prooftree}
+\end{center}
+
+Passons maintenant à comment interpréter le second ordre dans notre modèle de réalisabilité. Une variable du second ordre représente une partie de l'univers de discours. Par exemple, $X^\bN$ représente une partie de $\mathbb N$. Les parties d'un ensemble $X$, en logique classique, donc exactement les éléments de $2^X$~: cela est dû au fait que le sens d'une proposition est toujours un élément de $2$. Comme, dans notre cas, le sens d'une proposition doit être l'ensemble de ses témoins, on remplace $2$ par $\mathcal P(\bX)$. On obtient donc comme interprétation d'une variable $X^\bN$ une fonction $\mathbb N \to \mathcal P (\bX)$ Plus généralement, en ayant défini une interprétation $\bS$ de chaque sorte $S$, une variable $X^{S_1,\ldots,S_n}$ sera interprétée par une fonction $\bS_1\times\cdots\times\bS_n \to \mathcal P(\bX)$.
+
+Pour permettre à notre relation de réalisabilité de prendre en compte le second ordre, nous allons paramétrer cette relation par une assignation (partielle) des variables du second ordre à des interprétations comme décrites plus haut.
+
+\'Etant donnée une interprétation des variables du second ordre, qu'on notera $\rho$, on notera $x\reali_\rho \varphi$ pour dire que $x$ est une preuve de $\varphi$ dans laquelle on interprète les variables libres du second ordre de $\varphi$ par $\rho$. Cela nous permet alors de définir \[x\reali_\rho \forall X^{S_1,\ldots,S_n}, \varphi \defeq x\in \bigcap_{A : \bS_1\times\cdots\times \bS_n \to \mathcal P(\bX)} \{x \in \bX\mid x\reali_{\rho[X\leftarrow A]} \varphi\}\]
+
+Cette interprétation ne fonctionne que dans le cas où $\varphi$ est close pour les variables du premier ordre, mais on peut adapter l'idée précédente au premier ordre~: on ajoute une assignation $\sigma$ de $\mathcal X_1$ vers l'ensembles des $\bS$ pour $S\in\mathcal S$. Ce faisant, on peut définir $x\reali_\rho^\sigma \varphi$. Cependant, le sens de $x\reali \forall x^S, \varphi$ change alors~: cela signifie que $x$ est une preuve de tous les $\varphi[\bt/\bx]$, et non une fonction associant $s\in \bS$ à une preuve de $\varphi[s/\bx]$. On a donc deux possibilités d'interprétation du $\forall^1$~: comme une réalisation uniforme et comme une réalisation fonctionnelle. Nous verrons plus tard qu'on peut en fait exprimer la seconde à travers la première.
+
+\subsection{Le langage de programmation}
+
+Maintenant que nous avons donné les idées principales à propos de la relation de réalisabilité, précisons l'ensemble $\bX$ que nous étudions. Comme nous avons parlé d'interpréter nos éléments comme des fonctions, il semble naturel de considérer le $\lambda$-calcul, dans lequel tout terme peut se voir comme une fonction. On présentera succinctement le $\lambda$-calcul, principalement pour s'accorder sur les conventions et les notations.
+
+\begin{defi}[$\lambda$-termes]
+    On se fixe un ensemble dénombrable $\mathcal X_\Lambda$ de $\lambda$-variables, qu'on notera $x,y,\ldots$ On définit l'ensemble $\Lambda$ des $\lambda$-termes comme l'ensemble engendré par la grammaire suivante~:
+    \[t,u ::= x \mid \lambda x. t\mid t\;u\]
+\end{defi}
+
+Pour le parenthésage, on prendra la convention de minimiser le nombre de parenthèses en les écrivant seulement quand nécessaire, et en prenant l'application (la construction $t\;u$) comme associative à droite, c'est-à-dire que $t\;u\;v$ se lit $(t\;u)\;v$. On considère toujours les $\lambda$-termes à $\alpha$-conversion près, c'est-à-dire que changer le nom de variables liées par de nouvelles variables (dans le $\lambda$ qui lie cette variable y compris) ne change pas le terme. On définit la substitution simultanée et la simple substitution~:
+
+\begin{defi}[Substitution de termes]
+    Soit $\nu : \mathcal X_\Lambda \rightharpoonup \Lambda$ une substitution de termes et $t\in \Lambda$, on notera $\nu(t)$ le terme défini par induction sur $t$ par~:
+    \begin{itemize}
+        \item si $t = x$ et $x \in \domm(\nu)$ alors $\nu(t) = \nu(x)$.
+        \item si $t = x$ et $x\notin\domm(\nu)$ alors $\nu(t) = x$.
+        \item si $t = \lambda x.u$ et $x\notin\bigcup_{y\in\domm(\nu)}\varlib{\nu(y)}$ alors $\nu(t) = \lambda x.\nu(u)$.
+        \item si $t = u\;v$ alors $\nu(t) = (\nu(u))\;(\nu(v))$.
+    \end{itemize}
+
+    Si $\nu$ est définie uniquement sur un élément $x$, alors pour $u = \nu(x)$ on notera $t[u/x] = \nu(t)$.
+\end{defi}
+
+On définit aussi la $\beta$-réduction.
+
+\begin{defi}[$\beta$-réduction]
+    On définit d'abord la relation $\mapsto\subseteq \Lambda\times\Lambda$ par la règle
+    \[(\lambda x.t)u \mapsto t[u/x]\]
+    La relation $\rhd\subseteq \Lambda\times\Lambda$ est alors la plus petite relation contenant $\mapsto$ et stable par les règles
+    \begin{center}
+        \begin{prooftree}
+            \hypo{t \rhd u}
+            \infer1{\lambda x.t \rhd \lambda x.u}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+            \hypo{t\rhd t'}
+            \infer1{t\;u\rhd t'\;u}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+            \hypo{u \rhd u'}
+            \infer1{t\;u\rhd t\;u'}
+        \end{prooftree}
+    \end{center}
+\end{defi}
+
+Commençons maintenant à présenter un premier modèle de réalisabilité, basé sur ce $\lambda$-calcul. Nous utiliserons les notions d'environnement définies plus tôt à la fois pour le premier et le second ordre. On se place dans le cas d'une signature sans symbole de relation, et on considère que $\Nat$ est l'unique sorte, pour simplifier notre modèle dans un premier temps. On possède les fonctions habituelles de l'arithmétique~: $S,+,\times$ et la constante $0$. On interprétera $\Nat$ par l'ensemble $\bN$.
+
+Précisons d'abord les interprétations de variables qui nous intéressent. On dira qu'une interprétation $\sigma$ du premier ordre, c'est-à-dire une fonction partielle $\sigma : \mathcal X_1 \rightharpoonup \bN$, est adéquate vis à vis de $\varphi$ si $\domm(\sigma) \supseteq\varlib{\varphi}$ pour le premier ordre. Dans le cas de plusieurs sortes, on demande aussi que $\sigma(\bx)$ soit du même type que $\bx$ dans $\varphi$ (si par exemple $\bx : S \vdash \varphi : \Propo$ alors on doit avoir $\vdash \sigma(\bx) : S$). On notera $\sigma\models \varphi$ dans ce cas. Remarquons que si $\sigma \models \varphi$ et que $\bt$ apparaît dans $\varphi$, alors on peut naturellement lui associer un élément $\sigma(\bt) \in \bN$.
+
+
+On fait de même pour le second ordre~: une interprétation $\rho$ du second ordre, qui à $X \in \mathcal X_2$ associe une fonction $\bN^n \to \mathcal P(\Lambda)$ est adéquate pour $\varphi$ si les variables libres du second ordre de $\varphi$ sont dans le domaine de $\rho$, et si l'arité de $\rho(X)$ correspond à l'arité de $X$ dans le typage de $\varphi$. On notera, là encore, $\rho\models \varphi$.
+
+On peut maintenant définir la relation de réalisabilité.
+
+\begin{defi}[Relation de réalisabilité]
+    Soit une proposition $\varphi$, $\sigma\models \varphi$ et $\rho\models \varphi$. On définit $\trad\varphi_\rho^\sigma \in \mathcal P(\Lambda)$ par induction sur $\varphi$~:
+    \begin{itemize}
+        \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\trad\varphi_\rho^\sigma = \rho(X)(\sigma(\bt_1),\ldots,\sigma(\bt_n))$.
+        \item si $\varphi = \psi \to \chi$ alors $\trad{\varphi\to\chi}_\rho^\sigma = \{t \in \Lambda\mid \forall u \in \trad{\psi}_\rho^\sigma, t\;u \in \trad{\chi}_\rho^\sigma\}$.
+        \item si $\varphi = \forall \bx^S, \psi$ alors $\displaystyle\trad{\forall \bx^S, \psi}_\rho^\sigma = \bigcap_{n \in \bS} \trad{\psi}_\rho^{\sigma[\bx\leftarrow n]}$
+        \item si $\varphi = \forall X^{S_1,\ldots,S_n}, \psi$ alors $\displaystyle\trad{\forall X^{S_1,\ldots,S_n},\psi}_\rho^\sigma = \bigcap_{F : \bS_1\times\cdots\times\bS_n \to \mathcal P(\Lambda)} \trad\psi_{\rho[X\leftarrow F]}^\sigma$
+    \end{itemize}
+
+    On notera $t\reali_\rho^\sigma \varphi$ si $t\in\trad\varphi_\rho^\sigma$ et $t\reali\varphi$ pour $t\reali_\varnothing^\varnothing\varphi$, et on dira alors que $t$ réalise (ou est un réaliseur de) $\varphi$.
+\end{defi}
+
+On souhaite maintenant montrer l'adéquation. L'interprétation de $t\in \Lambda$ comme une fonction $n$-aire peut se faire en prenant $(t_1,\ldots,t_n) \mapsto t[t_1/x_1,\ldots,t_n/x_n]$ en considérant qu'on a ordonné nos variables. Avec cette définition, l'interprétation de $\varphi_1,\ldots,\varphi_n\vdash \varphi$ devient
+\[\forall t_1,\ldots,t_n \in \Lambda, (\forall i \in \{1,\ldots,n\}, t_i \reali \varphi_i)\implies t[t_1/x_1,\ldots,t_n/x_n]\reali\varphi\]
+
+On voit alors que la règle d'axiome est vérifiée directement en prenant le terme $x_i$, qui vaudra $t_i$ après substitution et par hypothèse $t_i\reali \varphi_i = \varphi$. Cette règle est exactement celle qu'on attend du typage des $\lambda$-termes, et la prouvabilité est une relation syntaxique~: il convient donc de travailler directement avec un système de type et de montrer que ce système de type est adéquat en ce qu'un terme typé est un réaliseur.
+
+\begin{defi}[Système de type]
+    On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash t : \varphi$, où $\Gamma$ et $\Delta$ sont comme introduits plus tôt, et $\Xi$ est une liste de couples $(x,\varphi)$ où $x \in \mathcal X_\Lambda$ et $\varphi \in \Propo$, par les règles suivantes~:
+    \begin{center}
+        \begin{prooftree}
+            \infer0[Ax]{\Gamma\mid\Delta\mid\Xi, x : \varphi\vdash x : \varphi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi, x : \varphi\vdash t : \psi}
+            \infer1[$\to_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda x. t : \varphi \to \psi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi\to \psi}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \varphi}
+            \infer2[$\to_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t\;u : \psi}
+        \end{prooftree}
+
+        \vspace{0.5cm}
+
+        \begin{prooftree}
+            \hypo{\Gamma, \bx : S\mid\Delta\mid\Xi\vdash t : \varphi}
+            \infer1[$\forall_\mathrm i^1$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^S, \varphi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall x^S, \varphi}
+            \hypo{\Gamma\vdash \bt : S}
+            \infer2[$\forall_\mathrm e^1$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\bt/\bx]}
+        \end{prooftree}
+
+        \vspace{0.5cm}
+
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta, X : S_1,\ldots,S_n\mid\Xi\vdash t : \varphi}
+            \infer1[$\forall_\mathrm i^2$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{S_1,\ldots,S_n}, \varphi}
+        \end{prooftree}
+        \qquad
+        \begin{prooftree}
+            \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{S_1,\ldots,S_n}, \varphi}
+            \hypo{\Gamma, \bx_1 : S_1,\ldots, \bx_n : S_n\mid \Delta\vdash \psi : \Propo}
+            \infer2[$\forall_\mathrm e^2$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[X/\psi(\bx_1,\ldots,\bx_n)]}
+        \end{prooftree}
+    \end{center}
+\end{defi}
+
+Nous avons donc vu que la règle Ax est directement vérifiée par la forme du lemme d'adéquation que nous voulons montrer. Passons maintenant à la règle $\to_\mathrm i$. Pour celle-ci, supposons qu'on a $\nu$ tel que $t_i = \nu(x_i) \reali \varphi_i$, $\nu(x) \reali \varphi$ et $t[t_1/x_1,\ldots,t_n/x_n, \nu(x)/x]\reali \varphi$, on veut en déduire que $\lambda x.t[t_1/x_1,\ldots,t_n/x_n]\reali \varphi\to\psi$. Pour cela, si on a $u \reali \varphi$, alors on veut que $(\lambda x.\nu(t))\;u\reali \psi$~: il n'y a pas de raison que cela soit vrai. Cependant, en utilisant l'hypothèse d'induction avec $\nu(x_i) = t_i$ et $\nu(x) = u$, on obtient $t[t_i/x_i, t/x]$ et on voit que $(\lambda x.t[t_i/x_i])u \rhd t[t_i/x_i, t/x]$ (quitte à faire de l'$\alpha$-conversion), on souhaite donc que $\trad\varphi$ soit stable par antiréduction pour permettre la validité de cette règle.
+
+Cette exigence peut sembler artificielle, mais elle vient simplement du fait que le $\lambda$-calcul est un système syntaxique, et il contient donc plusieurs termes qui peuvent avoir le même sens~: en l'occurrence, ici, $(\lambda x.t)u$ et $t[u/x]$ ont tous les deux le sens de $f(x)$ dans un cadre plus sémantique. On pourrait donc décider de travailler dans $\Lambda/=_\beta$, mais l'analyse donnée plus tôt nous montre que cette exigence n'est en fait pas nécessaire, puisqu'il suffit de conserver la stabilité par antiréduction. Une partie stable par antiréduction est donc, en un sens, une partie ayant un contenu sémantique. Remarquons quand même que ce choix dépend largement du formalisme utilisé (ici le $\lambda$-calcul) mais aussi de la réduction considérée~: on aurait pu considérer la réduction call-by-value, cherchant à évaluer les arguments avant de faire une substitution, et les parties saturées auraient dû être définies différemment en obligeant l'évaluation de l'argument.
+
+\begin{defi}[Partie saturée]
+    On dit qu'une partie $S\subseteq \Lambda$ est saturée si la condition suivante est vérifiée~:
+    \[\forall t,u\in \Lambda, t \rhd u \land u \in S \implies t \in S\]
+
+    On note $\SAT$ l'ensemble des parties saturées.
+\end{defi}
+
+On peut montrer que pour avoir $\trad\varphi \in \SAT$, il suffit de l'imposer sur les interprétations des variables du second ordre (et des symboles de relations, mais nous n'en avons pas ici). Pour cela, on montre d'abord que les opérations ensemblistes usuelles préservent la stabilité.
+
+\begin{lem}
+  $(\SAT,\subseteq,\Lambda,\varnothing,\bigcap,\bigcup)$ est un treillis complet.
+\end{lem}
+
+\begin{proof}
+  Il est évident que $S\in \SAT \implies \varnothing\subseteq S \subseteq \Lambda$ et que ces deux parties sont stables par antiréduction. Supposons que $\{S_i\}_{i\in I}$ est une famille de parties saturées. Si $t\reduc u$ et $u \in \bigcap S_i$, alors pour tout $i \in I$, $t \in S_i$ par saturation de $S_i$, donc $t\in \bigcap S_i$, donc $\bigcap S_i$ est saturée. De même si $u \in \bigcup S_i$, alors on trouve $i$ tel que $u \in S_i$ donc $t\in S_i$ par saturation. Donc $\bigcup S_i$ est saturée. Ainsi $(\SAT,\subseteq,\Lambda,\varnothing, \bigcap,\bigcup)$ est un treillis complet.
+\end{proof}
+
+On décide maintenant de modifier l'interprétation au-dessus en disant juste que $\rho(X) : \bN^n \to \SAT$, et de même que l'intersection pour le $\forall X, \varphi$ est définie sur $S : \bN^n \to \SAT$. On peut alors montrer le lemme de saturation.
+
+\begin{lem}[Saturation]
+  Pour toute formule $\varphi$, $\trad\varphi_\rho^\sigma\in \SAT$.
+\end{lem}
+
+\begin{proof}
+  On procède par induction sur $\varphi$~:
+  \begin{itemize}
+  \item si $\varphi = X(t_1,\ldots,t_n)$ alors $\trad\varphi_\rho^\sigma=\rho(X)(t_1^\sigma,\ldots,t_n^\sigma)\in \SAT$.
+  \item si $\varphi = \psi \to \chi$, supposons que $t\reali_\rho^\sigma \psi \to \chi$, $t'\reduc t$ et $u\reali_\rho^\sigma\psi$. Par hypothèse, $t\;u\reali_\rho^\sigma \chi$, et comme par hypothèse d'induction $\trad\chi_\rho^\sigma\in\SAT$ et $t'\;u\reduc t\;u$, on en déduit que $t'\;u\reali_\rho^\sigma \chi$. Ainsi pour tout $u\reali_\rho^\sigma\psi$, $t'\;u\reali_\rho^\sigma\chi$, ce qui signifie que $t'\reali_\rho^\sigma\psi\to\chi$.
+  \item les deux interprétations données par des intersections donnent des ensembles saturés car $\SAT$ est un treillis complet.
+  \end{itemize}
+  Donc par induction $\trad\varphi_\rho^\sigma\in\SAT$.
+\end{proof}
+
+On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règle $\to_\mathrm e$ est automatique~: la définition même de $\trad{\psi\to\chi}$ nous assure que la règle est vérifiée. Pour les deux quantificateurs, par contre, il nous faut introduire des lemmes de substitution, pour prouver qu'enrichir l'environnement $\sigma$ (respectivement $\rho$) revient à faire une substitution dans le terme (respectivement la proposition) qu'on interprète.
+
+\begin{lem}\label{lem.subst.1}
+  Pour tous $\varphi : \Propo$, $\sigma\models\varphi,\rho\models\varphi$, $\bt : S$, $t\in\Lambda$, on a
+  \[t\reali_\rho^{\sigma[\bx \leftarrow \bt^\sigma]} \varphi\iff t\reali_\rho^\sigma \varphi[\bt/\bx]\]
+\end{lem}
+
+\begin{proof}
+  Tout d'abord, par une induction sur $\bu$ (que nous ne détaillerons pas), on peut quitte à renommer nos variables considérer que $\forall \bu, \bu^{\sigma[\bx\leftarrow \bt^\sigma]} = (\bu[\bt/\bx])^\sigma$. On raisonne maintenant par induction sur $\varphi$~:
+  \begin{itemize}
+  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors
+    \begin{align*}
+      \trad\varphi_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} &= \rho(X)(\bt_1^{\sigma[\bx\leftarrow \bt^\sigma]},\ldots,\bt_n^{\sigma[\bx\leftarrow \bt^\sigma]})\\
+      &= \rho(X)((\bt_1[\bt/\bx])^\sigma,\ldots,(\bt_n[\bt/\bx])^\sigma)\\
+      &= \trad{\varphi[\bt/\bx]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = \psi \to \chi$ alors
+    \begin{align*}
+      \trad{\psi\to\chi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \{t\in\Lambda\mid \forall u\in\trad\psi_\rho^{\sigma[\bx\leftarrow\bt^\sigma]}, t\;u \in \trad\chi_\rho^{\sigma[\bx\leftarrow\bt^\sigma]}\}\\
+      &= \{t\in\Lambda\mid\forall u\in \trad{\psi[\bt/\bx]}_\rho^\sigma, t\;u\in\trad{\chi[\bt/\bx]}_\rho^\sigma\}\\
+      &= \trad{\psi[\bt/\bx]\to\chi[\bt/\bx]}_\rho^\sigma\\
+      &= \trad{(\psi\to\chi)[\bt/\bx]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = \psi_1\land \psi_2$ alors
+    \begin{align*}
+      \trad{\psi_1\land\psi_2}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \{t\in\Lambda\mid \forall i \in\{1,2\}, \pi_i\;t\in \trad{\psi_i}_\rho^{\sigma[\bt\leftarrow\bt^\sigma]}\}\\
+      &= \{t\in\Lambda\mid\forall i \in \{1,2\}, \pi_i\;t\in\trad{\psi_i[\bt/\bx]}_\rho^\sigma\}\\
+      &= \trad{(\psi\land\chi)[\bt/\bx]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = \forall \by^S, \psi$ alors quitte à renommer $\by$ pour s'assurer que la variable n'appartienne pas aux variables libres de $\bt$~:
+    \begin{align*}
+      \trad{\forall \by^S,\psi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \bigcap_{s\in \bS}\trad{\psi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma,\by\leftarrow s]}\\
+      &= \bigcap_{s\in\bS}\trad\psi_\rho^{\sigma[\by\leftarrow s, \bx\leftarrow \bt^\sigma]}\\
+      &= \bigcap_{s\in\bS}\trad{\psi[\bt/\bx]}_\rho^{\sigma[\by\leftarrow s]}\\
+      &= \trad{\forall \bx, \psi[\bt/\bx]}_\rho^\sigma\\
+      &= \trad{(\forall \bx, \psi)[\bt/\bx]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = \forall X^{S_1,\ldots,S_n}, \psi$ alors
+    \begin{align*}
+      \trad{\forall X^{S_1,\ldots,S_n}, \psi}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} &= \bigcap_{F : \bS_1\times\cdots\times \bS_n\to \SAT}\trad{\psi}_{\rho[X\leftarrow F]}^{\sigma[\bx\leftarrow \bt^\sigma]}\\
+      &= \bigcap_{F : \bS_1\times\cdots\times \bS_n \to \SAT}\trad{\psi[\bt/\bx]}_{\rho[X\leftarrow F]}^\sigma\\
+      &= \trad{(\forall X^{S_1,\ldots,S_n}, \psi)[\bt/\bx]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = S(\bu)$, alors $\trad{S(\bu)}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} = \ceil{\bu^{\sigma[\bx\leftarrow\bt^\sigma]}} = \ceil{(\bu[\bt/\bx])^\sigma}$
+  \end{itemize}
+  Donc, par induction, $\trad\varphi_\rho^{\sigma[\bx\leftarrow\bt]} = \trad{\varphi[\bt/\bx]}_\rho^\sigma$, d'où le résultat.
+\end{proof}
+
+\begin{lem}\label{lem.subst.2}
+  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis on a, en notant $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow s_1,\ldots,\bx_n\leftarrow s_n]}$~:
+  \[t\reali_{\rho[X\leftarrow F]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
+\end{lem}
+
+\begin{proof}
+  Par induction sur $\varphi$~:
+  \begin{itemize}
+  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors
+    \begin{align*}
+      \trad\varphi_{\rho[X\leftarrow F]}^\sigma &= S(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
+      &= \trad\psi_\rho^{\sigma[\bx_1\leftarrow \bt_1^\sigma,\ldots,\bx_n\leftarrow \bt_n^\sigma]} \\
+      &= \trad{\psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]}_\rho^\sigma\\
+      &= \trad{X(\bt_1,\ldots,\bt_n)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = Y(\bt_1,\ldots,\bt_p)$ où $X\neq Y$ alors $\trad{\varphi}_{\rho[X\leftarrow F]}^\sigma = \trad\varphi_\rho^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
+  \item si $\varphi = \chi \to \chi'$ alors
+    \begin{align*}
+      \trad{\chi\to\chi'}_{\rho[X\leftarrow F]}^\sigma &= \{t\in\Lambda\mid \forall u \in \trad\chi_{\rho[X\leftarrow F]}^\sigma, t\;u\in \trad{\chi'}_{\rho[X\leftarrow F]}^\sigma\}\\
+      &= \{t\in\Lambda\mid \forall u \in \trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma, t\;u\in\trad{\chi'[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\}\\
+      &= \trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X] \to \chi'[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
+      &= \trad{(\chi\to\chi')[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = \forall \bx^S, \chi$ alors
+    \begin{align*}
+      \trad{\forall \bx^S, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{s\in\bS}\trad\chi_{\rho[X\leftarrow F]}^{\sigma[\bx\leftarrow s]}\\
+      &= \bigcap_{s\in\bS}\trad{\chi/[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^{\sigma[\bx\leftarrow s]}\\
+      &= \trad{\forall \bx^S, \chi[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma\\
+      &= \trad{(\forall \bx^S, \chi)[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma
+    \end{align*}
+  \item si $\varphi = \forall Y^{S_1,\ldots,S_p},\chi$ alors
+    \begin{align*}
+      \trad{\forall Y^{S_1,\ldots,S_p}, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{G : \bS_1\times\cdots\times\bS_p \to \SAT}\trad\chi_{\rho[X\leftarrow F, Y\leftarrow G]}^\sigma\\
+      &= \bigcap_{G : \bS_1\times\cdots\times\bS_p\to\SAT}\trad\chi_{\rho[Y\leftarrow G, X\leftarrow F]}^\sigma\\
+      &= \bigcap_{G : \bS_1\times\cdots\times\bS_p\to\SAT}\trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_{\rho[Y\leftarrow G]}^\sigma\\
+      &= \trad{\forall Y^{S_1,\ldots,S_n}, \chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
+      &= \trad{(\forall Y^{S_1,\ldots,S_n}, \chi)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
+    \end{align*}
+  \end{itemize}
+  Donc, par induction, $\trad\varphi_{\rho[X\leftarrow F]}^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
+\end{proof}
+
+Il nous reste alors à montrer le lemme d'adéquation. Là encore, il nous faut rajouter des notations et de la syntaxe, pour pouvoir relier les différents contextes de typages et logique.
+
+\begin{defi}[Valuation de réalisabilité]
+  Soit un contexte de typage du premier ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
+  \[\forall i \in I, \nu(x_i)\reali_\rho^\sigma\varphi_i\]
+\end{defi}
+
+\begin{lem}[Adéquation]
+  Soient des contextes $\Gamma,\Delta,\Xi$ et des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$. Soit $t\in\Lambda$ et $\varphi\in\Propo$ tels que $\Gamma\mid\Delta\mid\Xi\vdash t : \varphi$. Alors $\nu(t) \reali_\rho^\sigma \varphi$.
+\end{lem}
+
+\begin{proof}
+  La preuve se fait par induction sur la relation de typage $\vdash$~:
+  \begin{itemize}
+  \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $\nu(t) = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
+  \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $\nu(t) \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $\nu(\lambda x.t)\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $\nu[x \leftarrow u](t)\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $\nu[x\leftarrow u](t) = \nu(t)[u/x]$ donc $\nu(t)[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.\nu(t)) u \reali_\rho^\sigma \psi$, donc $\lambda x.\nu(t)\reali_\rho^\sigma \varphi\to\psi$.
+  \item Supposons que $\nu(t)\reali_\rho^\sigma \varphi \to \psi$ et $\nu(u)\reali_\rho^\sigma \varphi$, alors par définition $\nu(t\;u)\reali_\rho^\sigma \psi$.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S),\Delta,\Xi$, $\nu(t)\reali_\rho^\sigma \varphi$. Soit alors $\nu\reali_\rho^\sigma \Gamma,\Delta\Xi$ et $s \in \bS$, comme $\nu\reali_\rho^{\sigma[\bx\leftarrow s]} (\Gamma,\bx : S), \Delta,\Xi$, on en déduit que $\nu(t)\reali_\rho^{\sigma[\bx\leftarrow s]} \varphi$, ce qui est valide pour tout $s\in \bS$, donc par définition $\nu(t)\reali_\rho^\sigma \forall \bx^S, \varphi$.
+  \item On suppose que $\nu(t)\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\sigma(\bt) \in \mathbb S$ donc $\nu(t)\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
+  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n), \Xi$, $\nu(t) \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n),\Xi$ donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
+  \item Si $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
+  \end{itemize}
+
+  On en déduit par induction le résultat.
+\end{proof}
+
+On a donc maintenant notre premier modèle de réalisabilité, qui définit effectivement une théorie
+\[\mathcal T_\reali \defeq \{\varphi \in \Propo\mid \exists t \in \Lambda, t \reali \varphi\}\]
+qui est stable par déduction naturelle. De plus, comme $\varnothing \in \SAT$, d'après notre interprétation, on en déduit que
+\[\trad\bot = \bigcap_{S \in \SAT} S = \varnothing\]
+donc $\bot$ n'est pas prouvable par $\mathcal T_\reali$~: c'est une théorie cohérente.
+
+Malheureusement, notre modèle n'a pas beaucoup de principes logique intéressants. Pour une théorie parlant de $\bN$, on pourrait s'attendre à avoir le principe d'induction~: ça n'est pas le cas ici. La raison derrière est l'absence d'accès au contenu calculatoire des arguments. Réaliser une proposition de la forme $\forall x^{\Nat}, \psi(x)$ signifie que l'on peut montrer $\psi(x)$ indépendamment de $x$, donc que la preuve de $\psi$ ne changera pas selon $x$. Au contraire, dans la démonstration par récurrence, en considérant $x\reali \psi(0)$ et $s \reali \psi(n) \to \psi(n+1)$, la démonstration qui en est construite, pour $2$, est $s\;(s\;x)$, quand pour $1$ on a $s\;x$. On a donc besoin d'un moyen d'accéder au contenu calculatoire d'un terme. Pour cela, il nous faut encoder nos éléments par des $\lambda$-termes.
+
+\subsection{Relativisation et codage}
+
+Une façon habituelle de représenter les nombres entiers en $\lambda$-calcul est de considérer les entiers de Church, c'est-à-dire
+\[\overline n \defeq \lambda f.\lambda x.f^n\;x\]
+on peut montrer que toutes les fonctions calculables $\bN\to\bN$ peuvent se représenter (dans un sens fort) comme des $\lambda$-termes. On a donc une façon de représenter les objets du premier ordre (les entiers) au sein du langage.
+
+Au niveau logique, on va ajouter un prédicat unaire, $\Nat$, qui exprime d'un terme qu'il représente un entier pris avec son contenu calculatoire, c'est-à-dire qu'on devra fournir à $\Nat(\bt)$ une preuve, qui est l'encodage de l'entier correspondant à $\bt$.
+
+Par exemple, reprenons l'exemple de la récurrence. Supposons qu'on possède $x\reali \psi(0)$ et $s\reali \forall \bn, \Nat(\bn) \to \psi(\bn) \to \psi(\bn+1)$. Ici, notre $s$ a besoin de l'information d'à quel $\bn$ il s'applique. Cela signifie en particulier qu'on peut maintenant définir un programme qui, étant donné $\bn$ et son encodage $\overline{\bn}$, peut retourner une preuve de $\psi(\bn)$ en itérant $s$ et en l'appliquant à $x$. On a donc récupéré, depuis notre interprétation par intersection, une interprétation fonctionnelle de la quantification universelle. On peut se demander si la même chose est possible pour une quantification du second ordre~: c'est une idée que nous avons exploré dans ce stage pour avoir diverses version de $\KL$, mais la syntaxe que nous avons finalement adoptée nous permet de ne pas introduire ce genre de quantification supplémentaire. Un prédicat $\psi^{\Nat}$ qui serait possible à représenter par un code serait un prédicat décidable, et avoir des fonctions comme objets du premier ordre nous suffira alors (puisqu'il nous suffira donc de considérer une fonction $\Nat\to\Bool$).
+
+On augmente donc la syntaxe des propositions avec la construction d'encodage de terme~:
+\begin{center}
+    \begin{prooftree}
+        \hypo{\Gamma\vdash \bt : S}
+        \infer1{\Gamma\mid\Delta\vdash S(\bt) : \Propo}
+    \end{prooftree}
+\end{center}
+
+De plus, on définit la relation de réalisabilité pour ce constructeur~:
+\[\trad{\Nat(\bt)}_\rho^\sigma \defeq \{t\in \Lambda\mid t \rhd^* \overline{\sigma(\bt)}\}\]
+Remarquons que le choix est fait de considérer les termes se réduisant en un entier donné, plutôt que simplement l'entier. Cela se justifie par notre volonté d'avoir des ensembles saturés~: celui-ci est clairement saturé.
+
+Ainsi, pour la preuve d'adéquation, tout fonctionne de la même manière~: il nous suffit de montrer que les lemmes de substitutions sont encore valides. En particulier, comme nous n'avons pas changé les règles de typage, la preuve d'adéquation elle-même ne change pas.
+
+Supposons donc que $\varphi = \Nat(\bu)$ et prouvons le lemme \ref{lem.subst.1}~:
+\begin{align*}
+    \trad{\Nat(\bu)}_\rho^{\sigma[\bx\leftarrow \sigma(\bt)]} &= \{t \in \Lambda\mid t \rhd^* \overline{\sigma[\bx\leftarrow\sigma(\bt)](\bu)}\}\\
+    &= \{ t \in \Lambda\mid t \rhd^* \overline{\sigma(\bu[\bt/\bx])}\}\\
+    &= \trad{\Nat(\bu[\bt/\bx])}_\rho^\sigma
+\end{align*}
+
+Dans le cas du lemme \ref{lem.subst.2}, le résultat est direct étant donné que l'interprétation de $\Nat(\bt)$ ne dépend pas de l'interprétation du second ordre.
+
+On souhaite en déduire une nouvelle théorie, qui considère la version dite relativisée des quantificateurs~: plutôt que de considérer $\forall \bx^S, \varphi$, on considère $\forall \bx^S, S(\bx) \to \varphi$, ce qu'on notera $\forall \bx^{\{S\}}, \varphi$ pour alléger la lecture. L'adéquation ne correspond alors par tout à fait au fait que la nouvelle théorie définie est close par déduction~: il faut de plus remarquer que si $\Gamma\vdash \bt : \Nat$ alors $\sigma(\bt) \in \bN$ et possède donc un code, ce qui signifie que l'on a bien $\Nat(\bt)$, permettant d'appliquer la règle $\forall_\mathrm e^1$ dans une version relativisée. Une version relativisée de la règle $\forall_\mathrm i^1$, par contre, est juste la concaténation de $\to_\mathrm i$ et $\forall_\mathrm i^1$ dans sa version uniforme.
+
+On possède donc une nouvelle théorie. Pour une proposition du second ordre $\varphi$, on notera $\{\varphi\}$ sa version relativisée. On peut donc définir la nouvelle théorie comme~:
+\[\{\mathcal T_\reali\} \defeq \{\varphi \in \Propo\mid \exists t \in \Lambda, t \reali\{\varphi\}\]
+
+Cette théorie a un sens calculatoire bien plus profond~: par exemple, on peut vérifier que dans notre modèle actuel, l'axiome du choix est vérifié (dans un sens relativisé)~:
+\[\reali \forall R^{\Nat,\Nat},(\forall \bx^{\{\Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by))\to (\exists \bbf^{\{\Nat\to\Nat\}}, \forall \bx^{\{\Nat\}}, R(\bx,\bbf(\bx)))\]
+Nous n'avons pas défini la sorte $\Nat\to\Nat$~: on verra plus tard comment parler des fonctions au premier ordre, mais on donne ici une idée informelle de la véracité de l'axiome du choix (dénombrable).
+
+On fixe $R^{\Nat,\Nat}$ et on suppose qu'il existe $r\reali \forall \bx^{\{Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by)$~: cela signifie que pour tout code $n$ de $\bx$, on peut trouver un code $m$ d'un certain $\by$ tel que $R(\bx,\by)$~: $r$ définit une fonction calculable qui aux codes de $\bx$ associe les codes de $\by$ correspondant. On considère les deux fonctions $\pi_1,\pi_2$ telles que pour $t \reali \exists \bx^{\{S\}}, \varphi$, $\pi_1\;t\reali S(\bx)$ et $\pi_2\;t\reali \varphi$, alors $\lambda x.\pi_1\;(r\;x)$ code une fonction $\Nat\to\Nat$ et $\lambda x.\pi_2\;(r\;x)$ montre que cette fonction réalise bien ce qu'on attend d'elle.
+
+
+\begin{comment}
+\section{Réalisabilité}
+
+L'élément central de ce stage est la réalisabilité. Nous nous devons donc d'en donner une présentation un peu détaillée. Pour cela, nous allons faire un détour légèrement historique en présentant l'idée à l'origine de ce concept.
+
+\subsection{L'interprétation BHK}
+
+
 
 On voudrait alors que la relation $\reali\subseteq \bX \times \Phi$ ainsi construite définisse une théorie
 \[\mathcal T_\reali \defeq \{\varphi\in\Phi\mid \exists x \in \bX, x\reali \varphi\}\]
@@ -668,299 +1227,7 @@ On commence par montrer que $\SAT$ est un treillis complet.
 
 On définit un système de typage pour $\Lambda$, dont les types sont des propositions.
 
-\begin{defi}[Typage]
-  Nos contextes de typage de termes sont des listes de couples $(x : \varphi)\in\mathcal X_\Lambda\times \Propo$. On définit la relation de typage par les règles suivantes, où les deux premiers contextes servent à typer les variables du premier et second ordre (en particulier on considère que tous les séquents sont bien typés)~:
-  \begin{center}
-    \begin{prooftree}
-      \infer0[Ax]{\Gamma\mid\Delta\mid\Xi,x : \varphi\vdash x : \varphi}
-    \end{prooftree}
 
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi \vdash t : \varphi}
-      \infer1[Aff$_1$]{\Gamma, \bx : S\mid\Delta\mid\Xi \vdash t : \varphi}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
-      \infer1[Aff$_2$]{\Gamma\mid\Delta, X : S_1,\ldots,S_n\mid\Xi\vdash t : \varphi}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
-      \infer1[Aff$_\Lambda$]{\Gamma\mid\Delta\mid\Xi, x : \psi\vdash t : \varphi}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi, x : \varphi \vdash t : \psi}
-      \infer1[$\to_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda x.t : \varphi \to \psi}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi \to \psi}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \varphi}
-      \infer2[$\to_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t\:u : \psi}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \psi}
-      \infer2[$\land_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \langle t,u\rangle : \varphi\land \psi}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi_1\land\varphi_2}
-      \infer1[$\land_\mathrm e^i$]{\Gamma\mid\Delta\mid\Xi\vdash \pi_i\;t : \varphi_i}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \hypo{\Gamma, \bx : S\mid\Delta\mid\Xi\vdash t : \varphi}
-      \infer1[$\forall^1_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^A, \varphi}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall \bx^A, \varphi}
-      \hypo{\Gamma\vdash \bt : S}
-      \infer2[$\forall^1_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\bt/\bx]}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta, X^{S_1,\ldots,S_n}\mid\Xi\vdash t : \varphi}
-      \infer1[$\forall^2_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{A_1,\ldots,A_n}, \varphi}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \forall X^{S_1,\ldots,S_n}, \varphi}
-      \hypo{\Gamma, \bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo}
-      \infer2[$\forall^2_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t : \varphi[\psi(\bx_1,\ldots,\bx_n)/X]}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \infer0[$\bN_\mathrm i^0$]{\Gamma\mid\Delta\mid\Xi\vdash 0 : \Nat(\bZ)}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Nat(\bt)}
-      \infer1[$\bN_\mathrm i^S$]{\Gamma\mid\Delta\mid\Xi\vdash S\;t : \Nat(\bfS\:\bt)}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0[$\bN_\mathrm e$]{\Gamma\mid\Delta, X : \Nat\mid\Xi\vdash \rec_\bN : X(\bZ) \to (\forall \bx^{\{\Nat\}}, X(\bx) \to X(\bfS\;\bx)) \to \forall \bx^{\{\Nat\}}, X(\bx)}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0[$\bB_\mathrm i ^{\btt}$]{\Gamma\mid\Delta\mid\Xi\vdash \btt : \Bool(\bbtt)}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \infer0[$\bB_\mathrm i^{\bff}$]{\Gamma\mid\Delta\mid\Xi\vdash \bff : \Bool(\bbff)}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0[$\bB_\mathrm e$]{\Gamma\mid\Delta, X : \Bool\mid\Xi\vdash \rec_\bB : X(\bbtt) \to X(\bbff) \to \forall \bx^{\{\Bool\}}, X(\bx)}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0[$\bL_\mathrm i^{[\;]}$]{\Gamma\mid\Delta\mid\Xi\vdash [\:] : \List(\bnil)}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Nat(\bt)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \List(\bu)}
-      \infer2[$\bL_\mathrm i^{::}$]{\Gamma\mid\Delta\mid\Xi\vdash t :: u : \List(\bt \bcons \bu)}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0[$\bL_\mathrm e$]{\Gamma\mid\Delta, X : \List\mid\Xi\vdash \rec_\bL : X(\bnil) \to (\forall \bn^{\{\Nat\}}\;\bx^{\{\List\}}, X(\bx) \to X(\bn \bcons \bx)) \to \forall \bx^{\{\List\}},X(\bx)}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \hypo{\Gamma, \bx : S\mid\Delta\mid\Xi, x : S(\bx)\vdash t : S'(\bt)}
-      \infer1[$\blam_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda x.t : (S\to S')(\blam \bx. \bt)}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : (S\to S')(\bt)}
-      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : S(\bu)}
-      \infer2[$\blam_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t\;u : S'(\bt(\bu))}
-    \end{prooftree}
-  \end{center}
-\end{defi}
-
-On définit une notion de valuation adaptée au lemme d'adéquation.
-
-\begin{defi}[Valuation de réalisabilité]
-  Soit un contexte de typage du premire ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
-  \[\forall i \in I, \nu(x_i)\reali_\rho^\sigma\varphi_i\]
-\end{defi}
-
-On définit aussi la substitution simultanée $t^\nu$ en remplaçant directement chaque variable libre $x$ de $t$ par $\nu(x)$ dans $t$.
-
-On a besoin de deux lemmes de substitutions, pour le premier et le second ordre.
-
-\begin{lem}
-  Pour tous $\sigma,\rho$, $\bt : A$, $t\in\Lambda$, $\varphi : \Propo$, on a
-  \[t\reali_\rho^{\sigma[\bx \leftarrow \bt^\sigma]} \varphi\iff t\reali_\rho^\sigma \varphi[\bt/\bx]\]
-\end{lem}
-
-\begin{proof}
-  Tout d'abord, par une induction sur $\bu$ (que nous ne détaillerons pas), on peut quitte à renommer nos variables considérer que $\forall \bu, \bu^{\sigma[\bx\leftarrow \bt^\sigma]} = (\bu[\bt/\bx])^\sigma$. On raisonne maintenant par induction sur $\varphi$~:
-  \begin{itemize}
-  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors
-    \begin{align*}
-      \trad\varphi_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} &= \rho(X)(\bt_1^{\sigma[\bx\leftarrow \bt^\sigma]},\ldots,\bt_n^{\sigma[\bx\leftarrow \bt^\sigma]})\\
-      &= \rho(X)((\bt_1[\bt/\bx])^\sigma,\ldots,(\bt_n[\bt/\bx])^\sigma)\\
-      &= \trad{\varphi[\bt/\bx]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \psi \to \chi$ alors
-    \begin{align*}
-      \trad{\psi\to\chi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \{t\in\Lambda\mid \forall u\in\trad\psi_\rho^{\sigma[\bx\leftarrow\bt^\sigma]}, t\;u \in \trad\chi_\rho^{\sigma[\bx\leftarrow\bt^\sigma]}\}\\
-      &= \{t\in\Lambda\mid\forall u\in \trad{\psi[\bt/\bx]}_\rho^\sigma, t\;u\in\trad{\chi[\bt/\bx]}_\rho^\sigma\}\\
-      &= \trad{\psi[\bt/\bx]\to\chi[\bt/\bx]}_\rho^\sigma\\
-      &= \trad{(\psi\to\chi)[\bt/\bx]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \psi_1\land \psi_2$ alors
-    \begin{align*}
-      \trad{\psi_1\land\psi_2}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \{t\in\Lambda\mid \forall i \in\{1,2\}, \pi_i\;t\in \trad{\psi_i}_\rho^{\sigma[\bt\leftarrow\bt^\sigma]}\}\\
-      &= \{t\in\Lambda\mid\forall i \in \{1,2\}, \pi_i\;t\in\trad{\psi_i[\bt/\bx]}_\rho^\sigma\}\\
-      &= \trad{(\psi\land\chi)[\bt/\bx]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \forall \by^S, \psi$ alors quitte à renommer $\by$ pour s'assurer que la variable n'appartienne pas aux variables libres de $\bt$~:
-    \begin{align*}
-      \trad{\forall \by^S,\psi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \bigcap_{s\in \bS}\trad{\psi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma,\by\leftarrow s]}\\
-      &= \bigcap_{s\in\bS}\trad\psi_\rho^{\sigma[\by\leftarrow s, \bx\leftarrow \bt^\sigma]}\\
-      &= \bigcap_{s\in\bS}\trad{\psi[\bt/\bx]}_\rho^{\sigma[\by\leftarrow s]}\\
-      &= \trad{\forall \bx, \psi[\bt/\bx]}_\rho^\sigma\\
-      &= \trad{(\forall \bx, \psi)[\bt/\bx]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \forall X^{S_1,\ldots,S_n}, \psi$ alors
-    \begin{align*}
-      \trad{\forall X^{S_1,\ldots,S_n}, \psi}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} &= \bigcap_{F : \bS_1\times\cdots\times \bS_n\to \SAT}\trad{\psi}_{\rho[X\leftarrow F]}^{\sigma[\bx\leftarrow \bt^\sigma]}\\
-      &= \bigcap_{F : \bS_1\times\cdots\times \bS_n \to \SAT}\trad{\psi[\bt/\bx]}_{\rho[X\leftarrow F]}^\sigma\\
-      &= \trad{(\forall X^{S_1,\ldots,S_n}, \psi)[\bt/\bx]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = S(\bu)$, alors $\trad{S(\bu)}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} = \ceil{\bu^{\sigma[\bx\leftarrow\bt^\sigma]}} = \ceil{(\bu[\bt/\bx])^\sigma}$
-  \end{itemize}
-  Donc, par induction, $\trad\varphi_\rho^{\sigma[\bx\leftarrow\bt]} = \trad{\varphi[\bt/\bx]}_\rho^\sigma$, d'où le résultat.
-\end{proof}
-
-\begin{lem}
-  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis on a, en notant $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow s_1,\ldots,\bx_n\leftarrow s_n]}$~:
-  \[t\reali_{\rho[X\leftarrow F]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
-\end{lem}
-
-\begin{proof}
-  Par induction sur $\varphi$~:
-  \begin{itemize}
-  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors
-    \begin{align*}
-      \trad\varphi_{\rho[X\leftarrow F]}^\sigma &= S(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
-      &= \trad\psi_\rho^{\sigma[\bx_1\leftarrow \bt_1^\sigma,\ldots,\bx_n\leftarrow \bt_n^\sigma]} \\
-      &= \trad{\psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]}_\rho^\sigma\\
-      &= \trad{X(\bt_1,\ldots,\bt_n)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = Y(\bt_1,\ldots,\bt_p)$ où $X\neq Y$ alors $\trad{\varphi}_{\rho[X\leftarrow F]}^\sigma = \trad\varphi_\rho^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
-  \item si $\varphi = \chi \to \chi'$ alors
-    \begin{align*}
-      \trad{\chi\to\chi'}_{\rho[X\leftarrow F]}^\sigma &= \{t\in\Lambda\mid \forall u \in \trad\chi_{\rho[X\leftarrow F]}^\sigma, t\;u\in \trad{\chi'}_{\rho[X\leftarrow F]}^\sigma\}\\
-      &= \{t\in\Lambda\mid \forall u \in \trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma, t\;u\in\trad{\chi'[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\}\\
-      &= \trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X] \to \chi'[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
-      &= \trad{(\chi\to\chi')[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \chi_1\land\chi_2$ alors
-    \begin{align*}
-      \trad{\chi\land\chi'}_{\rho[X\leftarrow F]}^\sigma &= \{t\in\Lambda\mid \forall i \in \{1,2\}, \pi_i\;t\in \trad{\chi_i}_{\rho[X\leftarrow F]}^\sigma\}\\
-      &= \{t\in\Lambda\mid \forall i \in \{1,2\}, \pi_i\;t\in\trad{\chi_i[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\}\\
-      &= \trad{\chi_1[\psi(\bx_1,\ldots,\bx_n)/X] \land \chi_2[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
-      &= \trad{(\chi_1\to\chi_2)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \forall \bx^S, \chi$ alors
-    \begin{align*}
-      \trad{\forall \bx^S, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{s\in\bS}\trad\chi_{\rho[X\leftarrow F]}^{\sigma[\bx\leftarrow s]}\\
-      &= \bigcap_{s\in\bS}\trad{\chi/[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^{\sigma[\bx\leftarrow s]}\\
-      &= \trad{\forall \bx^S, \chi[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma\\
-      &= \trad{(\forall \bx^S, \chi)[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = \forall Y^{S_1,\ldots,S_p},\chi$ alors
-    \begin{align*}
-      \trad{\forall Y^{S_1,\ldots,S_p}, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{G : \bS_1\times\cdots\times\bS_p \to \SAT}\trad\chi_{\rho[X\leftarrow F, Y\leftarrow G]}^\sigma\\
-      &= \bigcap_{G : \bS_1\times\cdots\times\bS_p\to\SAT}\trad\chi_{\rho[Y\leftarrow G, X\leftarrow F]}^\sigma\\
-      &= \bigcap_{G : \bS_1\times\cdots\times\bS_p\to\SAT}\trad{\chi[\psi(\bx_1,\ldots,\bx_n)/X]}_{\rho[Y\leftarrow G]}^\sigma\\
-      &= \trad{\forall Y^{S_1,\ldots,S_n}, \chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
-      &= \trad{(\forall Y^{S_1,\ldots,S_n}, \chi)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
-    \end{align*}
-  \item si $\varphi = S(\bt)$ alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \varphi$ d'où le résultat.
-  \end{itemize}
-  Donc, par induction, $\trad\varphi_{\rho[X\leftarrow F]}^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma$.
-\end{proof}
-
-\begin{lem}[Adéquation]
-  Soient des contextes $\Gamma,\Delta,\Xi$ et des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$. Soit $t\in\Lambda$ et $\varphi\in\Propo$ tels que $\Gamma\mid\Delta\mid\Xi\vdash t : \varphi$. Alors $t^\nu \reali_\rho^\sigma \varphi$.
-\end{lem}
-
-\begin{proof}
-  La preuve se fait par induction sur la relation de typage $\vdash$~:
-  \begin{itemize}
-  \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $t^\nu = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
-  \item Le cas d'un affaiblissement est direct aussi.
-  \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $t^\nu \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $(\lambda x.t)^\nu\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $t^{\nu[x \leftarrow u]}\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $t^{\nu[x\leftarrow u]} = t^\nu[u/x]$ donc $t^\nu[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.t^\nu) u \reali_\rho^\sigma \psi$, donc $\lambda x.t^\nu\reali_\rho^\sigma \varphi\to\psi$.
-  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi \to \psi$ et $u^\nu\reali_\rho^\sigma \varphi$, alors par définition $(t\;u)^\nu\reali_\rho^\sigma \psi$.
-  \item Supposons que $t^\nu\reali_\rho^\sigma \varphi$ et $u^\nu\reali_\rho^\sigma \psi$, alors $\pi_1\;\langle t,u\rangle^\nu \reduc t^\nu \reali_\rho^\sigma \varphi$ et $\pi_2\;\langle t,u\rangle^\nu\reduc u^\nu \reali_\rho^\sigma \psi$, donc $\langle t,u\rangle^\nu \reali_\rho^\sigma \varphi\land\psi$.
-  \item Si $t^\nu \reali_\rho^\sigma \varphi_1\land\varphi_2$ alors par définition, $\pi_i\;t^\nu\reali_\rho^\sigma \varphi_i$.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S), \Delta,\Xi$, $t^\nu\reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, alors par hypothèse pour tout $s \in \bS$, $\nu\reali_\rho^{\sigma[\bx\leftarrow s]}(\Gamma, \bx : S), \Delta, \Xi$ donc $t^\nu\reali_\rho^{\sigma[\bx \leftarrow s]}\varphi$ pour tout $s\in \bS$, ce qui signifie que $t^\nu \reali_\rho^\sigma \forall \bx^S, \varphi$.
-  \item On suppose que $t^\nu\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\bt^\sigma \in \mathbb S$ donc $t^\nu\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n), \Xi$, $t^\nu \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n),\Xi$ donc $t^\nu\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $t^\nu\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
-  \item Si $t^\nu\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $t^\nu\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $t^\nu\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
-  \item Comme $0\reduc^* 0$ et $0\in\ceil\bZ$, on en déduit le résultat.
-  \item Si $t\in\ceil{\bt^\sigma}$ où $\bt^\sigma \in \bN$, alors $t\reduc^* \overline{\bt^\sigma}$ donc $S\;t\reduc^*\overline{\bfS\;\bt^\sigma}$, donc $S\;t\in\ceil{\bfS\;\bt^\sigma}$.
-  \item On veut montrer que $\rec_\bN \reali_\rho^\sigma X(\bZ) \to (\forall \bn^{\{\Nat\}}, X(\bn) \to X(\bfS\;\bn))\to \forall \bn^{\{\Nat\}}, X(\bn)$. Soient donc $t,u,v\in\Lambda$ tel que $t^\nu \reali_\rho^\sigma X(\bZ)$, $u^\nu \reali_\rho^\sigma \forall \bn^{\{\Nat\}}, X(\bn) \to X(\bfS\;\bn)$ et $v^\nu \reali_\rho^\sigma \Nat(\bn)$, montrons que $\rec_\bN\;t\;u\;v\reali_\rho^\sigma X(\bn)$. Par définition de $v^\nu\reali_\rho^\sigma \Nat(\bn)$, on sait que $v^\nu \reduc^* S^m\;0$ pour un certain $m\in\bN$. On raisonne par induction sur ce $m$~:
-    \begin{itemize}
-    \item si $v^\nu\reduc^* 0$, alors
-      \begin{align*}
-        (\rec_\bN\;t\;u\;v)^\nu &= \rec_\bN\;t^\nu\;u^\nu\;v^\nu\\
-        &\reduc^* \rec_\bN\;t^\nu\;u^\nu\;0\\
-        &\reduc t^\nu \reali_\rho^\sigma X(\bZ)
-      \end{align*}
-      donc par saturation $(\rec_\bN\;t\;u\;v)\reali_\rho^\sigma X(\bn)$ dans le cas où $\bn^\sigma = 0$.
-    \item si $v^\nu\reduc^* S\;n'$ et, par hypothèse d'induction, que pour tout $w\in\Lambda$, $w \reduc^* n' \implies (\rec_\bN\;t\;u\;w)^\nu\reali_\rho^\sigma X(n')$, alors
-      \begin{align*}
-        (\rec_\bN\;t\;u\;v)^\nu&= \rec_\bN\;t^\nu\;u^\nu\;v^\nu\\
-        &\reduc^* \rec_\bN\;t^\nu\;u^\nu\;(S\;n')\\
-        &\reduc^* u^\nu\;n'\;(\rec_\bN\;t^\nu\;u^\nu\;n')
-      \end{align*}
-      or comme $u^\nu\reali_\rho^\sigma \Nat(n') \to X(n') \to X(\bfS\;n')$ et par hypothèse d'induction, on en déduit par saturation que $(\rec_\bN\;t\;u\;v)^\nu\reali_\rho^\sigma X(\bfS\;n')$
-    \end{itemize}
-    Donc par induction, pour tout $\bn : \Nat$ et $v\reali_\rho^\sigma \Nat(\bn)$, on a $(\rec_\bN\;t\;u\;v)^\nu\reali_\rho^\sigma X(\bn)$, donc $\rec_\bN\reali_\rho^\sigma X(\bZ) \to (\forall \bn^{\{\Nat\}}, X(\bn) \to X(\bfS\;\bn)) \to \forall \bn^{\{\Nat\}}, X(\bn)$.
-  \item les cas de $\bB$ et $\bL$ sont analogues.
-  \item supposons que $t^\nu\in\ceil{S'(\bt^\sigma)}$ pour $\nu\reali_\rho^\sigma (\Gamma, \bx : S), \Delta,(\Xi, x : S(\bt))$. Soit alors $s\in\bS$ et $e\in \ceil s$. On sait que $t^{\nu[x\leftarrow e]}\in\ceil{S'(\bt^{\sigma[\bx\leftarrow s]})}$, donc $(\lambda x.t)^\nu e \in \ceil{S'(\bt^{\sigma[x\leftarrow s]})}$ par saturation, donc $\lambda x.t\in\ceil{(S\to S')(\blam x.\bt)}$.
-  \item supposons que $t^\nu \in\ceil{(S\to S')(\bt^\sigma)}$ et $u^\nu \in\ceil{S(\bu^\sigma)}$, alors par définition de $\trad{S\to S'}$ on en déduit que $(t\;u)^\nu\in\ceil{S'(\bt(\bu))^\sigma}$.
-  \end{itemize}
-
-  On en déduit par induction le résultat.
-\end{proof}
 
 En particulier, si $\vdash t : \varphi$ alors $t\reali \varphi$.
 
@@ -1104,5 +1371,7 @@ On montre maintenant que $\KL$ n'est pas vérifié, même sous sa forme faible $
 
   Cependant, supposons qu'il existe un chemin infini dans l'arbre, $\alpha$, alors on trouve $j$ tel que $\alpha = \varphi_j$. On sait donc que pour $t$ suffisamment grand, $d(j,t) \neq \varphi_j(j) = \alpha_j$, donc $\alpha_j \notin K$, ce qui est une contradiction. On voit donc que $K$ ne possède pas de chemin infini.
 \end{proof}
+
+\end{comment}
 
 \end{document}
