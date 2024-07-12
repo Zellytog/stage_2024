@@ -21,9 +21,9 @@ Cette question est renouvelée dans le cadre de la logique intuitionniste et des
 \[\forall x^A, \exists y^B, R(x,y) \implies \exists f^{A\to B}, \forall x^A, R(x,f(x))\]
 Où $R$ est une relation binaire entre $A$ et $B$. Suivant le choix de $A,B$ et des formes que peut prendre $R$, on obtient de nombreux principes de choix. On peut, de plus, étudier une variante de ces principes en en prenant la contraposée~: en logique intuitionniste, ces ``principes de co-choix'' sont plus faibles, souvent strictement.
 
-Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem. Sans rentrer dans les détails, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante~:
+Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem. Sans rentrer dans les détails, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante (en omettant plusieurs hypothèses sur $T$, respectivement $C$)~:
 \[\KL \defeq (\forall n^{\bN}, \exists u^{\bN^*}, |p| = n \land p \in T) \implies \exists \alpha^{\bN\to\bN}, \forall n^{\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
-\[\FT \defeq (\forall \alpha^{\bN\to\bN}, \exists n^\bN, \alpha_0\ldots \alpha_{n-1}\in C)\implies \exists n^\bN, \forall \alpha^{\bN\to\bN}\]
+\[\FT \defeq (\forall \alpha^{\bN\to\bN}, \exists n^\bN, \alpha_0\ldots \alpha_{n-1}\in C)\implies \exists n^\bN, \forall \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
 L'écriture $\exists p^{\bN^*},|p| = n \land p \in T$ est équivalente à $\exists \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T$, mais plus naturelle à considérer. On suppose ici que $T$ est clos par préfixe et $C$ par extension, nous donnant donc que $\FT$ est la contraposée de $\KL$.
 
 Mentionnons que $\KL$ comme $\FT$ sont toujours vrais dans $\ZFC$, et même dans $\ZF$~: on travaille donc dans une théorie plus faible dans laquelle on peut étudier l'ajout de $\FT$ ou $\KL$ comme non trivial. La théorie habituellement utilisée en mathématiques à rebours est un fragment faible de l'arithmétique du second ordre nommée $\RCAO$. Cette théorie est très expressive car elle permet de décrire les réels ainsi que les fonctions continues voire mesurables. Cependant, cette expressivité se fait au coût d'une grande quantité de codages, qui nous intéressent peu. Nous faisons donc le choix de travailler dans une version de l'arithmétique dans laquelle on peut parler de façon interne de fonctions, de paires et d'autres outils primitifs en plus des entiers, le tout avec une logique du second ordre.
@@ -263,7 +263,7 @@ Cette interprétation ne fonctionne que dans le cas où $\varphi$ est close pour
 
 Maintenant que nous avons donné les idées principales à propos de la relation de réalisabilité, précisons l'ensemble $\bX$ que nous étudions. Comme nous avons parlé d'interpréter nos éléments comme des fonctions, il semble naturel de considérer le $\lambda$-calcul, dans lequel tout terme peut se voir comme une fonction. On présentera succinctement le $\lambda$-calcul, principalement pour s'accorder sur les conventions et les notations.
 
-\begin{defi}[$\lambda$-termes]
+\begin{defi}[$\lambda$-termes]\label{def.lam}
     On se fixe un ensemble dénombrable $\mathcal X_\Lambda$ de $\lambda$-variables, qu'on notera $x,y,\ldots$ On définit l'ensemble $\Lambda$ des $\lambda$-termes comme l'ensemble engendré par la grammaire suivante~:
     \[t,u ::= x \mid \lambda x. t\mid t\;u\]
 \end{defi}
@@ -572,10 +572,10 @@ Supposons donc que $\varphi = \Nat(\bu)$ et prouvons le lemme \ref{lem.subst.1}~
 
 Dans le cas du lemme \ref{lem.subst.2}, le résultat est direct étant donné que l'interprétation de $\Nat(\bt)$ ne dépend pas de l'interprétation du second ordre.
 
-On souhaite en déduire une nouvelle théorie, qui considère la version dite relativisée des quantificateurs~: plutôt que de considérer $\forall \bx^S, \varphi$, on considère $\forall \bx^S, S(\bx) \to \varphi$, ce qu'on notera $\forall \bx^{\{S\}}, \varphi$ pour alléger la lecture. L'adéquation ne correspond alors par tout à fait au fait que la nouvelle théorie définie est close par déduction~: il faut de plus remarquer que si $\Gamma\vdash \bt : \Nat$ alors $\sigma(\bt) \in \bN$ et possède donc un code, ce qui signifie que l'on a bien $\Nat(\bt)$, permettant d'appliquer la règle $\forall_\mathrm e^1$ dans une version relativisée. Une version relativisée de la règle $\forall_\mathrm i^1$, par contre, est juste la concaténation de $\to_\mathrm i$ et $\forall_\mathrm i^1$ dans sa version uniforme.
+On souhaite en déduire une nouvelle théorie, qui considère la version dite relativisée des quantificateurs~: plutôt que de considérer $\forall \bx^S, \varphi$, on considère $\forall \bx^S, S(\bx) \to \varphi$, ce qu'on notera $\forall \bx^{\{S\}}, \varphi$ pour alléger la lecture. L'adéquation fonctionne encore correctement, mais à condition de considérer seulement les objets qui possèdent des codes~: on force donc notre modèle à se restreindre à une forme d'éléments standards. Pour les entiers, cela ne change pas notre interprétation, qui est $\bN$, mais lorsque nous introduirons des fonctions, une quantification relativisée force la fonction introduite à être calculable.
 
 On possède donc une nouvelle théorie. Pour une proposition du second ordre $\varphi$, on notera $\{\varphi\}$ sa version relativisée. On peut donc définir la nouvelle théorie comme~:
-\[\{\mathcal T_\reali\} \defeq \{\varphi \in \Propo\mid \exists t \in \Lambda, t \reali\{\varphi\}\]
+\[\{\mathcal T_\reali\} \defeq \{\varphi \in \Propo\mid \exists t \in \Lambda, t \reali\{\varphi\}\}\]
 
 Cette théorie a un sens calculatoire bien plus profond~: par exemple, on peut vérifier que dans notre modèle actuel, l'axiome du choix est vérifié (dans un sens relativisé)~:
 \[\reali \forall R^{\Nat,\Nat},(\forall \bx^{\{\Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by))\to (\exists \bbf^{\{\Nat\to\Nat\}}, \forall \bx^{\{\Nat\}}, R(\bx,\bbf(\bx)))\]
@@ -583,6 +583,599 @@ Nous n'avons pas défini la sorte $\Nat\to\Nat$~: on verra plus tard comment par
 
 On fixe $R^{\Nat,\Nat}$ et on suppose qu'il existe $r\reali \forall \bx^{\{Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by)$~: cela signifie que pour tout code $n$ de $\bx$, on peut trouver un code $m$ d'un certain $\by$ tel que $R(\bx,\by)$~: $r$ définit une fonction calculable qui aux codes de $\bx$ associe les codes de $\by$ correspondant. On considère les deux fonctions $\pi_1,\pi_2$ telles que pour $t \reali \exists \bx^{\{S\}}, \varphi$, $\pi_1\;t\reali S(\bx)$ et $\pi_2\;t\reali \varphi$, alors $\lambda x.\pi_1\;(r\;x)$ code une fonction $\Nat\to\Nat$ et $\lambda x.\pi_2\;(r\;x)$ montre que cette fonction réalise bien ce qu'on attend d'elle.
 
+En réalité, le système de type permet plus que de montrer que $\{\mathcal T_\reali\}$ est close par déduction~: elle permet de construire des réaliseurs de façon simple et efficace. En effet, l'adéquation nous dit qu'un terme typé est un réaliseur, mais là où la réalisabilité est sémantique (la proposition $t\reali \varphi$ est liée à la sémantique de $t$ et non à sa forme), le typage est syntaxique. En particulier, il est facile de vérifier qu'un terme $t$ donné peut bien se typer avec un type $\varphi$ donné~: il nous suffit d'exhiber une dérivation de typage. On souhaite donc rajouter des règles de typage, non pour l'aspect logique, mais aussi pour simplifier les constructions de réaliseurs. Nous introduisons donc $3$ règles à propos de $\Nat$, qui s'apparentent largement aux règles de typage des constructeurs et du destructeur de $\Nat$ en système T~:
+\begin{center}
+    \begin{prooftree}
+        \infer0[$\bN_\mathrm i^0$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda f.\lambda x.x : \Nat(0)}
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+        \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Nat(\bt)}
+        \infer1[$\bN_\mathrm i^S$]{\Gamma\mid\Delta\mid\Xi\vdash (\lambda n.\lambda f.\lambda x.n\;f\;(f\;x))\;t : \Nat(S\;\bt)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+        \infer0[$\bN_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash \rec_{\Nat} : \forall X^{\Nat}, X(0)\to (\forall \bx^{\{\Nat\}}, X(\bx) \to X(S\;\bx))\to \forall \bx^{\{\Nat\}}, X(\bx)}
+    \end{prooftree}
+\end{center}
+
+où $\rec_{\Nat}$ est le récurseur sur les entiers, vérifiant $\rec_{\Nat}\;x\;y\;\overline 0 \rhd^* x$ et $\rec_{\Nat}\;x\;y\;\overline{S\;n} \rhd^* y\;\overline n\;(\rec_{\Nat}\;x\;y\;\overline n)$. Nous n'en donnons pas la constructions, car nous l'ajouterons directement à notre langage final et l'écrire en $\lambda$-calcul pur demande de changer l'encodage des entiers, par exemple vers les entiers de Scott, qui sont moins lisibles pour introduire la notion actuelle.
+
+L'adéquation vis à vis de ces règles se prouve~:
+\begin{itemize}
+    \item on sait que $\lambda f.\lambda x.x = \overline 0$ donc le terme se réduit bien en $\overline 0$
+    \item supposons que $t\rhd^* \overline{\sigma(\bt)}$, alors $s\;t \rhd^* s\;\overline{\sigma(\bt)}$, où $s \defeq \lambda n\;f\;x.n\;f\;(f\;x)$. Cela signifie que
+    \begin{align*}
+        s\;t&\rhd^* s\;(\lambda f\;x. f^{\sigma(\bt)}\;x)\\
+        &\rhd \lambda f\;x. (\lambda f\;x. f^{\sigma(\bt)}\;x)\;f\;(f\;x)\\
+        &\rhd^2 \lambda f\;x. f^{\sigma(\bt) + 1}\;x\\
+        &= \overline{S\;\sigma(\bt)}
+    \end{align*}
+    d'où le résultat.
+    \item on suppose que $x_0 \reali X(0)$ et que $x_s \reali \forall \bx^{\{\Nat\}}, X(\bx) \to X(S\;\bx)$, montrons par récursion sur $n$ que pour tout $n$, $\rec_{\Nat}\;x_0\;x_s\;\overline n \reali X(\bx)$ (par saturation, si on sait seulement que $t \rhd^* \overline n$ cela suffit à dire que $\rec_{\Nat}\;x_0\;x_s\;t \reali X(\bx)$)~:
+    \begin{itemize}
+        \item si $n = 0$, alors $\rec_{\Nat}\;x_0\;x_s\;\overline 0 \rhd^* x_0 \reali X(0)$, d'où le résultat par saturation.
+        \item supposons que $\rec_{\Nat}\;x_0\;x_s\;\overline n \reali X(n)$, alors
+            \[\rec_{\Nat}\;x_0\;x_s\;\overline{n+1} \rhd^* x_s\;\overline n\;(\rec_{\Nat}\;x_0\;x_s\;\overline n)\]
+        or $x_s \reali \Nat(n) \to X(n) \to X(n+1)$, $\overline n \reali \Nat(n)$ de façon évidente, et l'hypothèse d'induction nous dit que $\rec_{\Nat}\;x_0\;x_s\;\overline n \reali X(n)$, donc le terme total réalise $X(n+1)$.
+    \end{itemize}
+    D'où le résultat par récurrence.
+\end{itemize}
+
+Nous n'avons pas introduit de valuations $\sigma, \rho$ ni de substitution $\nu$ pour garder la preuve la plus lisible possible, mais celle-ci fonctionne évidemment tout aussi bien en ajoutant ces éléments.
+
+De plus, cette preuve s'adapte tout à fait à n'importe quel codage des entiers avec un codage de la fonction successeur et un récurseur vérifiant les relations décrites précédemment. Dans la suite, on décidera de travailler directement avec un terme $0$, un terme $S$ et un terme $\rec_{\Nat}$ vérifiant ce qu'on souhaite~: la preuve précédente fonctionnera encore pour montrer l'adéquation de ces règles. Un point important, cependant, est que si nous avions décidé de créer une fonction $\rec_{\Nat}$ qui, pour des paramètres $x$ et $y$, réduit à partir de $\overline n$ vers $y^n\;x$ (en ignorant le paramètre dans $\bN$ de $y$), il ne serait pas possible d'appliquer seulement la saturation.
+
+On voit donc que la théorie $\{\mathcal T_\reali\}$ est plus intéressante~: elle vérifie le principe de récurrence, au prix de ne parler que des entiers standards.
+
+\subsection{Encoder les fonctions et le reste}
+
+Pour finir, nous souhaitons permettre à notre modèle de parler d'autres choses que des entiers. Nous allons donc introduire d'autres sortes dans notre modèle~: les booléens, les listes, les fonctions et les paires. Notre $\lambda$-calcul sera, lui aussi, enrichi de constructeurs pour permettre de parler plus facilement des listes, des booléens et des paires (ainsi que des entiers).
+
+Ainsi, notre ensemble $\mathcal S$ des sortes est engendré par la grammaire suivante~:
+\[S,S' ::= \Nat\mid\Bool\mid\List(S)\mid S\times S'\mid S\to S'\]
+
+Plutôt que de donner explicitement la signature, on donne les règles de typages des termes du premier ordre~:
+\begin{center}
+    \begin{prooftree}
+      \infer0{\Gamma, \bx : S \vdash \bx : S}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bZ : \Nat}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \Nat}
+      \infer1{\Gamma\vdash \bfS\;\bt : \Nat}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bu : \Nat \to S \to S}
+      \hypo{\Gamma\vdash \bv : \Nat}
+      \infer3{\Gamma\vdash \rec_{\Nat}\;\bt\;\bu\;\bv : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bbtt : \Bool}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bbff : \Bool}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : \Bool}
+      \hypo{\Gamma\vdash \bu : S}
+      \hypo{\Gamma\vdash \bv : S}
+      \infer3{\Gamma\vdash \rec_{\Bool}\;\bt\;\bu\;\bv : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bnil : \List(S)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bu : \List(S)}
+      \infer2{\Gamma\vdash \bt \bcons \bu : \List(S)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bt : S' \to \List(S') \to S \to S}
+      \hypo{\Gamma\vdash \bv : \List(S')}
+      \infer3{\Gamma\vdash \rec_{\List}\;\bt\;\bu\;\bv : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma, \bx : S \vdash \bt : S'}
+      \infer1{\Gamma\vdash \blam \bx.\bt : S \to S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S \to S'}
+      \hypo{\Gamma\vdash \bu : S}
+      \infer2{\Gamma\vdash \bt\;\bu : S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S}
+      \hypo{\Gamma\vdash \bu : S'}
+      \infer2{\Gamma\vdash \langle \bt,\bu \rangle : S \times S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash \bt : S_1 \times S_2}
+      \infer1{\Gamma\vdash \bpi_i\;\bt : S_i}
+    \end{prooftree}
+\end{center}
+
+On définit l'interprétation de chaque sorte $S$ par un ensemble qu'on notera $\trad S$ ou $\bS$, ainsi que l'interprétation d'un terme $\bt$ tel que $\Gamma\vdash \bt : S$ pour une valuation $\sigma$ du premier ordre adéquate pour $\Gamma$~:
+\begin{itemize}
+    \item $\trad \Nat = \bN$
+    \item $\trad \Bool = \{0,1\}$
+    \item $\trad{\List(S)} = \bS^*$, l'ensemble des suites finies d'éléments de $\bS$
+    \item $\trad{S\times S'} = \bS\times \bS'$, le produit cartésien
+    \item $\trad{S\to S'} = \bS'^{\bS}$, l'espace fonctionnel
+    \item l'interprétation de $\bx$ est $\sigma(\bx)$
+    \item l'interprétation de $\bZ$ est $0\in \bN$
+    \item l'interprétation de $\bS$ est $n\mapsto n + 1$
+    \item l'interprétation de $\rec_{\Nat}\;\bt\;\bu$ est l'unique fonction $f : \bN \to \bS$ valant $\sigma(\bt)$ en $0$ et vérifiant la relation $f(n+1) = \sigma(\bu)(n,f(n))$, et $\rec_{\Nat}\;\bt\;\bu\;\bv$ est donc sa valeur en $\sigma(\bv)$
+    \item l'interprétation de $\bbtt$ est $1\in \{0,1\}$
+    \item l'interprétation de $\bbff$ est $0\in\{0,1\}$
+    \item l'interprétation de $\rec_{\Bool}\;\bt\;\bu\;\bv$ est celle d'un branchement conditionnel~: si $\sigma(\bt) = 1$ alors l'expression vaut $\sigma(\bu)$ et sinon l'expression vaut $\sigma(\bv)$
+    \item l'interprétation de $\bnil$ est $\varepsilon \in \bS^*$
+    \item l'interprétation de $\bt\bcons\bu$ est $\star : \bS \times \bS^* \to \bS^*$, la concaténation d'une lettre à un mot
+    \item l'interprétation de $\rec_\List$ est définie de façon analogue aux autres interprétations de $\rec$
+    \item l'interprétation de $\blam \bx.\bt$ est la fonction qui à $x \in \bX$ associe $\sigma[\bx\leftarrow x](\bt)$
+    \item l'interprétation de $\bt\;\bu$ est l'application fonctionnelle
+    \item l'interprétation des paires et des projections est évidente.
+\end{itemize}
+
+On souhaite aussi définir un ensemble de codes pour nos termes, mais il nous faut d'abord, pour cela, introduire le langage de programmation augmenté avec des outils pour les différentes sortes.
+
+\begin{defi}[$\lambda$-calcul augmenté]
+    Notre nouveau $\lambda$-calcul est engendré, à partir de la grammaire de la définition \ref{def.lam}, par~:
+    \[t,u ::= [\cdots] \mid\langle t,u\rangle\mid \pi_1\;t\mid\pi_2\;t\mid 0\mid S\;t \mid\rec_\bN\mid \btt\mid\bff\mid\rec_\bB\mid[\,]\mid t::u\mid\rec_\bL\]
+\end{defi}
+
+On étend la substitution de façon évidente, et on ajoute dans $\mapsto$ les règles suivantes~:
+\begin{center}
+    \begin{prooftree}
+        \infer0[$i\in\{1,2\}$]{\pi_i\;\langle t_1,t_2\rangle \mapsto t_i}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+        \infer0{\rec_\bN\;t\;u\;0 \mapsto t}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+        \infer0{\rec_\bN\;t\;u\;(S\;v)\mapsto u\;v\;(\rec_\bN\;t\;u\;v)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+        \infer0{\rec_\bB\;\btt\;t\;u\mapsto t}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+        \infer0{\rec_\bB\;\bff\;t\;u\mapsto u}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+        \infer0{\rec_\bL\;t\;u\;[\,]\mapsto t}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+        \infer0{\rec_\bL\;t\;u\;(v::w)\mapsto u\;v\;w\;(\rec_\bL\;t\;u\;w)}
+    \end{prooftree}
+\end{center}
+
+$\rhd$ est définie comme la plus petite relation contenant $\mapsto$ et étant compatible (c'est-à-dire qu'on s'autorise à effectuer une réduction à l'intétieur d'un terme).
+
+On peut désormais définir les codes des objets du premier ordre~: caque objet du premier ordre $x$ sera associé à un ensemble de codes $\ceil x$ (possiblement vide~: c'est ce qu'il se passe pour une fonction non calculable). On raisonne par induction sur la structure des sortes~:
+\begin{itemize}
+    \item pour $n\in\bN$, $\ceil n \defeq \{t\in\Lambda \mid t \rhd^* S^n\,0\}$
+    \item pour $b \in \bB$, $\ceil 0 \defeq \{t\in\Lambda\mid t \rhd^* \bff\}$ et $\ceil 1 \defeq \{t \in \Lambda\mid t \rhd^* \btt\}$
+    \item pour $l \in \bS^*$, $\ceil{\varepsilon} \defeq \{t\in\Lambda \mid t\rhd^* [\,]\}$ et $\ceil{s\star l} \defeq \{t \in \Lambda\mid\exists u \in \ceil s,\exists v \in \ceil l,t \rhd^* u::v\}$
+    \item pour $(s,s') \in \bS\times \bS'$, $\ceil{(s,s')} \defeq \{t\in \Lambda\mid \exists u \in \ceil s, \exists v \in \ceil{s'}, t \rhd^* \langle u,v\rangle\}$
+    \item pour $f \in \bS\to \bS'$, $\ceil f \defeq \{t \in \Lambda\mid \forall s \in \bS, \forall u \in \ceil s, t\;u \in \ceil{f(s)}\}$
+\end{itemize}
+Par construction, pour $s\in \bS$, $\ceil s$ est un ensemble saturé.
+
+On définit alors simplement, 
+\[\trad{S(\bt)}_\rho^\sigma\defeq \ceil{\sigma(\bt)}\]
+
+La preuve du lemme \ref{lem.subst.1} est la même que pour simplement $\Nat(\bt)$, et celle du lemme \ref{lem.subst.2} est toujours le fait que ces formules sont indépendantes du contexte du second ordre.
+
+On récupère ainsi, très facilement, une théorie où les fonctions, listes et booléens sont plus faciles à exprimer. On a vu les règles de typage liées à $\Nat$~: on peut faire les mêmes pour les autres sortes.
+
+\begin{center}
+    \begin{prooftree}
+      \infer0[$\bB_\mathrm i ^{\btt}$]{\Gamma\mid\Delta\mid\Xi\vdash \btt : \Bool(\bbtt)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0[$\bB_\mathrm i^{\bff}$]{\Gamma\mid\Delta\mid\Xi\vdash \bff : \Bool(\bbff)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0[$\bB_\mathrm e$]{\Gamma\mid\Delta, X : \Bool\mid\Xi\vdash \rec_\bB : X(\bbtt) \to X(\bbff) \to \forall \bx^{\{\Bool\}}, X(\bx)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0[$\bL_\mathrm i^{[\;]}$]{\Gamma\mid\Delta\mid\Xi\vdash [\:] : \List(S)(\bnil)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : S(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : \List(S)(\bu)}
+      \infer2[$\bL_\mathrm i^{::}$]{\Gamma\mid\Delta\mid\Xi\vdash t :: u : \List(S)(\bt \bcons \bu)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0[$\bL_\mathrm e$]{\Gamma\mid\Delta, X : \List\mid\Xi\vdash \rec_\bL : X(\bnil) \to (\forall \bs^{\{S\}}\;\bx^{\{\List(S)\}}, X(\bx) \to X(\bs \bcons \bx)) \to \forall \bx^{\{\List(S)\}},X(\bx)}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma, \bx : S\mid\Delta\mid\Xi, x : S(\bx)\vdash t : S'(\bt)}
+      \infer1[$\blam_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda x.t : (S\to S')(\blam \bx. \bt)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : (S\to S')(\bt)}
+      \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : S(\bu)}
+      \infer2[$\blam_\mathrm e$]{\Gamma\mid\Delta\mid\Xi\vdash t\;u : S'(\bt(\bu))}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+        \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : S(\bt)}
+        \hypo{\Gamma\mid\Delta\mid\Xi\vdash u : S'(\bu)}
+        \infer2[$\times_\mathrm i$]{\Gamma\mid\Delta\mid\Xi\vdash \langle t,u\rangle : (S\times S')(\langle \bt,\bu\rangle)}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+        \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : (S_1\times S_2)(\bt)}
+        \infer1[$\times_\mathrm e^1$]{\Gamma\mid\Delta\mid\Xi\vdash \pi_i\;t : S_1(\bpi_i\;\bt)}
+    \end{prooftree}
+\end{center}
+
+La preuve de l'adéquation pour ces termes est parfaitement similaire au cas des entiers.
+
+Nous avons donc construit un premier modèle de réalisabilité permettant de manipuler de façon efficace les objets dont nous aurons besoin plus tard~: entiers, listes, booléens. Nous mettons en annexe différentes fonctions utiles mais dont la définition est inintéressante. Notre modèle de réalisabilité étant construit, intéressons-nous maintenant aux énoncés d'intérêts étudiés en mathématiques à rebours.
+
+\section{Mathématiques à rebours}
+
+\subsection{Pourquoi l'arithmétique ?}
+
+Nous avons déjà mentionné l'idée de base des mathématiques à rebours dans l'introduction~: c'est un programme mathématique cherchant à partir des théorèmes déjà connus pour en analyser le contenu et la force logique. La réponse typique à laquelle on souhaite répondre est "quels axiomes sont les plus faibles pour entraîner un théorème $T$ ?'' Pour y répondre, on peut essayer de s'intéresser à une notion classique de théorie de la démonstration, celle de l'algèbre de Lindenbaum-Tarski (\cite{Tarski1983-TARLSM-5})~: étant donnée une théorie $\mathcal T$, on peut définir une relation de pré-ordre $\varphi \vdash_{\mathcal T} \psi$ par $\mathcal T\vdash \varphi \to \psi$. L'ensemble des propositions est alors, quotienté par l'équivalence $\dashv\vdash_{\mathcal T}$, une algèbre de Boole. Les classes d'équivalence, qui sont constituées de formules équivalentes modulo $\mathcal T$, sont alors l'objet d'étude des mathématiques à rebours~: on s'intéresse, étant donné un théorème fixé, à la classe d'équivalence (appelons cette classe degré logique, par analogie aux degrés Turing) de ce théorème.
+
+La question vient alors du choix de $\mathcal T$~: il nous faut avant tout que $\mathcal T$ soit faible, car plus la théorie est forte et plus les degrés sont gros. Le cas extrême, de $\ZFC$, met tous les théorèmes intéressants dans le degré de $\top$. On pourrait donc souhaiter que $\mathcal T$ soit vide~: le problème, alors, est que les symboles n'ont plus de sens. Dans le cas de l'arithmétique, par exemple, ne pas considérer d'axiomes entraîne que $0,S,+,\times$ sont des objets quelconques~: ça n'est pas ce que nous voulons. Il nous faut donc un entre-deux~: une théorie suffisamment faible pour être incapable de prouver la plupart des théorèmes mathématiques usuels, mais assez forte pour contenir une partie substantielle des fondements mathématiques (les entiers, le fait qu'ils se comportent correctement, etc). Une solution à cette question est donnée en partie par les travaux de Hilbert et Bernays dans \cite{Hilbert1935-HILGDM-8} et \cite{Hilbert1974-HILGDM-5}~: la puissance de la théorie des ensembles est superflue pour la plupart des résultats mathématiques, et l'arithmétique du second ordre suffit à les prouver. Le cadre de l'arithmétique du second ordre, utilisant des entiers et des ensembles d'entiers, semble donc un bon cadre. On considère donc un système plus faible d'axiomes (puisqu'on veut avoir un maximum d'énoncés indécidables dans notre théorie) mais contenant suffisamment d'informations pour donner un sens à nos objets.
+
+En particulier, puisqu'on souhaite coder les nombres réels et les fonctions continues (choses souhaitables pour formaliser les mathématiques usuelles), il nous faut une théorie permettant de définir ces objets. Le choix historique, qu'on peut voir dans \cite{Simpson_2009} par exemple, est de considérer le sous-système $\RCAO$~: ce sous-système est celui des mathématiques calculables. Cette théorie contient, en plus de l'arithmétique de Robinson, le schéma d'axiomes de compréhension sur les formules $\Delta_1^0$ et le schéma d'induction sur les formules $\Sigma_1^0$. Le schéma de compréhension est l'ensemble des formules de la forme $\exists X^{\Nat}, \forall \bx^{\Nat}, X(\bx) \leftrightarrow \psi(\bx)$, tandis que le schéma d'induction est l'ensemble des formules de la forme $\psi(0)\land (\forall \bx^{\Nat}, \psi(\bx) \to \psi(S\;\bx)) \to \forall \bx^{\Nat}, \psi(\bx)$. $\RCAO$ est donc une restriction de ces schémas pour certaines familles de formules $\psi$. Cette théorie contient l'expressivité des fonctions calculables~: les nombres réels peuvent se représenter comme certaines fonctions calculables, et on peut représenter jusqu'aux fonctions mesurables.
+
+Une conclusion importante de \cite{Simpson_2009} est le phénomène du \textit{Big Five}~: la plupart des théorèmes mathématiques usuels sont équivalents à l'un des cinq sous-systèmes de l'arithmétique du second ordre (modulo $\RCAO$). Parmi ces sous-systèmes se trouve l'un des principes de choix mentionnés dans l'introduction, le lemme de König (en fait, sa version faible).
+
+\subsection{Les principes de choix}
+
+Nous en venons maintenant à l'élément essentiel de notre étude~: les principes de choix. Un principe de choix est un axiome permettant, en partant d'une forme locale de choix, de dériver une forme globale de choix (le tout de façon interne). Reprenons notre formulation précédente~:
+\[(\forall x^A, \exists y^B, R(x,y)) \to \exists f^{A\to B}, \forall x^A, R(x,f(x))\]
+La prémisse indique que si $x$ est présenté, alors il est possible de choisir un $y$ en relation avec ce $x$, la conclusion indique qu'il devient possible de généraliser ce choix local en une fonction, qui applique le choix uniformément à tout $x$. Ce principe, intuitif, a de nombreuses ramifications. Il est déjà connu que l'axiome du choix dans toute sa généralité mène à des résultats défiant fortement l'intuition (\cite{Banach1924-BANSLD}), mais il semble tout aussi peu intuitif de ne pas considérer l'axiome du choix, encore plus sous une forme faible~: si l'on est capable d'associer, pour chaque élément $x$, un élément $y$, comment ne pas en déduire une fonction faisant cette association ? Dans le modèle de réalisabilité que nous avons vu, l'axiome du choix est vérifié justement pour cette raison~: comme les fonctions considérées sont les fonctions calculables, qui est aussi le cadre de notre logique (être vrai signifie qu'on peut donner une trace calculatoire de cette véracité, par notre interprétation de réalisabilité), chercher le $y$ correspondant au $x$, de façon uniforme en $x$, signifie exactement construire une fonction calculable. Cependant, les méthodes de réalisabilité nous indiquent aussi comment contredire ce principe~: en ajoutant un principe non-déterministe, comme un lancer de pièce, on peut montrer (comme dans \cite{COHEN201987}) que l'axiome du choix n'est plus vérifié, car si le choix local dépend du résultat d'un lancer, il n'est pas vrai que la fonction globale donnera des résultats cohérents.
+
+Donnons une liste des principes de choix importants pour notre étude, qui seront organisés par force logique croissante en logique classique, strictement pour le symbole $>$ et de même force pour le symbole $=$~:
+\begin{itemize}
+    \item $\WFT$ qui est comme $\FT$ mais où $C$ ne contient que des éléments dans $\{0,1\}^*$.
+    \item $=$~: $\WKL$, qui est comme $\KL$ exprimé plus tôt mais où $T$ ne contient que des éléments dans $\{0,1\}^*$
+    \item $>$ : $\FT$
+    \item $=$~: $\KL$
+    \item $>$~: $\ACN$ dans le cas où $A = \bN$ et $B$ est quelconque
+    \item $>$~: $\DC \defeq \forall x^A, \exists y^A, R(x,y) \implies \exists u^{\bN\to A}, \forall n^{\bN}, R(u_n,u_{n+1})$
+    \item $>$ : $\AC$ en toute généralité.
+\end{itemize}
+
+Dans l'article \cite{DBLP:journals/corr/abs-2105-08951}, une façon plus systématique est détaillée pour traiter les principes de choix. Cette présentation se base en partie sur les notions d'arbre, que nous allons maintenant détailler.
+
+\subsection{Arbres et prédicats sur les listes}
+
+Nous avons jusque là évité de rentrer dans les détails du sens de $\KL$ et $\FT$, car leur version formelle nécessite des explications. Nous allons donc détailler le fonctionnement de nos prédicats sur les arbres, en considérant à chaque fois des arbres branchant sur les entiers, de profondeur potentiellement infinie.
+
+Deux présentations classiques existent pour parler d'arbres (au moins dans leur version finie, nous ne nous intéressons pas à leurs versions indicées par des ordinaux)~: \cite{DBLP:journals/corr/abs-2105-08951} parle de présentation intentionnelle et extensionnelle. La présentation intentionnelle, bien plus utilisée en théorie des types et en programmation, considère l'ensemble $\mathbb T$ construit par induction par
+\[T ::= \langle\rangle \mid \mathrm{Node}\;(\bN \to \mathbb T)\]
+Ainsi, on peut par exemple construire un arbre par $\mathrm{Node}(0 \mapsto \mathrm{Node}(\_\mapsto \langle\rangle), n \mapsto \langle\rangle)$, qui représente alors l'arbre
+\begin{center}
+    \begin{tikzcd}
+        & & & & & \mathrm{Node}\ar[dlll,"0"]\ar[dl,"1"]\ar[dr,"n"]\\
+        & &\mathrm{Node}\ar[dll,"0"]\ar[dl,"1"]\ar[dr,"n"] & & \langle\rangle & \cdots & \langle\rangle\\
+        \langle\rangle & \langle\rangle & \cdots & \langle\rangle
+    \end{tikzcd}
+\end{center}
+
+En supprimant les n\oe uds $\langle\rangle$, on a donc un arbre contenant le chemin $0$ et aucun autre chemin.
+
+Au contraire, l'approche extensionnelle va considérer les chemins (finis) appartenant à l'arbre. Dans le cas de notre exemple précédent, l'arbre associé est donc $\{(0)\}$. A chaque arbre défini de façon intentionnelle, on peut naturellement associer l'ensemble de ses chemins finis. On remarque que la propriété essentielle de ces ensembles, qui sont donc des parties de $\bN^*$ (puisque des listes finies d'entiers) est d'être stable par préfixe~: étant donné un arbre $T$, un mot $u \in T$ et un mot $v\preceq u$, $v\in T$ puisque le chemin parcouru par $u$ dans l'arbre a aussi parcouru $v$.
+
+On définit donc un arbre extensionnel comme une partie de $\bN^*$ stable par préfixe. La question se pose alors de si nos deux présentations coïncident. Dans un sens, on peut associer à un arbre l'ensemble de ses chemins. Dans l'autre sens, cependant, construire un arbre intentionnel à partir d'un arbre extensionnel n'est pas évident~: il nécessite ce qu'on appelle la \textit{bar induction}, dont le \textit{fan theorem} est un cas particulier, où l'arbre est finiment branchant. Nous définissons désormais les arbres uniquement par leur notion extensionnelle.
+
+Un chemin infini, que nous appellerons désormais simplement chemin (nous préciserons à chaque fois "chemin fini'' quand c'est le cas) dans un arbre $T$ est une fonction $\alpha : \bN \to \bN$ telle que pour tout $n\in \bN$, le mot fini $\alpha_0\ldots\alpha_{n-1}$ est un élément de $T$. On notera $\alpha \in_\infty T$ pour dire que $\alpha$ est un chemin de $T$. Nous définissons aussi la notation $\in_n$, pour $n \in \bN$~:
+\[\alpha \in_n T \defeq \alpha_0\ldots\alpha_{n-1} \in T\]
+Ainsi $\alpha\in_\infty T$ peut se voir comme $\forall n, \alpha\in_n T$.
+
+Les théorèmes nous intéressant, $\WKL$, $\KL$ et $\FT$, s'énoncent alors ainsi, en donnant toutes les conditions~:
+\begin{multline*}
+    \WKL \defeq \forall T \subseteq\{0,1\}^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land (\forall n \in \bN, \exists u \in T, |u| = n)\\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
+\end{multline*}
+\begin{multline*}
+    \KL \defeq \forall T \subseteq \bN^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land\\(\forall u \in T \implies \exists n \in \bN, \forall a \in \bN, u \star a \in T \implies a \leq n) \land (\forall n \in \bN, \exists u \in T, |u| = n) \\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
+\end{multline*}
+\begin{multline*}
+    \FT \defeq \forall C \subseteq \bN^*, (\forall u,v\in \bN^*, u\preceq v \implies u \in C \implies v \in C)\land\\(\forall u \notin C \implies \exists n \in \bN, \forall a \in \bN, u \star a \notin C \implies a \leq n) \land (\forall \alpha : \bN\to\bN, \exists n \in \bN, \alpha \in_n C) \\\implies \exists n \in \bN, \forall \alpha : \bN\to\bN, \alpha \in_n C
+\end{multline*}
+
+Les énoncés sont longs et difficilement lisibles, nous allons donc donner des noms aux différentes propriétés essentielles. Tout d'abord, être un arbre~: cela signifie être stable par préfixe (la première condition), ce que l'on résumera par $\isTree(T)$. Dans le cas de $\WKL$, on définit $\isBinTree(T)$, qui et la même condition mais où $T\subseteq\{0,1\}^*$. Ensuite, être le complémentaire d'un arbre~: comme un arbre est clos par préfixe, son complémentaire est clos par extension (on dit alors que cette partie est croissante, ou monotone), ce qu'on notera $\isMono(C)$. La seconde hypothèse, qui est considérée dans $\FT$ et $\KL$, est que l'arbre est finiment branchant~: pour tout $u \in T$, l'ensemble $\{ a \in \bN\mid u\star a \in T\}$ est fini. On notera cette hypothèse $\isFinBranch(T)$ (on notera aussi $\isFinBranch(C)$ pour un prédicat croissant $C$, même si lee prédicat porte alors sur le complémentaire de $C$). La condition commune à $\WKL$ et $\KL$ est d'avoir des chemins finis de longueur arbitrairement grande, ce qui peut se comprendre par "il y a une infinité de sommets dans l'arbre'', d'où le fait de nommer cette condition $\isInfinite(T)$. Pour la condition sur $\FT$, il nous faut un peu de vocabulaire~: on appelle \textit{bar} pour $C$ une fonction $b : (\bN \to \bN) \to \bN$ qui vérifie que $\alpha \in_{b(\alpha)} C$. Par analogie, on dit que $C$ est barré si pour tout $\alpha : \bN \to \bN$, on peut trouver $n_\alpha$ tel que $\alpha \in_{n_\alpha} C$. On notera donc $\isBarred(C)$ l'hypothèse.
+
+On définit alors les notations $\forall T^{\Tree}$, $\forall T^{\BinTree}$, et $\forall T^{\Mono}$ pour alléger notre écriture. Les axiomes sont alors~:
+\begin{align*}
+    \WKL &= \forall T^{\BinTree}, \isInfinite(T) \implies \exists \alpha : \bN \to \bN, \alpha\in_\infty T\\
+    \KL &= \forall T^{\Tree}, \isFinBranch(T) \land \isInfinite(T) \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T\\
+    \FT &= \forall C^{\Mono}, \isFinBranch(C) \land \isBarred(C) \implies \exists n \in \bN, \forall \alpha : \bN \to \bN, \alpha \in_n C
+\end{align*}
+
+La conclusion de $\FT$ est ce qu'on appelle une \textit{bar} uniforme~: le même $n$ fonctionne pour tous les chemins. Remarquons que le fait de considérer que $C$ est croissant signifie que l'on peut toujours prendre un $n$ plus grand ensuite pour obtenir une nouvelle \textit{bar} uniforme.
+
+\subsection{Vient l'intuitionnisme}
+
+Notre distinction entre $\FT$ (respectivement $\WFT$) et $\KL$ (respectivement $\WKL$) n'est intéressante que parce que les résultats ne sont plus équivalents en logique intuitionniste, logique dans laquelle nous menons notre étude. Dans ce cadre, les degrés logiques sont encore plus restreints, et plus de résultats peuvent être séparés. Cependant, au contraire des mathématiques à rebours classiques, une volonté de prouver des résultats d'indépendance existe~: en logique intuitionniste, des résultats habituellement faibles mais non constructifs deviennent des résultats bien plus forts (nous le verrons avec $\WKL$). Dans ces cas-là, prendre une théorie plus faible n'est pas forcément le meilleur moyen puisqu'être indépendant d'une théorie plus forte est un meilleur résultat. Dans ce rapport, nous nous contentons d'une sorte d'arithmétique du second ordre, la question se pose donc de si notre résultat d'indépendance principal, que $\FT$ n'implique pas $\WKL$, est encore vrai dans une théorie plus forte. Dans \cite{lubarsky2015realizabilitymodelsseparatingvarious}, une construction montre que cette indépendance est vraie même dans la version intuitionniste de $\ZF$.
+
+Cet article, néanmoins, semble répondre à notre question, puisqu'il construit un modèle de réalisabilité séparant $\FT$ et $\WKL$ dans un cadre intuitionniste. Il est ce qui nous a donné l'idée de considérer la continuité comme le principe calculatoire validant $\FT$. Dans ce contexte, mais la construction considérée dedans est largement plus complexe que ce que nous faisons ici~: on part d'un modèle de $\ZF$ pour considérer une structure de Kripke dans laquelle chaque monde est un modèle de réalisabilité indicée par un oracle, et les oracles sont strictement plus forts (pour la réduction Turing) quand on considère une arrête $v < w$ entre deux mondes. Au contraire, notre modèle est un simple modèle de réalisabilité sur un lambda-calcul, comme on peut en trouver facilement dans la littérature.
+
+Un autre point important, à propos de la construction que nous proposons, est que celle-ci semble très proche de la réalisabilité de Kleene pour l'algèbre $K_1$. Nous avons décrit plus tôt comment la réalisabilité peut s'imaginer à partir d'un ensemble $\bX$ muni de certaines structure. Historiquement, la réalisabilité a été construite depuis un cas particulier de $\bX$~: l'ensemble $\bN$ représentant à la fois les entiers et les codes de machines de Turing. Ainsi, on peut attribuer un sens à $n\reali \varphi \to \psi$ en disant que pour tout $m\reali \varphi$, $n\cdot m \reali\psi$, où $n\cdot m$ représente l'application de la machine de code $n$ à l'argument $m$. Dans ce cas-là, on peut interpréter les quantificateurs de façon fonctionnelle, où $\forall x, \varphi$ se réalise par une fonction qui à $n$ associe un réaliseur de $\varphi[n/x]$. Kleene a ainsi construit un modèle de réalisabilité pour l'arithmétique de Heyting (la version intuitionniste de l'arithmétique de Peano), mais ce modèle ne vérifie pas $\FT$ (\cite{Kleene1965-KLETFO-3}). Un autre modèle de réalisabilité, l'algèbre $K_2$ (ou seconde algèbre de Kleene), vérifie bien $\FT$, mais celle-ci est largement plus complexe. Notre modèle nous permet ainsi d'avoir une présentation relativement simple, plus proche de $K_1$, mais vérifiant quand même $\FT$.
+
+Enfin, notons que, en vue d'un approfondissement du sujet, la logique intuitionniste rend beaucoup plus de résultats indépendants ou non équivalents dans notre hiérarchie plus haut. Par exemple, on a vu que $\DC$ était encore réalisé par notre modèle de réalisabilité, tandis que, nous le verrons, $\WKL$ ne l'est pas. Une conjecture intéressante dans ce sens nous a été partagée par les auteurs de \cite{DBLP:conf/fscd/HerbelinK24} qui, à l'issu de leur travail, ont remarqué que les principes de maximalité (tels que le lemme de Zorn ou celui de Teichmuller-Tukey) ne permettent de dériver une preuve de $\AC$ qu'en utilisant le tiers exclu, pour passer d'une fonction partielle maximale à une fonction totale. Ainsi il est possible que le lemme de Zorn, dans le cadre intuitionniste, donne une force logique très élevée pour construire par exemple une clôture algébrique, mais ne construise pas entièrement la logique classique (en particulier, peut-être que certains principes d'omniscience, c'est-à-dire des constructions nécessitant d'avoir une vision complète sur un objet infini, échouent).
+
+\section{La preuve d'indépendance}
+
+Nous en venons maintenant à notre résultat principal~: $\WKL$ est indépendant de $\FT$ en logique intuitionniste. Le fait que $\WKL\vdash \FT$ est impossible découle directement du fait que $\KL$ est strictement plus fort que $\WKL$ en logique classique, donc dans une logique plus faible $\WKL$ ne peut pas dériver $\FT$. Ce qui importe ici est l'autre sens~: on montre qu'on a un modèle de $\FT$ qui ne satisfait pas $\WKL$.
+
+\subsection{Satisfaire le fan theorem}
+
+Commençons par le point le plus important, montrer qu'on satisfait $\FT$. Pour cela, donnons d'abord l'idée de la preuve.
+
+Celle-ci est inspirée de la preuve trouvée dans \cite{lubarsky2015realizabilitymodelsseparatingvarious}~: étant donné un prédicat $C$ croissant et une barre $b$, on décide de construire un nouveau prédicat $C'$ contenant $C$, mais décidable, qui contient une barre uniforme. Pour cela, on parcourt tous les chemins finis par longueur croissante~: étant donné un chemin fini $p$, on considère $(p 0^\infty)_{|b(p0^\infty)}$, qu'on notera $p'$ pour alléger les notations. Si $p'\preceq p$, alors on ajoute $p$ et toutes ses extensions à $C'$. Si $p\prec p'$, alors on ajoute $p'$ et toutes ses extensions à $C'$ et on exclut $p$ de $C'$. Ainsi le prédicat est décidable puisqu'il suffit pour calculer $p$ de vérifier tous les mots de longueur inférieure à $p$ (pas seulement ses préfixes, puisque si pour vérifier $0010$ on a en fait que $b(0110^\infty) = 0$, notre mot est dans $C'$ sans être détecté par un préfixe). Le fait que $C'\subseteq C$ est une conséquence directe du fait que $b$ est une barre (associée à $C$, donc retournant des éléments de $C$) et que $C$ est croissant.
+
+Il faut encore montrer que $C'$ contient une barre uniforme. Pour cela, on peut construire un algorithme qui vérifie, par $n$ croissant, si $C'$ admet $n$ comme barre uniforme. La véracité de $\FT$ tient donc dans la terminaison de cet algorithme. L'idée développée dans \cite{lubarsky2015realizabilitymodelsseparatingvarious} est de raisonner par l'absurde~: si l'algorithme ne termine pas, alors on a dans $\overline{C'}$, pour chaque $n \in \bN$, un mot $u$ de taille $n$. Avec le lemme de König, on extrait alors un chemin $\alpha \in_\infty \overline{C'}$, qui n'est pas calculable a priori (donc pas dans le modèle de réalisabilité en lui-même, ne vérifiant pas le lemme de König). C'est ici que notre approche diffère de celle de l'article cité ci-dessus~: là où l'article utilise des notions d'oracles de force croissante pour permettre d'internaliser le chemin $\alpha$ dans un futur possible, nous travaillons directement avec notre seul modèle.
+
+Pour montrer que l'existence d'un tel $\alpha$ mène à une contradiction, nous décidons alors de nous plonger dans un nouveau contexte~: si l'existence de $\alpha$ mène à une contradiction dans ce nouveau contexte, et que plonger dans ce nouveau contexte peut toujours se faire, alors nous avons bien là une contradiction. L'objectif est de trouver un contexte dans lequel $b$ peut retourner une valeur sur $\alpha$, ce qui n'est pas possible pour l'instant puisque $b$ est une fonction définie seulement sur les chemins calculables (rien n'est assuré sur les chemins non calculables). Une fois que l'on a ce contexte, on effectue la même manipulation que dans \cite{lubarsky2015realizabilitymodelsseparatingvarious}~: on sait que $b$ est une fonction calculable, donc pour calculer $b(\alpha)$ elle doit utiliser un préfixe fini, mais ce préfixe fini, lui, a déjà été traité dans la définition de $C'$, menant à ce que $\alpha\notin_\infty \overline{C'}$.
+
+Notre nouveau contexte est celui des fonctions continues et des ensembles ordonnés complets, au sens de \cite{Amadio_Curien_1998}. L'avantage de cette interprétation est clair~: on peut interpréter toute fonction calculable dans l'équivalent de $\bN\to\bN$, mais celui-ci contient aussi n'importe quel chemin que nous pourrions obtenir dans la meta-théorie. Nous n'avons à construire que des interprétations des termes du premier ordre pour cela~: l'objectif est alors de construire une interprétation de chaque objet du premier ordre $f \in \bS$ en un objet $\tilde f \in \tilde S$ de telle sorte que si $t\in\ceil f$ alors l'interprétation canonique de $t$ est $\tilde f$.
+
+Nous rappelons les définitions élémentaires et les résultats les plus basiques sur les ensembles ordonnés complets. Pour plus d'informations sur les preuves, voir \cite{Amadio_Curien_1998}.
+
+\begin{defi}[Ensemble ordonné complet]
+    Soit $(X,\leq)$ un ensemble ordonné. On dit que $\Delta\subseteq X$ est une partie filtrante, ce que l'on note $\Delta\subdir X$ (pour \textit{directed subset}), si
+    \[\forall x,y \in \Delta, \exists z \in \Delta, \left\{\begin{array}{c}
+        x \leq z\\
+        y \leq z
+    \end{array}\right.\]
+    On dit que $(X,\leq)$ est un ensemble ordonné complet si tout $\Delta\subdir X$ a une borne supérieure. On dira que $X$ est un cpo pour abréger (\textit{complete partial order}).
+\end{defi}
+
+\begin{expl}
+    L'exemple le plus basique est le suivant~: si $X$ est un ensemble, alors $X_\bot = X \sqcup \{\bot\}$ muni de l'ordre où tous les éléments de $X$ sont incomparables et $\bot \leq x$ pour tout $x \in X$, est un ensemble ordonné complet~: on l'appelle le domaine plat associé à $X$. Les domaines plats servent à représenter les ensembles de valeurs ayant pour but d'être observées~: la seule information pertinente est la présence ou l'absence d'une valeur, et quelle valeur on a si présence il y a.
+\end{expl}
+
+On définit une notion de morphisme adaptée à cette structure~: les fonctions continues (au sens de Scott).
+
+\begin{defi}[Fonction continue]
+    Soient $(X,\leq), (Y,\leq)$ deux cpos. Une fonction $f : X \to Y$ est dite continue si elle est croissante et préserve les bornes supérieures de parties filtrantes.
+\end{defi}
+
+La collection des cpos et des fonctions continues forme une catégorie cartésienne fermée, ce qui signifie en particulier que l'ensemble des fonctions continues de $X$ dans $Y$ peut être muni d'une structure de cpo, avec l'ordre
+\[f\leq g \defeq \forall x \in X, f(x) \leq g(x)\]
+On cite aussi le résultat suivant, nous donnant la continuité des fonctions qui nous intéressent~:
+\begin{prop}
+    Soient $X,Y$ deux fonctions et $f : X \to Y$ une fonction. Alors $f_\bot : X_\bot \to Y_\bot$ est une fonction continue.
+\end{prop}
+
+On peut même montrer qu'on a un foncteur entre la catégorie $\mathbf{Set}$ et la catégorie $\mathbf{Cpo}$ décrite plus haut, avec $X \mapsto X_\bot$ et $f \mapsto f_\bot$.
+
+On souhaite donc assigner à chaque sorte $S$ un cpo $\tilde S$, et à chaque terme $t$ tel que $t\reali S(\bt)$ un élément $\tilde t \in \tilde S$. L'existence d'une telle assignation dans le cas du $\lambda$-calcul non typé est encore une question ouverte (du moins nous n'avons pas trouvé de preuves d'une telle chose), et semble difficile. Nous n'avons pas réussi à construire une telle assignation, bien que nous pensions fortement que celle-ci existe. Pour pouvoir néanmoins obtenir un résultat positif à propos de $\FT$, nous construisons un nouveau $\lambda$-calcul pour faire un modèle de réalisabilité.
+
+Un résultat standard, que l'on retrouve par exemple dans \cite{Amadio_Curien_1998}, est que l'on peut interpréter le langage PCF dans $\mathbf{Cpo}$, où PCF désigne une variante du $\lambda$-calcul simplement typé avec un opérateur de point fixe $Y : (A \to A) \to A$ tel que $Y(t) \rhd t(Y(t))$. Ce langage est Turing-complet, comme le $\lambda$-calcul précédent, renforçant notre confiance en la possibilité d'une assignation n'utilisant que $t\reali S(\bt)$.
+
+On définit donc $\LamP$, notre variant de PCF utilisée pour notre modèle. Tout d'abord, on ajoute un contructeur $Y$, unaire, à notre langage $\Lambda$. On introduit maintenant $\LamP$ comme un ensemble de termes typés.
+
+\begin{defi}[$\LamP$]
+  On définit l'ensemble des types de $\LamP$ par
+  \[S,S' ::= \Nat\mid\Bool\mid\List\mid S \to S' \mid S \times S'\]
+  Les règles de typage sont les suivantes~:
+  \begin{center}
+    \begin{prooftree}
+      \infer0{\Gamma, x : S \vdash x : S}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, x : S \vdash t : S'}
+      \infer1{\Gamma\vdash \lambda x.t : S \to S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S \to S'}
+      \hypo{\Gamma\vdash u : S}
+      \infer2{\Gamma\vdash t\;u : S'}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : S'}
+      \infer2{\Gamma\vdash \langle t,u\rangle : S \times S'}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S_1\times S_2}
+      \infer1{\Gamma\vdash \pi_i\;t : S_i}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S \to S}
+      \infer1{\Gamma\vdash Y\;t : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0{\Gamma\vdash 0 : \Nat}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : \Nat}
+      \infer1{\Gamma\vdash S\;t : \Nat}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : \Nat \to S \to S}
+      \hypo{\Gamma\vdash v : \Nat}
+      \infer3{\Gamma\vdash \rec_\bN\;t\;u\;v}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \btt : \Bool}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer0{\Gamma\vdash \bff : \Bool}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : S}
+      \hypo{\Gamma\vdash v : \Bool}
+      \infer3{\Gamma\vdash \rec_\bB\;t\;u\;v : S}
+    \end{prooftree}
+
+    \vspace{0.5cm}
+    
+    \begin{prooftree}
+      \infer0{\Gamma\vdash [\:] : \List}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : \Nat}
+      \hypo{\Gamma\vdash u : \List}
+      \infer2{\Gamma\vdash t :: u : \List}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma\vdash t : S}
+      \hypo{\Gamma\vdash u : \Nat \to \List \to S \to S}
+      \hypo{\Gamma\vdash v : \List}
+      \infer3{\Gamma\vdash \rec_\bL\;t\;u\;v : S}
+    \end{prooftree}
+  \end{center}
+
+  Les règles de réduction sont celles induites par $\Lambda$. On définit aussi $\SATP$ comme l'ensemble des parties saturées de $\LamP$.
+
+  Pour chaque type $S$, on définit
+  \[\LamS{S}\defeq \{t\in\LamP\mid \vdash t : S\}\]
+\end{defi}
+
+On redéfinit aussi l'ensemble de code, de façon simple~: toute la définition reste la même, mais on remplace chaque fois $t\in \Lambda$ par $t\in \LamS{S}$ (où $S$ est la sorte dans laquelle on définit l'ensemble de codes). Ce changement fonctionne bien~: en particulier, en associant à la sorte $S$ le type de PCF $S$, les termes dans un code de $s\in \bS$ sont bien de type $S$.
+
+On modifie maintenant la relation $\reali$ en un seul endroit~:
+\[t\reali_\rho^\sigma S(\bt) \defeq \{ t \in \Lambda\mid \exists u \in \ceil{\sigma(\bt)}t\rhd^* u\}\]
+
+On voit sans trop de problèmes que la relation de réalisabilité n'est pas trop fortement changée~: les cas inductifs du lemme d'adéquation sont toujours vérifiés ($\trad{S(\bt)}_\rho^\sigma$ est toujours un ensemble saturé), et les lemmes de substitution fonctionnent toujours par les mêmes arguments. On a donc bien un modèle de réalisabilité comme on le souhaite.
+
+On définit maintenant notre plongement dans $\mathbf{Cpo}$~:
+\begin{itemize}
+    \item on associe à $\Nat$ le cpo $\bN_\bot$
+    \item on associe à $\Bool$ le cpo $\bB_\bot$
+    \item si on a associé à $S$ le cpo $\tilde S$, alors on associe à $\List(S)$ le cpo $(\tilde S)^*_\bot$
+    \item on associe à $S \to S'$ le cpo $\tilde S \to_{\mathbf{Cpo}} \tilde{S'}$
+    \item on associe à $S \times S'$ le cpo $\tilde S \times \tilde{S'}$ muni de l'ordre
+    \[(s,s') \leq (t,t') \defeq \left\{\begin{array}{c}
+        s \leq t \\
+        s' \leq t'
+    \end{array}\right.\]
+\end{itemize}
+
+On construit maintenant une interprétation des termes de $\LamP$ dans nos cpos. Pour cela, on construit par induction, à partir d'un jugement de typage $\Gamma\vdash t : S$ une fonction $\trad t : \left(\prod_{\gamma \in \Gamma} \tilde\gamma\right) \to \tilde S$~:
+\begin{itemize}
+    \item si $t$ est la variable $x_i$ alors $\trad t$ est la $i$ème projection depuis $\prod \tilde \gamma$.
+    \item si $t$ est $\lambda x.u$ alors $\trad{\Gamma\vdash \lambda x. t : S \to S'} = \Lambda(\trad{\Gamma, x : S\vdash t : S'}$ où $\Lambda$ est l'opération d'abstraction, transformant un terme de type $a\times b \to c$ en un terme $a \to (b \to c)$.
+    \item si $t$ est $u\;v$ alors $\trad{\Gamma\vdash u\;v : S} = \mathrm{eval}\circ \langle \trad{\Gamma\vdash u : S' \to S}, \trad{\Gamma\vdash v : S'}\rangle$ où eval est la fonction $((a\to b)\times a) \to b$ et $\langle -,-\rangle$ représente le pairing de fonctions.
+    \item si $t$ est $0,\btt,\bff,[\,]$ alors son interprétation est (la fonction renvoyant) directement l'élément correspondant, $0 \in \bN_\bot$, $\btt, \bff \in \bB_\bot$, $[\,] \in \tilde S^*_\bot$ (attention, $\bff \neq \bot$ et $[\,] \neq \bot$).
+    \item le pairing $\langle -,-\rangle$ ainsi que les projections sont définis de façon évidente.
+    \item $S$ est la fonction associée à la fonction ensembliste $n \mapsto n + 1$, qui est donc continue.
+    \item $::$ est aussi la fonction associe à la fonction ensembliste $(a,\ell) \mapsto a :: \ell$.
+    \item $Y$ est défini comme l'opération de point fixe de Kleene~: $f \mapsto \bigvee_{n \in \bN} f^n(\bot)$. C'est une fonction continue, cf\cite{Amadio_Curien_1998}.
+    \item les récurseurs sont définis comme on l'attend~: on admet que ces fonctions sont continues (la preuve est longue et peu instructive).
+\end{itemize}
+
+On peut prouver par induction  sur $S$ que si $s \in \bS$ possède deux codes $t,u \in \ceil s$, alors $\trad t = \trad u$. Cela nous permet de dire que si $s \in \bS$ est un objet possédant un code, alors on peut lui associer un unique objet $\tilde s \in \tilde S$ qui l'objet associé à ses codes.
+
+\begin{rmk}
+    Il est essentiel que $s$ possède un code~: on a par exemple des fonctions $(\bN\to\bN) \to \bN$ non continues, mais qui ne sont alors pas calculables.
+\end{rmk}
+
+On peut maintenant prouver le résultat de cette sous-section~: notre modèle valide $\FT$.
+
+\begin{them}
+    Il existe $t \in \Lambda$ tel que
+    \[t \reali \FT\]
+\end{them}
+
+\begin{proof}
+    Soit un prédicat croissant $C$ dont le complémentaire est finiment branchant. On suppose qu'on a un réaliseur
+    \[r \reali \isBarred(C)\]
+
+    Comme on l'a dit plus tôt, on peut construire à partir de $r$ un réaliseur
+    \[\langle r',p\rangle \reali \exists f^{\{(\Nat\to\Nat)\to\Nat)}, \forall \alpha^{\{\Nat\to\Nat\}}, \alpha\in_{f(\alpha)} C\]
+
+    Où $r'$ représente la fonction $f$ et $p$ la preuve que $f$ réalise la propriété souhaitée.
+    
+    On construit le prédicat décidable $C : \List \to \Bool$ dont l'idée est de parcourir tous les chemins les uns à la suite des autres en ajoutant chaque fois pour une liste $\ell$ la liste obtenue en appliquant $r$ à $\ell 0^\infty$. On a donc besoin d'une fonction d'énumération des listes~:
+    \[\enumer \defeq A FAIRE\]
+
+    On a aussi besoin d'une fonction transformant une liste $\ell$ en la fonction $\bN \to \bN$ définie par $\ell 0^\infty$~:
+    \[\toinfty \defeq \rec_{\List}\;(\lambda n.0)\;(\lambda n.\lambda x.\lambda f.\rec_{\Nat}\;n\;(\lambda m.\lambda g.f\;m))\]
+
+    La construction de $C$ est alors la suivante~:
+    \[C \defeq \lambda b. Y(\lambda f. \lambda \ell. \rec_{Bool}\;(\ell << b)\;(\rec_{\Bool}\;(r\;(\toinfty\;\ell)\preceq b)\;\top\;(f\;(\enumer\;\ell)))\;(r\;(\toinfty\;\ell) \preceq b))\]
+
+    Pour trouver le $n$ correspondant, il nous suffit alors de regarder pour chaque $n$ si toutes les listes de taille $n$ sont dans $C$~:
+    \[fan\defeq Y (\lambda f\;i. \rec_{\Bool}\;(\forall \ell, |\ell| = i \implies C(\ell))\;i\;(f\;(i+1)))\;0\]
+
+    On souhaite donc montrer que cet algorithme termine. 
+\end{proof}
+
+\bibliographystyle{plain}
+\bibliography{biblio}
 
 \begin{comment}
 \section{Réalisabilité}
@@ -895,194 +1488,12 @@ On introduit la notion d'ensemble saturé, qui peut se considérer comme une par
 
 On définit de plus un sous-système de $\Lambda$, typé, qui est une variante de PCF.
 
-\begin{defi}[$\LamP$]
-  On définit l'ensemble des types de $\LamP$ par
-  \[S,S' ::= \Nat\mid\Bool\mid\List\mid S \to S' \mid S \times S'\]
-  Les règles de typage sont les suivantes~:
-  \begin{center}
-    \begin{prooftree}
-      \infer0{\Gamma, x : S \vdash x : S}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma, x : S \vdash t : S'}
-      \infer1{\Gamma\vdash \lambda x.t : S \to S'}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S \to S'}
-      \hypo{\Gamma\vdash u : S}
-      \infer2{\Gamma\vdash t\;u : S'}
-    \end{prooftree}
 
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S}
-      \hypo{\Gamma\vdash u : S'}
-      \infer2{\Gamma\vdash \langle t,u\rangle S \times S'}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S_1\times S_2}
-      \infer1{\Gamma\vdash \pi_i\;t : S_i}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S \to S}
-      \infer1{\Gamma\vdash Y\;t : S}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \infer0{\Gamma\vdash 0 : \Nat}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : \Nat}
-      \infer1{\Gamma\vdash S\;t : \Nat}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S}
-      \hypo{\Gamma\vdash u : \Nat \to S \to S}
-      \hypo{\Gamma\vdash v : \Nat}
-      \infer3{\Gamma\vdash \rec_\bN\;t\;u\;v}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \infer0{\Gamma\vdash \btt : \Bool}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \infer0{\Gamma\vdash \bff : \Bool}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S}
-      \hypo{\Gamma\vdash u : S}
-      \hypo{\Gamma\vdash v : \Bool}
-      \infer3{\Gamma\vdash \rec_\bB\;t\;u\;v : S}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0{\Gamma\vdash [\:] : \List}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : \Nat}
-      \hypo{\Gamma\vdash u : \List}
-      \infer2{\Gamma\vdash t :: u : \List}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash t : S}
-      \hypo{\Gamma\vdash u : \Nat \to \List \to S \to S}
-      \hypo{\Gamma\vdash v : \List}
-      \infer3{\Gamma\vdash \rec_\bL\;t\;u\;v : S}
-    \end{prooftree}
-  \end{center}
-
-  Les règles de réduction sont celles induites par $\Lambda$. On définit aussi $\SATP$ comme l'ensemble des parties saturées de $\LamP$.
-
-  Pour chaque type $S$, on définit
-  \[\LamS{S}\defeq \{t\in\LamP\mid \vdash t : S\}\]
-\end{defi}
 
 \subsubsection{Partie logique}
 
 On définit maintenant la partie logique de notre modèle de réalisabilité. Celui-ci est un modèle multi-sorté, dont les sortes sont données par les types de $\LamP$,
 représentant respectivement les entiers, les booléens, les listes d'entiers et les fonctions d'une sorte à une autre. On notera $\Sort$ l'ensemble des sortes. On définit maintenant les termes du premier ordre (qui sont donc typés).
-
-\begin{defi}[Termes du premier ordre]
-  On se donne un ensemble dénombrable $\mathcal X_1$ de variables du premier ordre. Un contexte de typage du premier ordre $\Gamma$ est une liste de paires $(x,\tau)\in \mathcal X_1\times \Sort$. On définit l'ensemble des termes du premier ordre bien typés par les règles suivantes~:
-  \begin{center}
-    \begin{prooftree}
-      \infer0{\Gamma, \bx : S \vdash \bx : S}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \infer0{\Gamma\vdash \bZ : \Nat}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \Nat}
-      \infer1{\Gamma\vdash \bfS\;\bt : \Nat}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : S}
-      \hypo{\Gamma\vdash \bu : \Nat \to S \to S}
-      \hypo{\Gamma\vdash \bv : \Nat}
-      \infer3{\Gamma\vdash \rec_{\Nat}\;\bt\;\bu\;\bv : S}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \infer0{\Gamma\vdash \bbtt : \Bool}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \infer0{\Gamma\vdash \bbff : \Bool}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \Bool}
-      \hypo{\Gamma\vdash \bu : S}
-      \hypo{\Gamma\vdash \bv : S}
-      \infer3{\Gamma\vdash \rec_{\Bool}\;\bt\;\bu\;\bv : S}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-    
-    \begin{prooftree}
-      \infer0{\Gamma\vdash \bnil : \List}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : \Nat}
-      \hypo{\Gamma\vdash \bu : \List}
-      \infer2{\Gamma\vdash \bt \bcons \bu : \List}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : S}
-      \hypo{\Gamma\vdash \bt : \Nat \to \List \to S \to S}
-      \hypo{\Gamma\vdash \bv : \List}
-      \infer3{\Gamma\vdash \rec_{\List}\;\bt\;\bu\;\bv : S}
-    \end{prooftree}
-
-    \vspace{0.5cm}
-
-    \begin{prooftree}
-      \hypo{\Gamma, \bx : S \vdash \bt : S'}
-      \infer1{\Gamma\vdash \blam \bx.\bt : S \to S'}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : S \to S'}
-      \hypo{\Gamma\vdash \bu : S}
-      \infer2{\Gamma\vdash \bt\;\bu : S'}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : S}
-      \hypo{\Gamma\vdash \bu : S'}
-      \infer2{\Gamma\vdash \langle \bt,\bu \rangle : S \times S'}
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{\Gamma\vdash \bt : S_1 \times S_2}
-      \infer1{\Gamma\vdash \bpi_i\;\bt : S_i}
-    \end{prooftree}
-  \end{center}
-\end{defi}
 
 \begin{rmk}
   Pour tout terme $\bt : S$ du premier ordre, il existe canoniquement un terme $\hat{\bt} : S$ dans $\LamP$ (l'ajout du constructeur $Y$ empêche d'avoir la réciproque).
