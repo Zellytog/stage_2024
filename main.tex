@@ -915,30 +915,30 @@ En supprimant les n\oe uds $\langle\rangle$, on a donc un arbre contenant le che
 
 Au contraire, l'approche extensionnelle va considérer les chemins (finis) appartenant à l'arbre. Dans le cas de notre exemple précédent, l'arbre associé est donc $\{(0)\}$. A chaque arbre défini de façon intentionnelle, on peut naturellement associer l'ensemble de ses chemins finis. On remarque que la propriété essentielle de ces ensembles, qui sont donc des parties de $\bN^*$ (puisque des listes finies d'entiers) est d'être stable par préfixe~: étant donné un arbre $T$, un mot $u \in T$ et un mot $v\preceq u$, $v\in T$ puisque le chemin parcouru par $u$ dans l'arbre a aussi parcouru $v$.
 
-On définit donc un arbre extensionnel comme une partie de $\bN^*$ stable par préfixe. La question se pose alors de si nos deux présentations coïncident. Dans un sens, on peut associer à un arbre l'ensemble de ses chemins. Dans l'autre sens, cependant, construire un arbre intentionnel à partir d'un arbre extensionnel n'est pas évident~: il nécessite ce qu'on appelle la \textit{bar induction}, dont le \textit{fan theorem} est un cas particulier, où l'arbre est finiment branchant. Nous définissons désormais les arbres uniquement par leur notion extensionnelle.
+On définit donc un arbre extensionnel comme une partie de $\bN^*$ stable par préfixe. La question se pose alors de si nos deux présentations coïncident. Dans un sens, on peut associer à un arbre l'ensemble de ses chemins. Dans l'autre sens, cependant, construire un arbre intentionnel à partir d'un arbre extensionnel n'est pas évident~: il nécessite ce qu'on appelle la \textit{bar induction}, dont le \textit{fan theorem} est un cas particulier, où l'arbre est finiment branchant. Le cas d'un arbre finiment branchant peut se traiter de deux façons~: on peut au choix considérer des arbres comme des parties de $B^*$ stables par préfixe, où $B$ est un ensemble fini, ou garder la notion d'arbres sur $\bN^*$ et exprimer qu'à un $u \in T$ donné, il existe un majorant des $n$ tels que $u \star n \in T$. La seconde option est la plus générale, mais elle est calculatoirement plus complexe puisqu'il faut être capable de calculer ce majorant (et ça n'est pas toujours possible) pour construire un nouvel arbre finiment branchant. Au total, on décide donc de s'intéresser à la définition extensionnelle des arbres et aux arbres finiment branchants dans le premier sens évoqué, de parties de $B^*$.
 
-Un chemin infini, que nous appellerons désormais simplement chemin (nous préciserons à chaque fois "chemin fini'' quand c'est le cas) dans un arbre $T$ est une fonction $\alpha : \bN \to \bN$ telle que pour tout $n\in \bN$, le mot fini $\alpha_0\ldots\alpha_{n-1}$ est un élément de $T$. On notera $\alpha \in_\infty T$ pour dire que $\alpha$ est un chemin de $T$. Nous définissons aussi la notation $\in_n$, pour $n \in \bN$~:
+Un chemin infini, que nous appellerons désormais simplement chemin (nous préciserons à chaque fois "chemin fini'' quand c'est le cas) dans un arbre $T \subseteq A^*$ est une fonction $\alpha : \bN \to A$ telle que pour tout $n\in \bN$, le mot fini $\alpha_0\ldots\alpha_{n-1}$ est un élément de $T$. On notera $\alpha \in_\infty T$ pour dire que $\alpha$ est un chemin de $T$. Nous définissons aussi la notation $\in_n$, pour $n \in \bN$~:
 \[\alpha \in_n T \defeq \alpha_0\ldots\alpha_{n-1} \in T\]
-Ainsi $\alpha\in_\infty T$ peut se voir comme $\forall n, \alpha\in_n T$.
+Ainsi $\alpha\in_\infty T$ peut se voir comme $\forall n\in \bN, \alpha\in_n T$.
 
-Les théorèmes nous intéressant, $\WKL$, $\KL$ et $\FT$, s'énoncent alors ainsi, en donnant toutes les conditions~:
+Les théorèmes nous intéressant, $\WKL$, $\KL$ et $\FT$, s'énoncent alors ainsi en donnant toutes les conditions (on considère que $A$ est un ensemble fini)~:
 \begin{multline*}
     \WKL \defeq \forall T \subseteq\{0,1\}^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land (\forall n \in \bN, \exists u \in T, |u| = n)\\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
 \end{multline*}
 \begin{multline*}
-    \KL \defeq \forall T \subseteq \bN^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land\\(\forall u \in T \implies \exists n \in \bN, \forall a \in \bN, u \star a \in T \implies a \leq n) \land (\forall n \in \bN, \exists u \in T, |u| = n) \\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
+    \KL \defeq \forall T \subseteq A^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land (\forall n \in \bN, \exists u \in T, |u| = n) \\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
 \end{multline*}
 \begin{multline*}
-    \FT \defeq \forall C \subseteq \bN^*, (\forall u,v\in \bN^*, u\preceq v \implies u \in C \implies v \in C)\land\\(\forall u \notin C \implies \exists n \in \bN, \forall a \in \bN, u \star a \notin C \implies a \leq n) \land (\forall \alpha : \bN\to\bN, \exists n \in \bN, \alpha \in_n C) \\\implies \exists n \in \bN, \forall \alpha : \bN\to\bN, \alpha \in_n C
+    \FT \defeq \forall C \subseteq \bN^*, (\forall u,v\in \bN^*, u\preceq v \implies u \in C \implies v \in C) \land (\forall \alpha : \bN\to\bN, \exists n \in \bN, \alpha \in_n C) \\\implies \exists n \in \bN, \forall \alpha : \bN\to\bN, \alpha \in_n C
 \end{multline*}
 
-Les énoncés sont longs et difficilement lisibles, nous allons donc donner des noms aux différentes propriétés essentielles. Tout d'abord, être un arbre~: cela signifie être stable par préfixe (la première condition), ce que l'on résumera par $\isTree(T)$. Dans le cas de $\WKL$, on définit $\isBinTree(T)$, qui et la même condition mais où $T\subseteq\{0,1\}^*$. Ensuite, être le complémentaire d'un arbre~: comme un arbre est clos par préfixe, son complémentaire est clos par extension (on dit alors que cette partie est croissante, ou monotone), ce qu'on notera $\isMono(C)$. La seconde hypothèse, qui est considérée dans $\FT$ et $\KL$, est que l'arbre est finiment branchant~: pour tout $u \in T$, l'ensemble $\{ a \in \bN\mid u\star a \in T\}$ est fini. On notera cette hypothèse $\isFinBranch(T)$ (on notera aussi $\isFinBranch(C)$ pour un prédicat croissant $C$, même si lee prédicat porte alors sur le complémentaire de $C$). La condition commune à $\WKL$ et $\KL$ est d'avoir des chemins finis de longueur arbitrairement grande, ce qui peut se comprendre par "il y a une infinité de sommets dans l'arbre'', d'où le fait de nommer cette condition $\isInfinite(T)$. Pour la condition sur $\FT$, il nous faut un peu de vocabulaire~: on appelle \textit{bar} pour $C$ une fonction $b : (\bN \to \bN) \to \bN$ qui vérifie que $\alpha \in_{b(\alpha)} C$. Par analogie, on dit que $C$ est barré si pour tout $\alpha : \bN \to \bN$, on peut trouver $n_\alpha$ tel que $\alpha \in_{n_\alpha} C$. On notera donc $\isBarred(C)$ l'hypothèse.
+Les énoncés sont longs et difficilement lisibles, nous allons donc donner des noms aux différentes propriétés essentielles. Tout d'abord, être un arbre~: cela signifie être stable par préfixe (la première condition), ce que l'on résumera par $\isTree(T)$. Dans le cas de $\WKL$, on définit $\isBinTree(T)$, qui et la même condition mais où $T\subseteq\{0,1\}^*$. Ensuite, être le complémentaire d'un arbre~: comme un arbre est clos par préfixe, son complémentaire est clos par extension (on dit alors que cette partie est croissante, ou monotone), ce qu'on notera $\isMono(C)$. La condition commune à $\WKL$ et $\KL$ est d'avoir des chemins finis de longueur arbitrairement grande, ce qui peut se comprendre par ``il y a une infinité de sommets dans l'arbre'', d'où le fait de nommer cette condition $\isInfinite(T)$. Pour la condition sur $\FT$, il nous faut un peu de vocabulaire~: on appelle barre pour $C$ une fonction $b : (\bN \to \bN) \to \bN$ qui vérifie que $\alpha \in_{b(\alpha)} C$. Par analogie, on dit que $C$ est barré si pour tout $\alpha : \bN \to \bN$, on peut trouver $n_\alpha$ tel que $\alpha \in_{n_\alpha} C$. On notera donc $\isBarred(C)$ l'hypothèse.
 
 On définit alors les notations $\forall T^{\Tree}$, $\forall T^{\BinTree}$, et $\forall T^{\Mono}$ pour alléger notre écriture. Les axiomes sont alors~:
 \begin{align*}
     \WKL &= \forall T^{\BinTree}, \isInfinite(T) \implies \exists \alpha : \bN \to \bN, \alpha\in_\infty T\\
-    \KL &= \forall T^{\Tree}, \isFinBranch(T) \land \isInfinite(T) \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T\\
-    \FT &= \forall C^{\Mono}, \isFinBranch(C) \land \isBarred(C) \implies \exists n \in \bN, \forall \alpha : \bN \to \bN, \alpha \in_n C
+    \KL &= \forall T^{\Tree},\isInfinite(T) \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T\\
+    \FT &= \forall C^{\Mono},\isBarred(C) \implies \exists n \in \bN, \forall \alpha : \bN \to \bN, \alpha \in_n C
 \end{align*}
 
 La conclusion de $\FT$ est ce qu'on appelle une \textit{bar} uniforme~: le même $n$ fonctionne pour tous les chemins. Remarquons que le fait de considérer que $C$ est croissant signifie que l'on peut toujours prendre un $n$ plus grand ensuite pour obtenir une nouvelle \textit{bar} uniforme.
@@ -947,7 +947,7 @@ La conclusion de $\FT$ est ce qu'on appelle une \textit{bar} uniforme~: le même
 
 Notre distinction entre $\FT$ (respectivement $\WFT$) et $\KL$ (respectivement $\WKL$) n'est intéressante que parce que les résultats ne sont plus équivalents en logique intuitionniste, logique dans laquelle nous menons notre étude. Dans ce cadre, les degrés logiques sont encore plus restreints, et plus de résultats peuvent être séparés. Cependant, au contraire des mathématiques à rebours classiques, une volonté de prouver des résultats d'indépendance existe~: en logique intuitionniste, des résultats habituellement faibles mais non constructifs deviennent des résultats bien plus forts (nous le verrons avec $\WKL$). Dans ces cas-là, prendre une théorie plus faible n'est pas forcément le meilleur moyen puisqu'être indépendant d'une théorie plus forte est un meilleur résultat. Dans ce rapport, nous nous contentons d'une sorte d'arithmétique du second ordre, la question se pose donc de si notre résultat d'indépendance principal, que $\FT$ n'implique pas $\WKL$, est encore vrai dans une théorie plus forte. Dans \cite{lubarsky2015realizabilitymodelsseparatingvarious}, une construction montre que cette indépendance est vraie même dans la version intuitionniste de $\ZF$.
 
-Cet article, néanmoins, semble répondre à notre question, puisqu'il construit un modèle de réalisabilité séparant $\FT$ et $\WKL$ dans un cadre intuitionniste. Il est ce qui nous a donné l'idée de considérer la continuité comme le principe calculatoire validant $\FT$. Dans ce contexte, mais la construction considérée dedans est largement plus complexe que ce que nous faisons ici~: on part d'un modèle de $\ZF$ pour considérer une structure de Kripke dans laquelle chaque monde est un modèle de réalisabilité indicée par un oracle, et les oracles sont strictement plus forts (pour la réduction Turing) quand on considère une arrête $v < w$ entre deux mondes. Au contraire, notre modèle est un simple modèle de réalisabilité sur un lambda-calcul, comme on peut en trouver facilement dans la littérature.
+Cet article, néanmoins, semble répondre à notre question, puisqu'il construit un modèle de réalisabilité séparant $\FT$ et $\WKL$ dans un cadre intuitionniste. Il est ce qui nous a donné l'idée de considérer la continuité comme le principe calculatoire validant $\FT$. Cependant, la construction considérée dedans est largement plus complexe que ce que nous faisons ici~: on part d'un modèle de $\ZF$ pour considérer une structure de Kripke dans laquelle chaque monde est un modèle de réalisabilité indicée par un oracle, et les oracles sont strictement plus forts (pour la réduction Turing) quand on considère une arrête $v < w$ entre deux mondes. Au contraire, notre modèle est un simple modèle de réalisabilité sur un lambda-calcul, comme on peut en trouver facilement dans la littérature.
 
 Un autre point important, à propos de la construction que nous proposons, est que celle-ci semble très proche de la réalisabilité de Kleene pour l'algèbre $K_1$. Nous avons décrit plus tôt comment la réalisabilité peut s'imaginer à partir d'un ensemble $\bX$ muni de certaines structure. Historiquement, la réalisabilité a été construite depuis un cas particulier de $\bX$~: l'ensemble $\bN$ représentant à la fois les entiers et les codes de machines de Turing. Ainsi, on peut attribuer un sens à $n\reali \varphi \to \psi$ en disant que pour tout $m\reali \varphi$, $n\cdot m \reali\psi$, où $n\cdot m$ représente l'application de la machine de code $n$ à l'argument $m$. Dans ce cas-là, on peut interpréter les quantificateurs de façon fonctionnelle, où $\forall x, \varphi$ se réalise par une fonction qui à $n$ associe un réaliseur de $\varphi[n/x]$. Kleene a ainsi construit un modèle de réalisabilité pour l'arithmétique de Heyting (la version intuitionniste de l'arithmétique de Peano), mais ce modèle ne vérifie pas $\FT$ (\cite{Kleene1965-KLETFO-3}). Un autre modèle de réalisabilité, l'algèbre $K_2$ (ou seconde algèbre de Kleene), vérifie bien $\FT$, mais celle-ci est largement plus complexe. Notre modèle nous permet ainsi d'avoir une présentation relativement simple, plus proche de $K_1$, mais vérifiant quand même $\FT$.
 
@@ -1151,7 +1151,7 @@ On peut maintenant prouver le résultat de cette sous-section~: notre modèle va
 \end{them}
 
 \begin{proof}
-    Soit un prédicat croissant $C$ dont le complémentaire est finiment branchant. On suppose qu'on a un réaliseur
+    Soit un prédicat croissant $C$ sur un ensemble $A$ fini non vide (on notera $0$ un certain élément arbitraire de $A$). On suppose qu'on a un réaliseur
     \[r \reali \isBarred(C)\]
 
     Comme on l'a dit plus tôt, on peut construire à partir de $r$ un réaliseur
@@ -1159,10 +1159,10 @@ On peut maintenant prouver le résultat de cette sous-section~: notre modèle va
 
     Où $r'$ représente la fonction $f$ et $p$ la preuve que $f$ réalise la propriété souhaitée.
     
-    On construit le prédicat décidable $C : \List \to \Bool$ dont l'idée est de parcourir tous les chemins les uns à la suite des autres en ajoutant chaque fois pour une liste $\ell$ la liste obtenue en appliquant $r$ à $\ell 0^\infty$. On a donc besoin d'une fonction d'énumération des listes~:
+    On construit le prédicat décidable $C : \List(A) \to \Bool$ dont l'idée est de parcourir tous les chemins les uns à la suite des autres en ajoutant chaque fois pour une liste $\ell$ la liste obtenue en appliquant $r$ à $\ell 0^\infty$. On a donc besoin d'une fonction d'énumération des listes~:
     \[\enumer \defeq A FAIRE\]
 
-    On a aussi besoin d'une fonction transformant une liste $\ell$ en la fonction $\bN \to \bN$ définie par $\ell 0^\infty$~:
+    On a aussi besoin d'une fonction transformant une liste $\ell$ en la fonction $\bN \to A$ définie par $\ell 0^\infty$~:
     \[\toinfty \defeq \rec_{\List}\;(\lambda n.0)\;(\lambda n.\lambda x.\lambda f.\rec_{\Nat}\;n\;(\lambda m.\lambda g.f\;m))\]
 
     La construction de $C$ est alors la suivante~:
@@ -1171,8 +1171,21 @@ On peut maintenant prouver le résultat de cette sous-section~: notre modèle va
     Pour trouver le $n$ correspondant, il nous suffit alors de regarder pour chaque $n$ si toutes les listes de taille $n$ sont dans $C$~:
     \[fan\defeq Y (\lambda f\;i. \rec_{\Bool}\;(\forall \ell, |\ell| = i \implies C(\ell))\;i\;(f\;(i+1)))\;0\]
 
-    On souhaite donc montrer que cet algorithme termine. 
+    On souhaite donc montrer que cet algorithme termine. Par l'absurde, si cet algorithme ne termine pas, alors pour tout $n$ il existe au moins un $\ell_n \in \List(A)$ tel que $\ell_n \notin C'$. Notons $T$ le complémentaire de $C'$~: c'est un arbre car $C'$ est croissant. On peut alors appliquer le lemme de König sur cette suite $(\ell_n)$~: on en déduit une fonction $\alpha : \bN \to A$ telle que $\alpha \in_\infty T$. On note alors $\alpha_\bot$ la fonction continue associée, $\alpha_\bot : \bN_\bot \to A_\bot$, valant $\bot$ en $\bot$.
+
+    Comme $f$ est une fonction possédant un code $r'$, celle-ci existe en tant que fonction continue dans $(\bN_\bot\to\bN_\bot)\to\bN_\bot$. On peut donc considérer $f(\alpha_\bot)\in\bN_\bot$. On sait que $\alpha_\bot$ est la borne supérieure de ses approximations finies, dont on notera l'ensemble $\Delta$. Par continuité de $f$ on en déduit que
+    \[\bigvee_{\delta \in \Delta} f(\delta) = f\left(\bigvee \Delta\right)\]
+
+    Or, comme $\bN_\bot$ est un domaine plat, seuls deux cas sont possibles~: soit pour une certaine approximation $\alpha_n$ on a $f(\alpha_n) \in \bN$, soit $f(\delta) = \bot$ pour tout $\delta\in\Delta$. Dans les deux cas, cela signifie que la suite des $f(\alpha_0\cdots \alpha_n)$ (en considérant $\alpha_0\cdots\alpha_n$ comme la fonction définie uniquement sur $[0,n]$) est une suite stationnaire. On en déduit qu'il existe $n$ tel que $f(\alpha) = f(\alpha_0\cdots \alpha_n)$, vu que cette suite prend au maximum deux valeurs, on fixe maintenant ce $n$. Comme $f$ est croissante, cela signifie aussi que $f(\alpha_0\ldots\alpha_n 0^\infty) = f(\alpha)$. Or $\alpha_0\cdots\alpha_n 0^\infty$ possède un code, donc cette valeur n'est pas vide (une fonction possédant un code est totale, donc $f$ ne peut pas renvoyer $\bot$ sur une fonction possédant un code).
+
+    De plus, on sait que pour tout chemin $\beta$ possédant un code, $\beta_{f(\beta)} \in C'$, par construction même de $C'$. Soit $m = f(\alpha)$. Si $m \leq n$, alors on sait que $\alpha_0\cdots \alpha_m$ est retourné au moment d'inclure $\alpha_0\cdots\alpha_m 0^\infty$ dans $C'$, donc $\alpha \in_\infty C'$, ce qui est absurde. On en déduit que $n < m$, mais alors en considérant $\alpha_0\cdots \alpha_m 0^\infty$, le résultat est $m$ puisque $\alpha_0\cdots \alpha_n$ est un préfixe de ce mot~: on ajoute donc $\alpha_0\cdots \alpha_m$ à $C'$ à ce moment-là, donc $\alpha \in_\infty C'$. Tous les cas sont donc absurdes.
+
+    On aboutit à une contradiction~: l'algorithme termine donc, et retourne une barre uniforme.
 \end{proof}
+
+\subsection[Lemme faible de König]{Ne pas satisfaire le lemme faible de König}
+
+On montre maintenant que notre modèle ne vérifie pas $\WKL$. Pour cela, on utilise une construction classique de calculabilité~: l'arbre de Kleene, qui est un arbre dont tous les chemins finis sont calculables et dont tous les chemins finis sont incalculables. Nous nous basons sur la présentation de \cite{bauer-kleene-tree}, qui contient tous les éléments essentiels que nous redonnons ici.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
