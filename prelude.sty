@@ -3,7 +3,6 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
-\usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -38,7 +37,7 @@
 \usepackage{geometry}
 \geometry{
 	a4paper,
-	total={170mm,260mm}
+	total={170mm,250mm}
 }
 
 \usepackage{caption}
@@ -95,7 +94,11 @@
 \caption{#2}
 \end{figure}}
 
+\newcommand{\subdir}{\subseteq_{\mathrm{dir}}}
+\newcommand{\enumer}{\mathrm{enum}}
+\newcommand{\toinfty}{\mathrm{toinfty}}
 \newcommand{\RR}[0]{\mathcal R}
+\newcommand{\bX}{\mathbb X}
 \newcommand{\FF}[0]{\mathcal F}
 \newcommand{\VV}[0]{\mathcal V}
 \newcommand{\LL}[0]{\mathcal L}
@@ -114,6 +117,7 @@
 \newcommand{\bff}[0]{\mathrm{f}\!\mathrm{f}}
 \newcommand{\bcons}{\boldsymbol{:}\boldsymbol{:}}
 \newcommand{\bnil}{\boldsymbol{ [ }\:\boldsymbol{ ] }}
+\newcommand{\bs}{\mathbf{s}}
 \newcommand{\bt}{\mathbf{t}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
@@ -121,12 +125,17 @@
 \newcommand{\by}{\mathbf{y}}
 \newcommand{\bz}{\mathbf{z}}
 \newcommand{\bn}{\mathbf{n}}
+\newcommand{\bbf}{\mathbf{f}}
 \newcommand{\blam}{\boldsymbol{\lambda}}
+\newcommand{\LamP}{\Lambda_{\mathrm{PCF}}}
+\newcommand{\LamS}[1]{\Lambda_{\mathrm{PCF}, #1}}
+\newcommand{\bpi}{\boldsymbol{\pi}}
 \newcommand{\Dec}{\mathrm{Dec}}
 \newcommand{\WHE}[0]{(\mathcal {WHE})}
 \newcommand{\WN}[0]{\mathcal {WN}}
 \newcommand{\SN}[0]{\mathcal {SN}}
 \newcommand{\SAT}[0]{\mathcal {SAT}}
+\newcommand{\SATP}{\mathcal{SAT}_{\mathrm{PCF}}}
 \newcommand{\SATS}[0]{\mathcal {SAT}_{\mathcal{SN}}}
 \newcommand{\Theor}[0]{\mathcal{T}\!h}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
@@ -141,6 +150,8 @@
 \newcommand{\Demonstr}[0]{\mathrm{Dem}}
 \newcommand{\Coh}[0]{\mathrm{Coh}}
 \newcommand{\ZF}[0]{\mathrm{ZF}}
+\newcommand{\ZFC}[0]{\mathrm{ZFC}}
+\newcommand{\RCAO}{\mathrm{RCA}_0}
 \newcommand{\On}[0]{\mathrm{On}}
 \newcommand{\Cn}[0]{\mathrm{Cn}}
 \newcommand{\Elim}[0]{\mathrm{Elim}}
@@ -202,7 +213,11 @@
 \newcommand{\WKL}{\mathrm{WKL}}
 \newcommand{\KL}{\mathrm{KL}}
 \newcommand{\FT}{\mathrm{FT}}
+\newcommand{\WFT}{\mathrm{WFT}}
 \newcommand{\DFT}{\mathrm{D-FT}}
+\newcommand{\ACN}{\mathrm{ACN}}
+\newcommand{\DC}{\mathrm{DC}}
+\newcommand{\AC}{\mathrm{AC}}
 \newcommand{\Sort}{\mathrm{Sort}}
 \newcommand{\Cpo}{\mathbf{Cpo}}
 
@@ -263,6 +278,9 @@
 \newcommand{\BinTree}{\mathrm{BinaryTree}}
 \newcommand{\isMono}{\mathrm{isMono}}
 \newcommand{\Mono}{\mathrm{Mono}}
+\newcommand{\isFinBranch}{\mathrm{isFinBranch}}
+\newcommand{\isInfinite}{\mathrm{isInfinite}}
+\newcommand{\isBarred}{\mathrm{isBarred}}
 
 \newcommand{\reali}[0]{\Vdash}
 
