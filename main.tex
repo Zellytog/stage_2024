@@ -1,5 +1,10 @@
 \documentclass{article}
 \usepackage{prelude}
+\usepackage[draft,inline,nomargin]{fixme}
+\fxusetheme{color}
+\fxuseenvlayout{color}
+\FXRegisterAuthor{em}{aem}{\color{teal}[E]}
+\usepackage{soul}
 
 \title{Choix, réalisabilité et evidenced frames}
 
@@ -21,34 +26,40 @@ Cette question est renouvelée dans le cadre de la logique intuitionniste et des
 \[\forall x^A, \exists y^B, R(x,y) \implies \exists f^{A\to B}, \forall x^A, R(x,f(x))\]
 Où $R$ est une relation binaire entre $A$ et $B$. Suivant le choix de $A,B$ et des formes que peut prendre $R$, on obtient de nombreux principes de choix. On peut, de plus, étudier une variante de ces principes en en prenant la contraposée~: en logique intuitionniste, ces ``principes de co-choix'' sont plus faibles, souvent strictement.
 
-Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem. Sans rentrer dans les détails, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante (en omettant plusieurs hypothèses sur $T$, respectivement $C$)~:
-\[\KL \defeq (\forall n^{\bN}, \exists u^{\bN^*}, |p| = n \land p \in T) \implies \exists \alpha^{\bN\to\bN}, \forall n^{\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
-\[\FT \defeq (\forall \alpha^{\bN\to\bN}, \exists n^\bN, \alpha_0\ldots \alpha_{n-1}\in C)\implies \exists n^\bN, \forall \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
+Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem.
+Sans rentrer dans les détails\emnote{avant ça, j'énoncerais de façon informelle KL, du type ``tout arbre infini à branchement fini contient un chemin infini''}, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante (en omettant plusieurs hypothèses sur $T$, respectivement $C$)~:
+\[\KL \defeq (\forall n^{\bN}, \exists u^{\bN^*}, \emnote{|u|=n}|p| = n \land \emnote{u\in T}p \in T) \implies \exists \alpha^{\bN\to\bN}, \forall n^{\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
+\[\FT \defeq (\forall \alpha^{\bN\to\bN}, \exists n^\bN, \alpha_0\ldots \alpha_{n-1}\in C)\implies \exists n^\bN, \forall \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in \emnote{C?}T\]
 L'écriture $\exists p^{\bN^*},|p| = n \land p \in T$ est équivalente à $\exists \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T$, mais plus naturelle à considérer. On suppose ici que $T$ est clos par préfixe et $C$ par extension, nous donnant donc que $\FT$ est la contraposée de $\KL$.
 
 Mentionnons que $\KL$ comme $\FT$ sont toujours vrais dans $\ZFC$, et même dans $\ZF$~: on travaille donc dans une théorie plus faible dans laquelle on peut étudier l'ajout de $\FT$ ou $\KL$ comme non trivial. La théorie habituellement utilisée en mathématiques à rebours est un fragment faible de l'arithmétique du second ordre nommée $\RCAO$. Cette théorie est très expressive car elle permet de décrire les réels ainsi que les fonctions continues voire mesurables. Cependant, cette expressivité se fait au coût d'une grande quantité de codages, qui nous intéressent peu. Nous faisons donc le choix de travailler dans une version de l'arithmétique dans laquelle on peut parler de façon interne de fonctions, de paires et d'autres outils primitifs en plus des entiers, le tout avec une logique du second ordre.
 
-Maintenant que le contexte est plus clair, nous pouvons décrire l'objectif du stage présenté dans ce rapport~: il s'agit de mesurer le contenu logique de $\FT$, en le séparant entre autre de $\KL$. Pour ce faire, nous utilisons la réalisabilité, qui est un outil reliant les langages de programmation et la logique.
+Maintenant que le contexte est plus clair, nous pouvons décrire l'objectif du stage présenté dans ce rapport~: il s'agit de mesurer le contenu logique de $\FT$ \emnote{à travers son interprétation calculatoire?}, en le séparant entre autre\emnote{notamment} de $\KL$. Pour ce faire, nous utilisons la réalisabilité, qui est un outil reliant les langages de programmation et la logique.
+\emnote{Potentiellement, ici tu pourrais insérer un paragraphe sur Curry-Howard, le fait que ça a apporté un point de vue nouveau sur le caractère constructif des preuves, et qu'à travers la réalisabilité, on peut même définir des modèles où les formules sont interprétées par l'ensemble de leur preuves.}
 
-Partant d'un langage simple (le $\lambda$-calcul), nous allons construire un modèle de réalisabilité vérifiant Fan theorem mais invalidant le lemme de König (sous une forme faible). La preuve que ce modèle vérifie $\FT$ nous servira ensuite à chercher une présentation plus générale de l'argument qu'une forme de continuité des fonctions calculables implique $\FT$.
+Partant d'un langage simple (le $\lambda$-calcul), nous allons construire un modèle de réalisabilité vérifiant Fan theorem mais invalidant le lemme de König (sous une forme faible).
+La preuve que ce modèle vérifie $\FT$ nous servira ensuite à chercher une présentation plus générale de l'argument qu'une forme de continuité des fonctions calculables implique $\FT$.\emnote{p-e: 1/ dire qu'on identifie que l'argument clé c'est la continuité, 2/ dire qu'effectivement on peut chercher à en trouver une présentation plus générale}
+
+\emnote{Ici je pense qu'il faut insérer un paragraphe expliquant quelles sont tes contributions, pour que ce soit clair pour les relecteur.ice.s, expliquant notamment que si définir un modèle de réalisabilité est un exercice bien connu, tu as fait des choix de syntaxe liés à la nature des énoncés à interpréter (et à un objectif plus long terme sur tous ces principes)}
 
 \section{Construire un modèle de réalisabilité}
 
 \subsection{L'interprétation BHK}
 
-L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétation de la sémantique d'une propositions, non en terme de valeurs de vérité, mais en terme d'ensemble de ses preuves.
+L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétation de la sémantique d'une proposition, non en termes de valeurs de vérité, mais en termes de l'ensemble de ses preuves.\emnote{je changerais le ``en termes''}
 
-La volonté derrière l'interprétation BHK est de définir une logique constructiviste, en ce qu'une preuve d'une proposition doit explicitement construire les outils auxquels elle fait appel (en particulier, on cherche à avoir la propriété du témoin, qui dit que si $\vdash \exists x, \varphi$ alors il existe $t$ tel que $\vdash \varphi[t/x]$). Comme le principe du tiers exclu est non constructif, on se place dans le cadre de la logique intuitionniste.
+La volonté derrière l'interprétation BHK est de définir une logique constructiviste, en ce qu'une preuve d'une proposition doit explicitement construire les outils auxquels elle fait appel (en particulier, on cherche à avoir la propriété du témoin, qui dit que si $\vdash \exists x, \varphi$ alors il existe $t$ tel que $\vdash \varphi[t/x]$). Comme le principe du tiers-exclu est non constructif, on se place dans le cadre de la logique intuitionniste.
+
 
 On suppose qu'on a un ensemble de propositions $\Phi$ et un ensemble de témoins, $\bX$. L'interprétation BHK donne une façon de penser une relation signifiant \textit{être une preuve de}, qu'on notera $x\reali \varphi$~:
 \begin{itemize}
 \item on suppose qu'on a défini ce que signifie $x\reali\varphi$ pour $\varphi$ atomique
 \item on n'a jamais $x\reali \bot$
-\item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ est une fonction (en un sens intuitif pour le moment) qui à $y\in \bX$ tel que $y\reali \psi$, associe $x(y)\in \bX$ tel que $x(y)\reali \chi$.
+\item \emnote{directement : $x\reali\psi\to\chi$ signifie que... non?} si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ est une fonction (en un sens intuitif pour le moment) qui à $y\in \bX$ tel que $y\reali \psi$, associe $x(y)\in \bX$ tel que $x(y)\reali \chi$.
 \item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x$ est une paire de deux éléments $y\reali \psi$ et $z\reali \chi$~: prouver la conjonction de deux formules signifie avoir une preuve de chaque formule.
 \item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x$ s'écrit $(i,y)$ où, si $i = 1$, $y\reali \psi$ et si $i = 2$, $y\reali \chi$. Cela correspond à une union disjointe (en particulier, une preuve d'une disjonction garde la trace de laquelle des deux propositions est prouvée).
-\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une fonction qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
-\item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x$ s'écrit comme une paire $(t,y)$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
+\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, \emnote{renvoie} associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une fonction qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
+\item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x$ s'écrit comme une paire $(t,y)$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (\emnote{lequel?} quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
 \end{itemize}
 
 Dans cette interprétation, dire qu'une formule $\varphi$ est vraie signifie
@@ -57,17 +68,18 @@ On souhaite donc que cette notion de vérité définisse une théorie logique, c
 
 \subsection{Sur l'adéquation}
 
-Rappelons les règles de déduction naturelle, et profitons-en pour clarifier les choix syntaxiques que nous faisons. Tout d'abord, on considère une logique multi-sortée, d'où une définition un peu plus chargée d'une signature~:
+Rappelons les règles de déduction naturelle, et profitons-en pour clarifier les choix syntaxiques que nous faisons. Tout d'abord, on considère une logique multi-sortée, d'où une définition \emnote{familier et ``négatif'', mieux: ``requierant'' ?}un peu plus chargée d'une signature~:
 \begin{defi}[Signature]
     Une signature $\Sigma$ est la donnée~:
     \begin{itemize}
     \item d'un ensemble $\mathcal S$ de sortes.
     \item d'un ensemble $\mathcal F$ de symboles de fonctions, et d'une fonction $\alpha : \mathcal F\to \mathcal S^* \times \mathcal S$ donnant à chaque symbole son arité.
-    \item d'un ensemble $\mathcal R$ de symboles de fonctions, et d'une fonction $\alpha : \mathcal R \to \mathcal S^*$ donnant à chaque symbole son arité.
+    \item d'un ensemble $\mathcal R$ de symboles de fonctions\emnote{relations? fonctions relationnelles?}, et d'une fonction $\alpha : \mathcal R \to \mathcal S^*$ donnant à chaque symbole son arité.
     \end{itemize}
-\end{defi}
+  \end{defi}
+  \emnote{je crois qu'on dit plutôt arité pour le nombre d'arguments, tandis que là en plus en un sens tu les types, peut-être il faudrait préciser ça}
 
-On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(x,S)$ où $x \in \mathcal X_1$ et $S\in\mathcal S$)~:
+On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(x,S)$ où $x \in \mathcal X_1$ et $S\in\mathcal S$    \emnote{rajouter $f\in\mathcal F$})~:
 \begin{center}
     \begin{prooftree}
         \infer0{\Gamma, \bx : S \vdash \bx : S}
@@ -79,11 +91,12 @@ On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de l
         \hypo{\Gamma\vdash \bt_n : S_n}
         \hypo{\alpha(f) = (S_1,\ldots,S_n,S)}
         \infer4{\Gamma\vdash f(\bt_1,\ldots,\bt_n) : S}
-    \end{prooftree}
+      \end{prooftree}
+
 \end{center}
 
 On définit maintenant les propositions, mais comme celles-ci contiennent des constructions d'ordre $2$, on doit d'abord introduire des variables d'ordre $2$. On notera $\mathcal X_2$ l'ensemble des variables d'ordre $2$ (ces variables seront notées en majuscules), et on appellera contexte de typage d'ordre deux une liste de couples $(X,S)$ où $X \in \mathcal X_2$ et $S \in \mathcal S^*$.
-
+\emnote{je trouve que la notation $X:(S_1....S_n)$ est un peu étonnante, éventuellement tu pourrais écrire $\mathrm{P}(S_1,...,S_n)$ pour rendre clair que c'est une proposition (je suis d'accord que $\mathrm{Prop}^{S_1,...,S_n}$ c'est trop lourd)} \emnote{détail plus que mineur, mais je dirais que $R$ pour une relation est plus standard que $r$}
 \begin{defi}[Propositions]
     On définit les propositions (bien formées) par les règles de typage suivantes~:
     \begin{center}
@@ -122,7 +135,8 @@ On définit maintenant les propositions, mais comme celles-ci contiennent des co
     \end{center}
 \end{defi}
 
-On définit de façon évidente les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$.
+On définit de façon évidente\emnote{mieux: usuelle} les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$.
+\emnote{Pour être précis, il faudrait dire quelque part que tu considères termes/propositions modulo $\alpha$-renommage comme standard.}
 
 On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
 
@@ -159,8 +173,9 @@ Par une induction sur les termes et les propositions, on peut montrer que la sub
 
 Là encore, une induction nous permet de vérifier que cette substitution interagit correctement avec le typage.
 
-Cela nous permet enfin d'introduire la déduction naturelle. Les règles que nous présentons sont particulièrement chargées, puisqu'elles utilisent trois contexte (un contexte de typage du premier ordre, un du second ordre et un contexte logique), mais elles sont globalement les mêmes que les règles habituelles de la déduction naturelle.
+Cela nous permet enfin d'introduire la déduction naturelle. Les règles que nous présentons sont particulièrement chargées\emnote{négatif, j'insisterais plutôt sur l'envie de précision qui induit une séparation des contextes en trois au lieu d'un}, puisqu'elles utilisent trois contextes (un contexte de typage du premier ordre, un du second ordre et un contexte logique), mais elles sont globalement les mêmes que les règles habituelles de la déduction naturelle.
 
+\emnote{pour éviter de parler des règles structurelles, je prendrais $\varphi\in\Xi$ pour l'axiome}
 \begin{defi}[Déduction naturelle]
     On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash\varphi$, où $\Gamma$ est un contexte de typage du premier ordre, $\Delta$ du second ordre, $\Xi$ un contexte logique, c'est-à-dire ici une liste de propositions, et $\varphi$ une proposition, par les règles suivantes~:
     \begin{center}
@@ -207,21 +222,21 @@ Cela nous permet enfin d'introduire la déduction naturelle. Les règles que nou
     \end{center}
 \end{defi}
 
-Dire que notre interprétation est adéquate signifie alors que $\reali$ est stable par les mêmes règles. Cependant, il n'est pas clair comment interpréter au niveau de la relation $\reali$ le séquent $\Xi\vdash \varphi$ (le contexte de typage, lui, peu être considéré comme extérieur à l'étude logique). Pour l'interpréter, on va considérer que nos éléments $x$ de $\bX$ s'interprètent comme des fonctions $f_x$, $n$-aires (où $\Xi = \varphi_1,\ldots,\varphi_n$), telles que
+Dire que notre interprétation est adéquate signifie alors que $\reali$ \emnote{je ne sais pas si à cet endroit il est clair que tu veux en définir une qui raffine BHK} est stable par les mêmes règles. Cependant, il n'est pas clair comment interpréter au niveau de la relation $\reali$ le séquent $\Xi\vdash \varphi$ (le contexte de typage, lui, peu être considéré comme extérieur à l'étude logique). Pour l'interpréter, on va considérer que nos éléments $x$ de $\bX$ s'interprètent comme des fonctions $f_x$, $n$-aires (où $\Xi = \varphi_1,\ldots,\varphi_n$), telles que
 \[\forall x_1,\ldots,x_n, (\forall i \in \{1,\ldots,n\}, x_i \reali \varphi_i)\implies f_x(x_1,\ldots,x_n)\reali\varphi\]
 
 Dans ce contexte, l'adéquation signifie que notre langage a besoin des constructions suivantes~:
 \begin{itemize}
-    \item il doit y avoir un moyen d'abstraire une variable et d'en instancier une, permettant de transformer un élément $x\in\bX$ interprété comme une fonction $(x_1,\ldots,x_n) \mapsto f_x(x_1,\ldots,x_n)$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto (y\mapsto f_x(x_1,\ldots,x_{n-1},y))$ et une fonction $(x_1,\ldots,x_n)\mapsto f_x(x_1,\ldots,x_n)$ avec un objet $y\in\bX$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto f_x(x_1,\ldots,x_{n-1},y)$.
+    \item \emnote{préciser que c'est les règles $\to_{i}/\to_{e}$ qui te font dire ça et pourquoi?} il doit y avoir un moyen d'abstraire une variable et d'en instancier une, permettant de transformer un élément $x\in\bX$ interprété comme une fonction $(x_1,\ldots,x_n) \mapsto f_x(x_1,\ldots,x_n)$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto (y\mapsto f_x(x_1,\ldots,x_{n-1},y))$ et une fonction $(x_1,\ldots,x_n)\mapsto f_x(x_1,\ldots,x_n)$ avec un objet $y\in\bX$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto f_x(x_1,\ldots,x_{n-1},y)$.
     \item les règles sur $\forall^1$ suggèrent de pouvoir représenter nos termes à l'intérieur même de notre ensemble $\bX$~: on veut par exemple avoir un objet de $\bX$ pour chaque entier $n\in\bN$.
     \item nous reviendrons plus tard sur les quantification du second ordre, qui seront interprétées par des contextes supplémentaires.
 \end{itemize}
 
 Un élément important de cette façon de faire est la modularité~: dans ce qui est prescrit ici, on ne donne aucune condition sur la forme globale de $\bX$ mais seulement sur des constructions qui doivent exister, ce qui signifie que l'on pourra modifier $\bX$ en gardant la propriété d'adéquation tant que nos constructions restent présentes. Comme on veut considérer $\bX$ comme un langage de programmation, ce point est essentiel, puisqu'on a très souvent envie d'ajouter des constructions ou des primitives à un langages en souhaitant préserver les propriétés déjà établies.
 
-\subsection{A propos du second ordre}
+\subsection{À propos du second ordre}
 
-Le choix de la logique du second ordre nous a permis d'alléger considérablement le nombre de constructeurs introduits pour construire des formules. En effet, la combinaison de $\to$ et $\forall^2$ permet de récupérer les constantes $\top$ et $\bot$ ainsi que $\lor$ et $\land$, mais aussi les quantifications existentielles.
+Le choix de la logique du second ordre nous a permis d'alléger considérablement le nombre de constructeurs introduits pour construire des formules. En effet, la combinaison de $\to$ et $\forall^2$ permet de récupérer\emnote{encoder?} les constantes $\top$ et $\bot$ ainsi que $\lor$ et $\land$, mais aussi les quantifications existentielles.
 
 Donnons donc ces différents encodages~:
 \begin{align*}
@@ -264,15 +279,15 @@ Cette interprétation ne fonctionne que dans le cas où $\varphi$ est close pour
 Maintenant que nous avons donné les idées principales à propos de la relation de réalisabilité, précisons l'ensemble $\bX$ que nous étudions. Comme nous avons parlé d'interpréter nos éléments comme des fonctions, il semble naturel de considérer le $\lambda$-calcul, dans lequel tout terme peut se voir comme une fonction. On présentera succinctement le $\lambda$-calcul, principalement pour s'accorder sur les conventions et les notations.
 
 \begin{defi}[$\lambda$-termes]\label{def.lam}
-    On se fixe un ensemble dénombrable $\mathcal X_\Lambda$ de $\lambda$-variables, qu'on notera $x,y,\ldots$ On définit l'ensemble $\Lambda$ des $\lambda$-termes comme l'ensemble engendré par la grammaire suivante~:
+    On se fixe\emnote{on fixe, moins familier} un ensemble dénombrable $\mathcal X_\Lambda$ de $\lambda$-variables, qu'on notera $x,y,\ldots$ On définit l'ensemble $\Lambda$ des $\lambda$-termes comme l'ensemble engendré par la grammaire suivante~:
     \[t,u ::= x \mid \lambda x. t\mid t\;u\]
 \end{defi}
 
-Pour le parenthésage, on prendra la convention de minimiser le nombre de parenthèses en les écrivant seulement quand nécessaire, et en prenant l'application (la construction $t\;u$) comme associative à droite, c'est-à-dire que $t\;u\;v$ se lit $(t\;u)\;v$. On considère toujours les $\lambda$-termes à $\alpha$-conversion près, c'est-à-dire que changer le nom de variables liées par de nouvelles variables (dans le $\lambda$ qui lie cette variable y compris) ne change pas le terme. On définit la substitution simultanée et la simple substitution~:
+Pour le parenthésage, on prendra la convention de minimiser le nombre de parenthèses en les écrivant seulement quand nécessaire, et en prenant l'application (la construction $t\;u$) comme associative à droite\emnote{gauche, non?}, c'est-à-dire que $t\;u\;v$ se lit $(t\;u)\;v$. On considère toujours les $\lambda$-termes à $\alpha$-conversion près, c'est-à-dire que changer le nom de variables liées par de nouvelles variables (dans le $\lambda$ qui lie cette variable y compris) ne change pas le terme. On définit la substitution simultanée et la simple substitution~:
 
 \begin{defi}[Substitution de termes]
     Soit $\nu : \mathcal X_\Lambda \rightharpoonup \Lambda$ une substitution de termes et $t\in \Lambda$, on notera $\nu(t)$ le terme défini par induction sur $t$ par~:
-    \begin{itemize}
+\begin{itemize}
         \item si $t = x$ et $x \in \domm(\nu)$ alors $\nu(t) = \nu(x)$.
         \item si $t = x$ et $x\notin\domm(\nu)$ alors $\nu(t) = x$.
         \item si $t = \lambda x.u$ et $x\notin\bigcup_{y\in\domm(\nu)}\varlib{\nu(y)}$ alors $\nu(t) = \lambda x.\nu(u)$.
@@ -305,13 +320,14 @@ On définit aussi la $\beta$-réduction.
         \end{prooftree}
     \end{center}
 \end{defi}
-
+\emnote{qquad ? c'est tassé!}
 Commençons maintenant à présenter un premier modèle de réalisabilité, basé sur ce $\lambda$-calcul. Nous utiliserons les notions d'environnement définies plus tôt à la fois pour le premier et le second ordre. On se place dans le cas d'une signature sans symbole de relation, et on considère que $\Nat$ est l'unique sorte, pour simplifier notre modèle dans un premier temps. On possède les fonctions habituelles de l'arithmétique~: $S,+,\times$ et la constante $0$. On interprétera $\Nat$ par l'ensemble $\bN$.
 
 Précisons d'abord les interprétations de variables qui nous intéressent. On dira qu'une interprétation $\sigma$ du premier ordre, c'est-à-dire une fonction partielle $\sigma : \mathcal X_1 \rightharpoonup \bN$, est adéquate vis à vis de $\varphi$ si $\domm(\sigma) \supseteq\varlib{\varphi}$ pour le premier ordre. Dans le cas de plusieurs sortes, on demande aussi que $\sigma(\bx)$ soit du même type que $\bx$ dans $\varphi$ (si par exemple $\bx : S \vdash \varphi : \Propo$ alors on doit avoir $\vdash \sigma(\bx) : S$). On notera $\sigma\models \varphi$ dans ce cas. Remarquons que si $\sigma \models \varphi$ et que $\bt$ apparaît dans $\varphi$, alors on peut naturellement lui associer un élément $\sigma(\bt) \in \bN$.
-
+\emnote{est-ce que ce ne serait pas plus simple de dire que $\sigma$ est adéquat par rapport à un contexte du premier ordre $\Gamma$? ce qui subsume ta définition avec des formules (et aussi les termes dans $\varphi$, de fait, puisque dans le même contexte), en disant juste qu'on veut, pour tout $(x:S)\in\Gamma$, avoir $\sigma(x)\in\mathbb{S}$? d'ailleurs, je me mélange, mais on veut qqchose dans $\mathbb{S}$ et non $S$, ou pas?}
 
 On fait de même pour le second ordre~: une interprétation $\rho$ du second ordre, qui à $X \in \mathcal X_2$ associe une fonction $\bN^n \to \mathcal P(\Lambda)$ est adéquate pour $\varphi$ si les variables libres du second ordre de $\varphi$ sont dans le domaine de $\rho$, et si l'arité de $\rho(X)$ correspond à l'arité de $X$ dans le typage de $\varphi$. On notera, là encore, $\rho\models \varphi$.
+\emnote{Étant donné que c'est le seul moment où tu définis formellement la relation de réalisabiltié, c'est ``dommage'' qu'elle soit faite avec le mauvais espace d'interprétation de Prop (que tu définis formellement via SAT seulement dans la suite). Peut-être que tu peux introduire une notation (encore une :s), par ex. $\mathbb{P}$, en disant que c'est l'interprétation sémantique des propositions, et qu'en première instance on peut penser à $P(\Lambda)$ (comme expliqué en 2.3), en attendant de raffiner à une définition correcte. Et ça permettrait d'avoir la définition pour $\forall X$ avec $\mathbb{P}$ que plus tard tu peux définir comme SAT.}
 
 On peut maintenant définir la relation de réalisabilité.
 
@@ -332,6 +348,7 @@ On souhaite maintenant montrer l'adéquation. L'interprétation de $t\in \Lambda
 
 On voit alors que la règle d'axiome est vérifiée directement en prenant le terme $x_i$, qui vaudra $t_i$ après substitution et par hypothèse $t_i\reali \varphi_i = \varphi$. Cette règle est exactement celle qu'on attend du typage des $\lambda$-termes, et la prouvabilité est une relation syntaxique~: il convient donc de travailler directement avec un système de type et de montrer que ce système de type est adéquat en ce qu'un terme typé est un réaliseur.
 
+\emnote{même chose, je prendrais $(x:\varphi)\in\Xi$ pour l'axiome}
 \begin{defi}[Système de type]
     On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash t : \varphi$, où $\Gamma$ et $\Delta$ sont comme introduits plus tôt, et $\Xi$ est une liste de couples $(x,\varphi)$ où $x \in \mathcal X_\Lambda$ et $\varphi \in \Propo$, par les règles suivantes~:
     \begin{center}
@@ -380,6 +397,7 @@ On voit alors que la règle d'axiome est vérifiée directement en prenant le te
 
 Nous avons donc vu que la règle Ax est directement vérifiée par la forme du lemme d'adéquation que nous voulons montrer. Passons maintenant à la règle $\to_\mathrm i$. Pour celle-ci, supposons qu'on a $\nu$ tel que $t_i = \nu(x_i) \reali \varphi_i$, $\nu(x) \reali \varphi$ et $t[t_1/x_1,\ldots,t_n/x_n, \nu(x)/x]\reali \varphi$, on veut en déduire que $\lambda x.t[t_1/x_1,\ldots,t_n/x_n]\reali \varphi\to\psi$. Pour cela, si on a $u \reali \varphi$, alors on veut que $(\lambda x.\nu(t))\;u\reali \psi$~: il n'y a pas de raison que cela soit vrai. Cependant, en utilisant l'hypothèse d'induction avec $\nu(x_i) = t_i$ et $\nu(x) = u$, on obtient $t[t_i/x_i, t/x]$ et on voit que $(\lambda x.t[t_i/x_i])u \rhd t[t_i/x_i, t/x]$ (quitte à faire de l'$\alpha$-conversion), on souhaite donc que $\trad\varphi$ soit stable par antiréduction pour permettre la validité de cette règle.
 
+\emnote{en plus de ça, je rajouterais un truc sur l'intuition d'un réaliseur comme ``programme qui calcule correctement'', et que du coup, se réduire vers quelqu'un qui calcule correctement, c'est naturel de le considérer comme correct.}
 Cette exigence peut sembler artificielle, mais elle vient simplement du fait que le $\lambda$-calcul est un système syntaxique, et il contient donc plusieurs termes qui peuvent avoir le même sens~: en l'occurrence, ici, $(\lambda x.t)u$ et $t[u/x]$ ont tous les deux le sens de $f(x)$ dans un cadre plus sémantique. On pourrait donc décider de travailler dans $\Lambda/=_\beta$, mais l'analyse donnée plus tôt nous montre que cette exigence n'est en fait pas nécessaire, puisqu'il suffit de conserver la stabilité par antiréduction. Une partie stable par antiréduction est donc, en un sens, une partie ayant un contenu sémantique. Remarquons quand même que ce choix dépend largement du formalisme utilisé (ici le $\lambda$-calcul) mais aussi de la réduction considérée~: on aurait pu considérer la réduction call-by-value, cherchant à évaluer les arguments avant de faire une substitution, et les parties saturées auraient dû être définies différemment en obligeant l'évaluation de l'argument.
 
 \begin{defi}[Partie saturée]
@@ -400,7 +418,8 @@ On peut montrer que pour avoir $\trad\varphi \in \SAT$, il suffit de l'imposer s
 \end{proof}
 
 On décide maintenant de modifier l'interprétation au-dessus en disant juste que $\rho(X) : \bN^n \to \SAT$, et de même que l'intersection pour le $\forall X, \varphi$ est définie sur $S : \bN^n \to \SAT$. On peut alors montrer le lemme de saturation.
-
+On décide maintenant de modifier l'interprétation au-dessus en disant juste\emnote{un peu familier} que $\rho(X) : \bN^n \to \SAT$\emnote{ici tu pourrais donc avoir $\mathbb{P}\triangleq \SAT$}, et de même que l'intersection pour le $\forall X, \varphi$ est définie sur $S : \bN^n \to \SAT$. On peut alors montrer le lemme de saturation.
+\emnote{CHANGER !!}
 \begin{lem}[Saturation]
   Pour toute formule $\varphi$, $\trad\varphi_\rho^\sigma\in \SAT$.
 \end{lem}
@@ -414,10 +433,11 @@ On décide maintenant de modifier l'interprétation au-dessus en disant juste qu
   \end{itemize}
   Donc par induction $\trad\varphi_\rho^\sigma\in\SAT$.
 \end{proof}
+\emnote{attention, tu utilises la réduction sans l'avoir définie, et ce que tu énonces n'est pas toujours vrai (par exemple pour une réduction cbv droite-gauche ça ne marcherait pas), donc il y a besoin de fixer le cadre avant !}
 
 On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règle $\to_\mathrm e$ est automatique~: la définition même de $\trad{\psi\to\chi}$ nous assure que la règle est vérifiée. Pour les deux quantificateurs, par contre, il nous faut introduire des lemmes de substitution, pour prouver qu'enrichir l'environnement $\sigma$ (respectivement $\rho$) revient à faire une substitution dans le terme (respectivement la proposition) qu'on interprète.
 
-\begin{lem}\label{lem.subst.1}
+\begin{lem}\label{lem.subst.1}\emnote{exprime le plutôt avec les valeurs de vérité (c'est de toute façon ta preuve), ça évitera en plus d'avoir deux $t$ différents. Bonus, avec les contextes, ça permettra un énoncé plur précis je pense : pour tout $\Gamma$ $\Gamma \vdash \varphi : \Propo$, $\sigma\models\Gamma,\rho\models\Gamma$, $\Gamma\vdash \bt : S$.}
   Pour tous $\varphi : \Propo$, $\sigma\models\varphi,\rho\models\varphi$, $\bt : S$, $t\in\Lambda$, on a
   \[t\reali_\rho^{\sigma[\bx \leftarrow \bt^\sigma]} \varphi\iff t\reali_\rho^\sigma \varphi[\bt/\bx]\]
 \end{lem}
@@ -458,7 +478,7 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
       &= \bigcap_{F : \bS_1\times\cdots\times \bS_n \to \SAT}\trad{\psi[\bt/\bx]}_{\rho[X\leftarrow F]}^\sigma\\
       &= \trad{(\forall X^{S_1,\ldots,S_n}, \psi)[\bt/\bx]}_\rho^\sigma
     \end{align*}
-  \item si $\varphi = S(\bu)$, alors $\trad{S(\bu)}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} = \ceil{\bu^{\sigma[\bx\leftarrow\bt^\sigma]}} = \ceil{(\bu[\bt/\bx])^\sigma}$
+  \item \emnote{reliquat d'autre chose?} si $\varphi = S(\bu)$, alors $\trad{S(\bu)}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} = \ceil{\bu^{\sigma[\bx\leftarrow\bt^\sigma]}} = \ceil{(\bu[\bt/\bx])^\sigma}$
   \end{itemize}
   Donc, par induction, $\trad\varphi_\rho^{\sigma[\bx\leftarrow\bt]} = \trad{\varphi[\bt/\bx]}_\rho^\sigma$, d'où le résultat.
 \end{proof}
@@ -471,7 +491,7 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
 \begin{proof}
   Par induction sur $\varphi$~:
   \begin{itemize}
-  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors
+  \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors\emnote{F, pas S, sur la première ligne}
     \begin{align*}
       \trad\varphi_{\rho[X\leftarrow F]}^\sigma &= S(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
       &= \trad\psi_\rho^{\sigma[\bx_1\leftarrow \bt_1^\sigma,\ldots,\bx_n\leftarrow \bt_n^\sigma]} \\
@@ -510,6 +530,7 @@ Il nous reste alors à montrer le lemme d'adéquation. Là encore, il nous faut 
 \begin{defi}[Valuation de réalisabilité]
   Soit un contexte de typage du premier ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
   \[\forall i \in I, \nu(x_i)\reali_\rho^\sigma\varphi_i\]
+  \emnote{pour éviter l'histoire de la numérotation, $\forall (x:\varphi)\in\Xi, \nu(x) \reali_\rho^\sigma \varphi$, ce qui est raccord avec des règles axiomes comme je disais plus tôt.}
 \end{defi}
 
 \begin{lem}[Adéquation]
@@ -518,8 +539,9 @@ Il nous reste alors à montrer le lemme d'adéquation. Là encore, il nous faut 
 
 \begin{proof}
   La preuve se fait par induction sur la relation de typage $\vdash$~:
+  \emnote{tu peux préfixer chaque item par le nom de la règle, du type \emph{(Cas $(\to_i)$)} Supposons ...}
   \begin{itemize}
-  \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $\nu(t) = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
+  \item Pour le cas d'une variable, \st{il est clair}\emnote{par hypothèse sur $\nu$} que si $\varphi = \varphi_i$ et $x = x_i$ alors $\nu(t) = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
   \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $\nu(t) \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $\nu(\lambda x.t)\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $\nu[x \leftarrow u](t)\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $\nu[x\leftarrow u](t) = \nu(t)[u/x]$ donc $\nu(t)[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.\nu(t)) u \reali_\rho^\sigma \psi$, donc $\lambda x.\nu(t)\reali_\rho^\sigma \varphi\to\psi$.
   \item Supposons que $\nu(t)\reali_\rho^\sigma \varphi \to \psi$ et $\nu(u)\reali_\rho^\sigma \varphi$, alors par définition $\nu(t\;u)\reali_\rho^\sigma \psi$.
   \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S),\Delta,\Xi$, $\nu(t)\reali_\rho^\sigma \varphi$. Soit alors $\nu\reali_\rho^\sigma \Gamma,\Delta\Xi$ et $s \in \bS$, comme $\nu\reali_\rho^{\sigma[\bx\leftarrow s]} (\Gamma,\bx : S), \Delta,\Xi$, on en déduit que $\nu(t)\reali_\rho^{\sigma[\bx\leftarrow s]} \varphi$, ce qui est valide pour tout $s\in \bS$, donc par définition $\nu(t)\reali_\rho^\sigma \forall \bx^S, \varphi$.
