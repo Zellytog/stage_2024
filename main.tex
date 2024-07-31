@@ -1,9 +1,9 @@
 \documentclass{article}
 \usepackage{prelude}
 
-\title{Choix, réalisabilité et evidenced frames}
+\title{Vers une étude du contenu calculatoire\\ des principes de choix}
 
-\author{Titouan Leclercq}
+\author{Titouan Leclercq\\ Sous l'encadrement de\\ \'Etienne Miquey}
 
 \date{April 15$^{\mathrm{th}}$ -- July 15$^{\mathrm{th}}$}
 
@@ -21,22 +21,26 @@ Cette question est renouvelée dans le cadre de la logique intuitionniste et des
 \[\forall x^A, \exists y^B, R(x,y) \implies \exists f^{A\to B}, \forall x^A, R(x,f(x))\]
 Où $R$ est une relation binaire entre $A$ et $B$. Suivant le choix de $A,B$ et des formes que peut prendre $R$, on obtient de nombreux principes de choix. On peut, de plus, étudier une variante de ces principes en en prenant la contraposée~: en logique intuitionniste, ces ``principes de co-choix'' sont plus faibles, souvent strictement.
 
-Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem. Sans rentrer dans les détails, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante (en omettant plusieurs hypothèses sur $T$, respectivement $C$)~:
-\[\KL \defeq (\forall n^{\bN}, \exists u^{\bN^*}, |p| = n \land p \in T) \implies \exists \alpha^{\bN\to\bN}, \forall n^{\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
+Dans ce rapport, nous étudierons l'un des principes les plus faibles~: le lemme de König et sa contraposée, le Fan theorem. Le premier énonce qu'un arbre infini qui reste finiment branchant (comprendre par-là qu'à un n\oe ud donné il n'y a qu'un nombre fini de fils directs) possède une branche infini ; le deuxième énonce que pour un arbre $T$, si toute branche infinie $\alpha$ sort de l'arbre à partir d'une longueur $n_\alpha$, alors on peut trouver un $n$ uniforme tel que toute branche infini $\alpha$ sort de $T$ à partir de la longueur $n$~: autrement dit, l'arbre a une hauteur finie. Sans rentrer dans les détails, en considérant un arbre comme une partie de $\bN^*$ close par préfixe (son complémentaire est donc une partie de $\bN^*$ close par extension), on peut énoncer le lemme de König et le Fan theorem de la façon suivante (en omettant plusieurs hypothèses sur $T$, respectivement $C$)~:
+\[\KL \defeq (\forall n^{\bN}, \exists p^{\bN^*}, |p| = n \land p \in T) \implies \exists \alpha^{\bN\to\bN}, \forall n^{\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
 \[\FT \defeq (\forall \alpha^{\bN\to\bN}, \exists n^\bN, \alpha_0\ldots \alpha_{n-1}\in C)\implies \exists n^\bN, \forall \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T\]
 L'écriture $\exists p^{\bN^*},|p| = n \land p \in T$ est équivalente à $\exists \alpha^{\bN\to\bN}, \alpha_0\ldots\alpha_{n-1}\in T$, mais plus naturelle à considérer. On suppose ici que $T$ est clos par préfixe et $C$ par extension, nous donnant donc que $\FT$ est la contraposée de $\KL$.
 
 Mentionnons que $\KL$ comme $\FT$ sont toujours vrais dans $\ZFC$, et même dans $\ZF$~: on travaille donc dans une théorie plus faible dans laquelle on peut étudier l'ajout de $\FT$ ou $\KL$ comme non trivial. La théorie habituellement utilisée en mathématiques à rebours est un fragment faible de l'arithmétique du second ordre nommée $\RCAO$. Cette théorie est très expressive car elle permet de décrire les réels ainsi que les fonctions continues voire mesurables. Cependant, cette expressivité se fait au coût d'une grande quantité de codages, qui nous intéressent peu. Nous faisons donc le choix de travailler dans une version de l'arithmétique dans laquelle on peut parler de façon interne de fonctions, de paires et d'autres outils primitifs en plus des entiers, le tout avec une logique du second ordre.
 
-Maintenant que le contexte est plus clair, nous pouvons décrire l'objectif du stage présenté dans ce rapport~: il s'agit de mesurer le contenu logique de $\FT$, en le séparant entre autre de $\KL$. Pour ce faire, nous utilisons la réalisabilité, qui est un outil reliant les langages de programmation et la logique.
+Maintenant que le contexte est plus clair, nous pouvons décrire l'objectif du stage présenté dans ce rapport~: il s'agit de mesurer le contenu logique et calculatoire de $\FT$, en le séparant notamment de $\KL$. Pour ce faire, nous utilisons la réalisabilité, qui est un outil reliant les langages de programmation et la logique.
 
-Partant d'un langage simple (le $\lambda$-calcul), nous allons construire un modèle de réalisabilité vérifiant Fan theorem mais invalidant le lemme de König (sous une forme faible). La preuve que ce modèle vérifie $\FT$ nous servira ensuite à chercher une présentation plus générale de l'argument qu'une forme de continuité des fonctions calculables implique $\FT$.
+Depuis la découverte de la correspondance de Curry-Howard, en effet, le lien entre les langages de programmation et la logique ont été longuement explorés. Cette correspondance établit un parallèle entre, d'un côté, les programmes d'un langage typé (par exemple un programme doublant sont entrée, qu'on pourrait écrire $\double : \intt \to \intt$) et les preuves d'une proposition. A une proposition $A$ il est possible de faire correspondre un type $A'$, et les programmes de types $A'$ correspondent alors à des preuves de $A$. La réalisabilité étend cette correspondance en considérant, plutôt que la relation de typage, syntaxique, une approche sémantique. On entend par-là que la relation de typage est définie par un ensemble simple de règles d'inférences, que l'on peut vérifier méthodiquement, et que vérifier si un certain programme est d'un type donné est en général un problème décidable. La réalisabilité, elle, remplace la relation de typage $t : A'$ par une relation, directement entre $t$ et $A$ (la proposition), que l'on note $t \reali A$, et qui signifie que $t$ est une preuve de $A$. Dans cette définition, on autorise les termes à être par exemple non typés, et le seul critère considéré pour dire que $t \reali A$ est le comportement (la sémantique) de $t$. Avec cette relation, il devient alors possible de définir une nouvelle notion de modèle~: plutôt que d'attribuer à une proposition une valeur de vérité dans $\{0,1\}$, la valeur de vérité de $A$ devient l'ensemble de ses preuves, qu'on appellera ses réaliseurs.
+
+Partant d'un langage simple (le $\lambda$-calcul), nous allons construire un modèle de réalisabilité vérifiant Fan theorem mais invalidant le lemme de König (sous une forme faible). La preuve que ce modèle vérifie $\FT$ pourra ensuite servir à chercher une présentation plus générale de l'argument qu'une forme de continuité des fonctions calculables implique $\FT$, qui semble être une notion de continuité des fonctions. En effet, il existe des cadres de travail plus généraux pour parler de réalisabilité, et extraire l'argument derrière la vérification de $\FT$ nous permettrait alors, en employant un de ces cadres de travail (en particulier les evidenced frames décrites dans \cite{DBLP:conf/lics/0001MT21}), d'extraire la notion calculatoire qui permet de vérifier ou non $\FT$.
+
+La principale contribution de ce stage, qui explique d'ailleurs le point de vue développé dans ce rapport, est la définition d'un modèle de réalisabilité pour aborder la réalisabilité permettant, plus tard, d'étudier les principes de choix. La construction de modèles de réalisabilité est un exercice classique~: on peut par exemple retrouver plusieurs modèles dans \cite{Dinis_2023} ou dans \cite{COHEN201987}, mais ceux-ci sont utilisés dans un objectif différent du nôtre. Le modèle que nous construisons a l'avantage d'être facilement expressif (peu de codage doit être employé) et modulaire (on peut modifier une partie du modèle, comme le langage de programmation ou la syntaxe, avec un impact minime sur les autres parties).
 
 \section{Construire un modèle de réalisabilité}
 
 \subsection{L'interprétation BHK}
 
-L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétation de la sémantique d'une propositions, non en terme de valeurs de vérité, mais en terme d'ensemble de ses preuves.
+L'interprétation de Brouwer-Heying-Kolmogorov (BHK) désigne une interprétation de la sémantique d'une propositions, non en considérant sa de valeurs de vérité, mais en considérant l'ensemble de ses preuves.
 
 La volonté derrière l'interprétation BHK est de définir une logique constructiviste, en ce qu'une preuve d'une proposition doit explicitement construire les outils auxquels elle fait appel (en particulier, on cherche à avoir la propriété du témoin, qui dit que si $\vdash \exists x, \varphi$ alors il existe $t$ tel que $\vdash \varphi[t/x]$). Comme le principe du tiers exclu est non constructif, on se place dans le cadre de la logique intuitionniste.
 
@@ -44,11 +48,11 @@ On suppose qu'on a un ensemble de propositions $\Phi$ et un ensemble de témoins
 \begin{itemize}
 \item on suppose qu'on a défini ce que signifie $x\reali\varphi$ pour $\varphi$ atomique
 \item on n'a jamais $x\reali \bot$
-\item si $\varphi$ est de la forme $\psi\to \chi$, alors $x\reali\psi \to\chi$ signifie que $x$ est une fonction (en un sens intuitif pour le moment) qui à $y\in \bX$ tel que $y\reali \psi$, associe $x(y)\in \bX$ tel que $x(y)\reali \chi$.
-\item si $\varphi$ est de la forme $\psi\land\chi$, alors $x\reali \psi\land \chi$ signifie que $x$ est une paire de deux éléments $y\reali \psi$ et $z\reali \chi$~: prouver la conjonction de deux formules signifie avoir une preuve de chaque formule.
-\item si $\varphi$ est de la forme $\psi\lor\chi$, alors $x\reali\psi\lor \chi$ signifie que $x$ s'écrit $(i,y)$ où, si $i = 1$, $y\reali \psi$ et si $i = 2$, $y\reali \chi$. Cela correspond à une union disjointe (en particulier, une preuve d'une disjonction garde la trace de laquelle des deux propositions est prouvée).
-\item si $\varphi$ est de la forme $\forall a, \psi$ alors $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, associe $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une fonction qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
-\item si $\varphi$ est de la forme $\exists a, \psi$ alors $x\reali \exists a, \psi$ signifie que $x$ s'écrit comme une paire $(t,y)$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin du caractère existentiel (quel terme est désigné par le $\exists$) et une preuve que ce témoin vérifie effectivement la proposition.
+\item $x\reali\psi \to\chi$ signifie que $x$ est une fonction (en un sens intuitif pour le moment) qui à $y\in \bX$ tel que $y\reali \psi$, associe $x(y)\in \bX$ tel que $x(y)\reali \chi$.
+\item $x\reali \psi\land \chi$ signifie que $x$ est une paire de deux éléments $y\reali \psi$ et $z\reali \chi$~: prouver la conjonction de deux formules signifie avoir une preuve de chaque formule.
+\item $x\reali\psi\lor \chi$ signifie que $x$ s'écrit $(i,y)$ où, si $i = 1$, $y\reali \psi$ et si $i = 2$, $y\reali \chi$. Cela correspond à une union disjointe (en particulier, une preuve d'une disjonction garde la trace de laquelle des deux propositions est prouvée).
+\item $x\reali\forall a, \psi$ signifie que $x$ représente une fonction qui, pour tout $v$ du domaine de discours, renvoie $x(a)\reali \psi[v/a]$. Une preuve d'une quantification universelle est ainsi une fonction qui, au terme auquel on veut appliquer la proposition, renvoie une preuve de cette proposition appliquée au terme.
+\item $x\reali \exists a, \psi$ signifie que $x$ s'écrit comme une paire $(t,y)$ où $t$ est un terme et $y\reali \psi[t/a]$. Ainsi, donner une preuve d'une proposition existentielle signifie donner un témoin (quel objet $t$ est tel que $\psi[t/a]$) et une preuve que ce témoin vérifie effectivement la proposition (une preuve de $\psi[t/a]$).
 \end{itemize}
 
 Dans cette interprétation, dire qu'une formule $\varphi$ est vraie signifie
@@ -57,17 +61,17 @@ On souhaite donc que cette notion de vérité définisse une théorie logique, c
 
 \subsection{Sur l'adéquation}
 
-Rappelons les règles de déduction naturelle, et profitons-en pour clarifier les choix syntaxiques que nous faisons. Tout d'abord, on considère une logique multi-sortée, d'où une définition un peu plus chargée d'une signature~:
+Rappelons les règles de déduction naturelle, et profitons-en pour clarifier les choix syntaxiques que nous faisons. Tout d'abord, on considère une logique multi-sortée, qui nous force à avoir une définition plus chargée d'une signature~:
 \begin{defi}[Signature]
     Une signature $\Sigma$ est la donnée~:
     \begin{itemize}
     \item d'un ensemble $\mathcal S$ de sortes.
     \item d'un ensemble $\mathcal F$ de symboles de fonctions, et d'une fonction $\alpha : \mathcal F\to \mathcal S^* \times \mathcal S$ donnant à chaque symbole son arité.
-    \item d'un ensemble $\mathcal R$ de symboles de fonctions, et d'une fonction $\alpha : \mathcal R \to \mathcal S^*$ donnant à chaque symbole son arité.
+    \item d'un ensemble $\mathcal R$ de symboles de relations, et d'une fonction $\alpha : \mathcal R \to \mathcal S^*$ donnant à chaque symbole son arité.
     \end{itemize}
 \end{defi}
 
-On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(x,S)$ où $x \in \mathcal X_1$ et $S\in\mathcal S$)~:
+On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(x,S)$ où $x \in \mathcal X_1$ et $S\in\mathcal S$), et $f \in \mathcal F$~:
 \begin{center}
     \begin{prooftree}
         \infer0{\Gamma, \bx : S \vdash \bx : S}
@@ -82,7 +86,7 @@ On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de l
     \end{prooftree}
 \end{center}
 
-On définit maintenant les propositions, mais comme celles-ci contiennent des constructions d'ordre $2$, on doit d'abord introduire des variables d'ordre $2$. On notera $\mathcal X_2$ l'ensemble des variables d'ordre $2$ (ces variables seront notées en majuscules), et on appellera contexte de typage d'ordre deux une liste de couples $(X,S)$ où $X \in \mathcal X_2$ et $S \in \mathcal S^*$.
+On définit maintenant les propositions, mais comme celles-ci contiennent des constructions d'ordre $2$, on doit d'abord introduire des variables d'ordre $2$. On notera $\mathcal X_2$ l'ensemble des variables d'ordre $2$ (ces variables seront notées en majuscules), et on appellera contexte de typage d'ordre deux une liste de couples $(X,S)$ où $X \in \mathcal X_2$ et $S \in \mathcal S^*$. On notera $X \subseteq (S)$ pour $(X,S)$.
 
 \begin{defi}[Propositions]
     On définit les propositions (bien formées) par les règles de typage suivantes~:
@@ -91,15 +95,15 @@ On définit maintenant les propositions, mais comme celles-ci contiennent des co
             \hypo{\Gamma\vdash \bt_1 : S_1}
             \hypo{\cdots}
             \hypo{\Gamma\vdash \bt_n : S_n}
-            \infer3{\Gamma\mid\Delta, X : (S_1,\ldots,S_n) \vdash X(\bt_1,\ldots,\bt_n) : \Propo}
+            \infer3{\Gamma\mid\Delta, X \subseteq (S_1,\ldots,S_n) \vdash X(\bt_1,\ldots,\bt_n) : \Propo}
         \end{prooftree}
         \quad
         \begin{prooftree}
             \hypo{\Gamma\vdash \bt_1 : S_1}
             \hypo{\cdots}
             \hypo{\Gamma\vdash \bt_n : S_n}
-            \hypo{\alpha(r) = (S_1,\ldots,S_n)}
-            \infer4{\Gamma\mid\Delta\vdash r(\bt_1,\ldots,\bt_n) : \Propo}
+            \hypo{\alpha(R) = (S_1,\ldots,S_n)}
+            \infer4{\Gamma\mid\Delta\vdash R(\bt_1,\ldots,\bt_n) : \Propo}
         \end{prooftree}
 
         \vspace{0.5cm}
@@ -116,13 +120,13 @@ On définit maintenant les propositions, mais comme celles-ci contiennent des co
         \end{prooftree}
         \quad
         \begin{prooftree}
-            \hypo{\Gamma\mid \Delta, X : (S_1,\ldots,S_n)\vdash \varphi : \Propo}
+            \hypo{\Gamma\mid \Delta, X \subseteq(S_1,\ldots,S_n)\vdash \varphi : \Propo}
             \infer1{\Gamma\mid\Delta\vdash \forall X^{S_1,\ldots,S_n}, \varphi : \Propo}
         \end{prooftree}
     \end{center}
 \end{defi}
 
-On définit de façon évidente les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$.
+On définit de façon usuelles les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$. On considère aussi que toutes nos définitions sont faite à $\alpha$-renommage près, de façon standard.
 
 On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
 
@@ -136,7 +140,7 @@ On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
     On peut maintenant, pour $\Gamma, \bx : S\mid\Delta\vdash \varphi : \Propo$ et $\Gamma\vdash \bt : S$, définir $\Gamma\mid\Delta\vdash\varphi[\bt/\bx] : \Propo$~:
     \begin{itemize}
         \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = X(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
-        \item si $\varphi = r(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = r(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
+        \item si $\varphi = R(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = R(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
         \item si $\varphi = \psi \to \chi$ alors $\varphi[\bt/\bx] = \psi[\bt/\bx] \to \chi[\bt/\bx]$.
         \item si $\varphi = \forall \by^{S'}, \psi$ et que $\by\notin \varlib{\bt}$, alors $\varphi[\bt/\bx] = \forall \by^{S'}, \psi[\bt/\bx]$.
         \item si $\varphi = \forall X^{S_1,\ldots,S_n}, \psi$ alors $\varphi[\bt/\bx] = \forall X^{S_1,\ldots,S_n}, \psi[\bt/\bx]$.
@@ -150,7 +154,7 @@ Par une induction sur les termes et les propositions, on peut montrer que la sub
     \begin{itemize}
         \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]$.
         \item si $\varphi = Y(\bt_1,\ldots,\bt_n)$
-        \item si $\varphi = r(\bt_1,\ldots,\bt_n$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \varphi$.
+        \item si $\varphi = R(\bt_1,\ldots,\bt_n$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \varphi$.
         \item si $\varphi = \chi \to \theta$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \chi[X/\psi(\bt_1,\ldots,\bt_n)] \to \theta[X/\psi(\bt_1,\ldots,\bt_n)]$.
         \item si $\varphi = \forall \bx^S, \chi$ et $\bx \notin \varlib{\psi}$, alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \forall \bx^S, \chi[X/\psi(\bt_1,\ldots,\bt_n)]$.
         \item si $\varphi = \forall Y^{S'_1,\ldots,S'_n}, \chi$ et $Y\notin\varlib{\psi}$, alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \forall Y^{S'_1,\ldots,S'_n}, \chi[X/\psi(\bx_1,\ldots,\bx_n)]$.
@@ -159,13 +163,14 @@ Par une induction sur les termes et les propositions, on peut montrer que la sub
 
 Là encore, une induction nous permet de vérifier que cette substitution interagit correctement avec le typage.
 
-Cela nous permet enfin d'introduire la déduction naturelle. Les règles que nous présentons sont particulièrement chargées, puisqu'elles utilisent trois contexte (un contexte de typage du premier ordre, un du second ordre et un contexte logique), mais elles sont globalement les mêmes que les règles habituelles de la déduction naturelle.
+Cela nous permet enfin d'introduire la déduction naturelle. Nos règles sont très proches de la déduction naturelle usuelle, mais la volonté de maîtriser précisément les variables du premier ordre et du second ordre nous oblige à considérer trois contextes~: ceux du premier et second ordre, et le contexte logique des formules prises pour hypothèses.
 
 \begin{defi}[Déduction naturelle]
-    On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash\varphi$, où $\Gamma$ est un contexte de typage du premier ordre, $\Delta$ du second ordre, $\Xi$ un contexte logique, c'est-à-dire ici une liste de propositions, et $\varphi$ une proposition, par les règles suivantes~:
+    On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash\varphi$, où $\Gamma$ est un contexte de typage du premier ordre, $\Delta$ du second ordre, $\Xi$ un contexte logique, c'est-à-dire ici une liste de propositions, et $\varphi$ une proposition, par les règles suivantes (toutes les formules dans $\Xi$ et $\varphi$ sont considérées bien typées dans les contextes $\Gamma, \Delta$)~:
     \begin{center}
         \begin{prooftree}
-            \infer0[Ax]{\Gamma\mid\Delta\mid\Xi, \varphi\vdash \varphi}
+            \hypo{\varphi \in \Xi}
+            \infer1[Ax]{\Gamma\mid\Delta\mid\Xi\vdash \varphi}
         \end{prooftree}
         \qquad
         \begin{prooftree}
@@ -195,7 +200,7 @@ Cela nous permet enfin d'introduire la déduction naturelle. Les règles que nou
         \vspace{0.5cm}
 
         \begin{prooftree}
-            \hypo{\Gamma\mid\Delta, X : S_1,\ldots,S_n\mid\Xi\vdash \varphi}
+            \hypo{\Gamma\mid\Delta, X \subseteq S_1,\ldots,S_n\mid\Xi\vdash \varphi}
             \infer1[$\forall_\mathrm i^2$]{\Gamma\mid\Delta\mid\Xi\vdash \forall X^{S_1,\ldots,S_n}, \varphi}
         \end{prooftree}
         \qquad
@@ -212,7 +217,7 @@ Dire que notre interprétation est adéquate signifie alors que $\reali$ est sta
 
 Dans ce contexte, l'adéquation signifie que notre langage a besoin des constructions suivantes~:
 \begin{itemize}
-    \item il doit y avoir un moyen d'abstraire une variable et d'en instancier une, permettant de transformer un élément $x\in\bX$ interprété comme une fonction $(x_1,\ldots,x_n) \mapsto f_x(x_1,\ldots,x_n)$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto (y\mapsto f_x(x_1,\ldots,x_{n-1},y))$ et une fonction $(x_1,\ldots,x_n)\mapsto f_x(x_1,\ldots,x_n)$ avec un objet $y\in\bX$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto f_x(x_1,\ldots,x_{n-1},y)$.
+    \item à cause des règles $\to_\mathrm i$ et $\to_\mathrm e$, il doit y avoir un moyen d'abstraire une variable et d'en instancier une, permettant de transformer un élément $x\in\bX$ interprété comme une fonction $(x_1,\ldots,x_n) \mapsto f_x(x_1,\ldots,x_n)$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto (y\mapsto f_x(x_1,\ldots,x_{n-1},y))$ et une fonction $(x_1,\ldots,x_n)\mapsto f_x(x_1,\ldots,x_n)$ avec un objet $y\in\bX$ en une fonction $(x_1,\ldots,x_{n-1})\mapsto f_x(x_1,\ldots,x_{n-1},y)$.
     \item les règles sur $\forall^1$ suggèrent de pouvoir représenter nos termes à l'intérieur même de notre ensemble $\bX$~: on veut par exemple avoir un objet de $\bX$ pour chaque entier $n\in\bN$.
     \item nous reviendrons plus tard sur les quantification du second ordre, qui seront interprétées par des contextes supplémentaires.
 \end{itemize}
@@ -221,7 +226,7 @@ Un élément important de cette façon de faire est la modularité~: dans ce qui
 
 \subsection{A propos du second ordre}
 
-Le choix de la logique du second ordre nous a permis d'alléger considérablement le nombre de constructeurs introduits pour construire des formules. En effet, la combinaison de $\to$ et $\forall^2$ permet de récupérer les constantes $\top$ et $\bot$ ainsi que $\lor$ et $\land$, mais aussi les quantifications existentielles.
+Le choix de la logique du second ordre nous a permis d'alléger considérablement le nombre de constructeurs introduits pour construire des formules. En effet, la combinaison de $\to$ et $\forall^2$ permet d'encoder les constantes $\top$ et $\bot$ ainsi que $\lor$ et $\land$, mais aussi les quantifications existentielles.
 
 Donnons donc ces différents encodages~:
 \begin{align*}
@@ -264,11 +269,11 @@ Cette interprétation ne fonctionne que dans le cas où $\varphi$ est close pour
 Maintenant que nous avons donné les idées principales à propos de la relation de réalisabilité, précisons l'ensemble $\bX$ que nous étudions. Comme nous avons parlé d'interpréter nos éléments comme des fonctions, il semble naturel de considérer le $\lambda$-calcul, dans lequel tout terme peut se voir comme une fonction. On présentera succinctement le $\lambda$-calcul, principalement pour s'accorder sur les conventions et les notations.
 
 \begin{defi}[$\lambda$-termes]\label{def.lam}
-    On se fixe un ensemble dénombrable $\mathcal X_\Lambda$ de $\lambda$-variables, qu'on notera $x,y,\ldots$ On définit l'ensemble $\Lambda$ des $\lambda$-termes comme l'ensemble engendré par la grammaire suivante~:
+    On fixe un ensemble dénombrable $\mathcal X_\Lambda$ de $\lambda$-variables, qu'on notera $x,y,\ldots$ On définit l'ensemble $\Lambda$ des $\lambda$-termes comme l'ensemble engendré par la grammaire suivante~:
     \[t,u ::= x \mid \lambda x. t\mid t\;u\]
 \end{defi}
 
-Pour le parenthésage, on prendra la convention de minimiser le nombre de parenthèses en les écrivant seulement quand nécessaire, et en prenant l'application (la construction $t\;u$) comme associative à droite, c'est-à-dire que $t\;u\;v$ se lit $(t\;u)\;v$. On considère toujours les $\lambda$-termes à $\alpha$-conversion près, c'est-à-dire que changer le nom de variables liées par de nouvelles variables (dans le $\lambda$ qui lie cette variable y compris) ne change pas le terme. On définit la substitution simultanée et la simple substitution~:
+Pour le parenthésage, on prendra la convention de minimiser le nombre de parenthèses en les écrivant seulement quand nécessaire, et en prenant l'application (la construction $t\;u$) comme associative à gauche, c'est-à-dire que $t\;u\;v$ se lit $(t\;u)\;v$. On considère toujours les $\lambda$-termes à $\alpha$-conversion près, c'est-à-dire que changer le nom de variables liées par de nouvelles variables (dans le $\lambda$ qui lie cette variable y compris) ne change pas le terme. On définit la substitution simultanée et la simple substitution~:
 
 \begin{defi}[Substitution de termes]
     Soit $\nu : \mathcal X_\Lambda \rightharpoonup \Lambda$ une substitution de termes et $t\in \Lambda$, on notera $\nu(t)$ le terme défini par induction sur $t$ par~:
@@ -293,12 +298,12 @@ On définit aussi la $\beta$-réduction.
             \hypo{t \rhd u}
             \infer1{\lambda x.t \rhd \lambda x.u}
         \end{prooftree}
-        \quad
+        \qquad
         \begin{prooftree}
             \hypo{t\rhd t'}
             \infer1{t\;u\rhd t'\;u}
         \end{prooftree}
-        \quad
+        \qquad
         \begin{prooftree}
             \hypo{u \rhd u'}
             \infer1{t\;u\rhd t\;u'}
@@ -306,17 +311,18 @@ On définit aussi la $\beta$-réduction.
     \end{center}
 \end{defi}
 
-Commençons maintenant à présenter un premier modèle de réalisabilité, basé sur ce $\lambda$-calcul. Nous utiliserons les notions d'environnement définies plus tôt à la fois pour le premier et le second ordre. On se place dans le cas d'une signature sans symbole de relation, et on considère que $\Nat$ est l'unique sorte, pour simplifier notre modèle dans un premier temps. On possède les fonctions habituelles de l'arithmétique~: $S,+,\times$ et la constante $0$. On interprétera $\Nat$ par l'ensemble $\bN$.
+Commençons maintenant à présenter un premier modèle de réalisabilité, basé sur ce $\lambda$-calcul. Nous utiliserons les notions d'environnement définies plus tôt à la fois pour le premier et le second ordre. On se place dans le cas d'une signature sans symbole de relation, et on considère que $\Nat$ est l'unique sorte, pour simplifier notre modèle dans un premier temps. On possède les fonctions habituelles de l'arithmétique~: $S,+,\times$ et la constante $0$. On interprétera $\Nat$ par l'ensemble $\bN$. On écrira cependant nos définitions en toute généralité, en particulier pour les sortes $S$ que l'on notera $S$ et leur interprétation sémantique $\bS$, pour que les définitions puissent être appliquées de façon identique pour les autres signatures que l'on peut choisir.
 
-Précisons d'abord les interprétations de variables qui nous intéressent. On dira qu'une interprétation $\sigma$ du premier ordre, c'est-à-dire une fonction partielle $\sigma : \mathcal X_1 \rightharpoonup \bN$, est adéquate vis à vis de $\varphi$ si $\domm(\sigma) \supseteq\varlib{\varphi}$ pour le premier ordre. Dans le cas de plusieurs sortes, on demande aussi que $\sigma(\bx)$ soit du même type que $\bx$ dans $\varphi$ (si par exemple $\bx : S \vdash \varphi : \Propo$ alors on doit avoir $\vdash \sigma(\bx) : S$). On notera $\sigma\models \varphi$ dans ce cas. Remarquons que si $\sigma \models \varphi$ et que $\bt$ apparaît dans $\varphi$, alors on peut naturellement lui associer un élément $\sigma(\bt) \in \bN$.
+Précisons d'abord les interprétations de variables qui nous intéressent. On dira qu'une interprétation $\sigma$ du premier ordre, c'est-à-dire une fonction partielle $\sigma : \mathcal X_1 \rightharpoonup \bN$, est adéquate vis à vis d'un contexte du premier ordre $\Gamma$ si pour tout $(x,S) \in \Gamma$, on a $\sigma(x) \in \bS$.
 
+Moralement, une variable du second ordre doit pouvoir être remplacée par la valeur de vérité d'une formule, c'est-à-dire dans la logique classique une partie des objets du premier ordre. Ici, on a dit que la valeur de vérité d'une formule est, plutôt qu'une valeur dans $\{0,1\}$, une partie de notre langage de programmation $\Lambda$. On est donc tentés d'interpréter une formule par un élément $A \in \mathcal P(\Lambda)$, mais on verra plus tard que cette interprétation cause des problèmes. On considère donc à la place que $A \in \bP$, où $\bP$ sera une famille de parties de $\Lambda$ que l'on décrira plus tard, mais qui se rapproche grandement de $\mathcal P(\Lambda)$ dans l'interprétation qu'on en fait.
 
-On fait de même pour le second ordre~: une interprétation $\rho$ du second ordre, qui à $X \in \mathcal X_2$ associe une fonction $\bN^n \to \mathcal P(\Lambda)$ est adéquate pour $\varphi$ si les variables libres du second ordre de $\varphi$ sont dans le domaine de $\rho$, et si l'arité de $\rho(X)$ correspond à l'arité de $X$ dans le typage de $\varphi$. On notera, là encore, $\rho\models \varphi$.
+Une interprétation $\rho$ du second ordre, alors, est une fonction partielle $\rho$ qui, à un élément de $\mathcal X_2$, associe une fonction $\bS_1\times\cdots\times\bS_n \to \bP$. On dira que $\rho$ est adéquat pour une proposition $\Gamma\mid\Delta\vdash \varphi : \Propo$ si, pour tout $(X, (S_1,\ldots,S_n))\in \Delta$, $\rho(X) : \bS_1\times\cdots\times\bS_n \to \bP$.
 
 On peut maintenant définir la relation de réalisabilité.
 
 \begin{defi}[Relation de réalisabilité]
-    Soit une proposition $\varphi$, $\sigma\models \varphi$ et $\rho\models \varphi$. On définit $\trad\varphi_\rho^\sigma \in \mathcal P(\Lambda)$ par induction sur $\varphi$~:
+    Soit une proposition $\varphi$, $\sigma\models \varphi$ et $\rho\models \varphi$. On définit $\trad\varphi_\rho^\sigma \in \mathcal \bP$ par induction sur $\varphi$~:
     \begin{itemize}
         \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\trad\varphi_\rho^\sigma = \rho(X)(\sigma(\bt_1),\ldots,\sigma(\bt_n))$.
         \item si $\varphi = \psi \to \chi$ alors $\trad{\varphi\to\chi}_\rho^\sigma = \{t \in \Lambda\mid \forall u \in \trad{\psi}_\rho^\sigma, t\;u \in \trad{\chi}_\rho^\sigma\}$.
@@ -336,7 +342,8 @@ On voit alors que la règle d'axiome est vérifiée directement en prenant le te
     On définit la relation $\Gamma\mid\Delta\mid\Xi\vdash t : \varphi$, où $\Gamma$ et $\Delta$ sont comme introduits plus tôt, et $\Xi$ est une liste de couples $(x,\varphi)$ où $x \in \mathcal X_\Lambda$ et $\varphi \in \Propo$, par les règles suivantes~:
     \begin{center}
         \begin{prooftree}
-            \infer0[Ax]{\Gamma\mid\Delta\mid\Xi, x : \varphi\vdash x : \varphi}
+            \hypo{(x : \varphi) \in \Xi}
+            \infer1[Ax]{\Gamma\mid\Delta\mid\Xi\vdash x : \varphi}
         \end{prooftree}
         \qquad
         \begin{prooftree}
@@ -382,6 +389,8 @@ Nous avons donc vu que la règle Ax est directement vérifiée par la forme du l
 
 Cette exigence peut sembler artificielle, mais elle vient simplement du fait que le $\lambda$-calcul est un système syntaxique, et il contient donc plusieurs termes qui peuvent avoir le même sens~: en l'occurrence, ici, $(\lambda x.t)u$ et $t[u/x]$ ont tous les deux le sens de $f(x)$ dans un cadre plus sémantique. On pourrait donc décider de travailler dans $\Lambda/=_\beta$, mais l'analyse donnée plus tôt nous montre que cette exigence n'est en fait pas nécessaire, puisqu'il suffit de conserver la stabilité par antiréduction. Une partie stable par antiréduction est donc, en un sens, une partie ayant un contenu sémantique. Remarquons quand même que ce choix dépend largement du formalisme utilisé (ici le $\lambda$-calcul) mais aussi de la réduction considérée~: on aurait pu considérer la réduction call-by-value, cherchant à évaluer les arguments avant de faire une substitution, et les parties saturées auraient dû être définies différemment en obligeant l'évaluation de l'argument.
 
+Une autre motivation rendant cette condition plus naturelle est la stabilité qu'elle impose au fait d'être un réaliseur. Avec cette condition, en considérant que $t \reali \varphi$ signifie que $t$ vérifie les spécifications imposées par $\varphi$ (en un sens, qu'il calcule correctement), alors savoir que $t \rhd^* u$ et que $u$ vérifie les spécifications suffit, puisque $t$ va alors calculer comme $u$, qui calcule correctement.
+
 \begin{defi}[Partie saturée]
     On dit qu'une partie $S\subseteq \Lambda$ est saturée si la condition suivante est vérifiée~:
     \[\forall t,u\in \Lambda, t \rhd u \land u \in S \implies t \in S\]
@@ -399,7 +408,7 @@ On peut montrer que pour avoir $\trad\varphi \in \SAT$, il suffit de l'imposer s
   Il est évident que $S\in \SAT \implies \varnothing\subseteq S \subseteq \Lambda$ et que ces deux parties sont stables par antiréduction. Supposons que $\{S_i\}_{i\in I}$ est une famille de parties saturées. Si $t\reduc u$ et $u \in \bigcap S_i$, alors pour tout $i \in I$, $t \in S_i$ par saturation de $S_i$, donc $t\in \bigcap S_i$, donc $\bigcap S_i$ est saturée. De même si $u \in \bigcup S_i$, alors on trouve $i$ tel que $u \in S_i$ donc $t\in S_i$ par saturation. Donc $\bigcup S_i$ est saturée. Ainsi $(\SAT,\subseteq,\Lambda,\varnothing, \bigcap,\bigcup)$ est un treillis complet.
 \end{proof}
 
-On décide maintenant de modifier l'interprétation au-dessus en disant juste que $\rho(X) : \bN^n \to \SAT$, et de même que l'intersection pour le $\forall X, \varphi$ est définie sur $S : \bN^n \to \SAT$. On peut alors montrer le lemme de saturation.
+On décide maintenant d'instancier l'interprétation définie précédemment en posant $\bP \defeq \SAT$. De plus, $\SAT$ se comporte correctement vis à vis de notre interprétation, puisque (comme on le montre ci-après) exiger seulement que $\rho(X) \in \SAT$ sur les variables $X$ suffit à ce que $\trad\varphi_\rho^\sigma \in \SAT$.
 
 \begin{lem}[Saturation]
   Pour toute formule $\varphi$, $\trad\varphi_\rho^\sigma\in \SAT$.
@@ -418,8 +427,8 @@ On décide maintenant de modifier l'interprétation au-dessus en disant juste qu
 On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règle $\to_\mathrm e$ est automatique~: la définition même de $\trad{\psi\to\chi}$ nous assure que la règle est vérifiée. Pour les deux quantificateurs, par contre, il nous faut introduire des lemmes de substitution, pour prouver qu'enrichir l'environnement $\sigma$ (respectivement $\rho$) revient à faire une substitution dans le terme (respectivement la proposition) qu'on interprète.
 
 \begin{lem}\label{lem.subst.1}
-  Pour tous $\varphi : \Propo$, $\sigma\models\varphi,\rho\models\varphi$, $\bt : S$, $t\in\Lambda$, on a
-  \[t\reali_\rho^{\sigma[\bx \leftarrow \bt^\sigma]} \varphi\iff t\reali_\rho^\sigma \varphi[\bt/\bx]\]
+  Pour tous $\Gamma,\Delta$, $\varphi$ telle que $\Gamma\mid\Delta\vdash \varphi : \Propo$ et interprétations $\sigma\models \Gamma, \rho \models \Delta$, pour tout terme $\Gamma\vdash \bt : S$, on a
+  \[\trad\varphi_\rho^{\sigma[\bx \leftarrow \bt^\sigma]}\iff \trad{\varphi[\bt/\bx]}\reali_\rho^\sigma\]
 \end{lem}
 
 \begin{proof}
@@ -438,12 +447,6 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
       &= \trad{\psi[\bt/\bx]\to\chi[\bt/\bx]}_\rho^\sigma\\
       &= \trad{(\psi\to\chi)[\bt/\bx]}_\rho^\sigma
     \end{align*}
-  \item si $\varphi = \psi_1\land \psi_2$ alors
-    \begin{align*}
-      \trad{\psi_1\land\psi_2}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \{t\in\Lambda\mid \forall i \in\{1,2\}, \pi_i\;t\in \trad{\psi_i}_\rho^{\sigma[\bt\leftarrow\bt^\sigma]}\}\\
-      &= \{t\in\Lambda\mid\forall i \in \{1,2\}, \pi_i\;t\in\trad{\psi_i[\bt/\bx]}_\rho^\sigma\}\\
-      &= \trad{(\psi\land\chi)[\bt/\bx]}_\rho^\sigma
-    \end{align*}
   \item si $\varphi = \forall \by^S, \psi$ alors quitte à renommer $\by$ pour s'assurer que la variable n'appartienne pas aux variables libres de $\bt$~:
     \begin{align*}
       \trad{\forall \by^S,\psi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma]} &= \bigcap_{s\in \bS}\trad{\psi}_\rho^{\sigma[\bx\leftarrow\bt^\sigma,\by\leftarrow s]}\\
@@ -458,13 +461,12 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
       &= \bigcap_{F : \bS_1\times\cdots\times \bS_n \to \SAT}\trad{\psi[\bt/\bx]}_{\rho[X\leftarrow F]}^\sigma\\
       &= \trad{(\forall X^{S_1,\ldots,S_n}, \psi)[\bt/\bx]}_\rho^\sigma
     \end{align*}
-  \item si $\varphi = S(\bu)$, alors $\trad{S(\bu)}_\rho^{\sigma[\bx\leftarrow \bt^\sigma]} = \ceil{\bu^{\sigma[\bx\leftarrow\bt^\sigma]}} = \ceil{(\bu[\bt/\bx])^\sigma}$
   \end{itemize}
   Donc, par induction, $\trad\varphi_\rho^{\sigma[\bx\leftarrow\bt]} = \trad{\varphi[\bt/\bx]}_\rho^\sigma$, d'où le résultat.
 \end{proof}
 
 \begin{lem}\label{lem.subst.2}
-  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\rho,\sigma$ bien choisis on a, en notant $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow s_1,\ldots,\bx_n\leftarrow s_n]}$~:
+  Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\gamma\models\Gamma, \rho\models \Delta$ on a, en notant $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow s_1,\ldots,\bx_n\leftarrow s_n]}$~:
   \[t\reali_{\rho[X\leftarrow F]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
 \end{lem}
 
@@ -473,7 +475,7 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
   \begin{itemize}
   \item si $\varphi = X(\bt_1,\ldots,\bt_n)$, alors
     \begin{align*}
-      \trad\varphi_{\rho[X\leftarrow F]}^\sigma &= S(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
+      \trad\varphi_{\rho[X\leftarrow F]}^\sigma &= F(\bt_1^\sigma,\ldots,\bt_n^\sigma) \\
       &= \trad\psi_\rho^{\sigma[\bx_1\leftarrow \bt_1^\sigma,\ldots,\bx_n\leftarrow \bt_n^\sigma]} \\
       &= \trad{\psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]}_\rho^\sigma\\
       &= \trad{X(\bt_1,\ldots,\bt_n)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
@@ -508,8 +510,8 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
 Il nous reste alors à montrer le lemme d'adéquation. Là encore, il nous faut rajouter des notations et de la syntaxe, pour pouvoir relier les différents contextes de typages et logique.
 
 \begin{defi}[Valuation de réalisabilité]
-  Soit un contexte de typage du premier ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi = (x_i : \varphi_i)_{i\in I}$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
-  \[\forall i \in I, \nu(x_i)\reali_\rho^\sigma\varphi_i\]
+  Soit un contexte de typage du premier ordre $\Gamma$, un contexte de typage du second ordre $\Delta$ et un contexte de typage de termes $\Xi$. On dit que des valuations $\sigma, \rho, \nu$ où $\nu : \mathcal X_\Lambda \to \Lambda$ sont adéquates pour $\Gamma,\Delta,\Xi$, ce que l'on note $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$, si $\sigma$ est adéquate pour $\Gamma$, $\rho$ est adéquate pour $\Delta$ et si
+  \[\forall (x : \varphi) \in \Xi, \nu(x)\reali_\rho^\sigma\varphi\]
 \end{defi}
 
 \begin{lem}[Adéquation]
@@ -519,13 +521,13 @@ Il nous reste alors à montrer le lemme d'adéquation. Là encore, il nous faut 
 \begin{proof}
   La preuve se fait par induction sur la relation de typage $\vdash$~:
   \begin{itemize}
-  \item Pour le cas d'une variable, il est clair que si $\varphi = \varphi_i$ et $x = x_i$ alors $\nu(t) = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
-  \item Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $\nu(t) \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $\nu(\lambda x.t)\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $\nu[x \leftarrow u](t)\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $\nu[x\leftarrow u](t) = \nu(t)[u/x]$ donc $\nu(t)[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.\nu(t)) u \reali_\rho^\sigma \psi$, donc $\lambda x.\nu(t)\reali_\rho^\sigma \varphi\to\psi$.
-  \item Supposons que $\nu(t)\reali_\rho^\sigma \varphi \to \psi$ et $\nu(u)\reali_\rho^\sigma \varphi$, alors par définition $\nu(t\;u)\reali_\rho^\sigma \psi$.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S),\Delta,\Xi$, $\nu(t)\reali_\rho^\sigma \varphi$. Soit alors $\nu\reali_\rho^\sigma \Gamma,\Delta\Xi$ et $s \in \bS$, comme $\nu\reali_\rho^{\sigma[\bx\leftarrow s]} (\Gamma,\bx : S), \Delta,\Xi$, on en déduit que $\nu(t)\reali_\rho^{\sigma[\bx\leftarrow s]} \varphi$, ce qui est valide pour tout $s\in \bS$, donc par définition $\nu(t)\reali_\rho^\sigma \forall \bx^S, \varphi$.
-  \item On suppose que $\nu(t)\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\sigma(\bt) \in \mathbb S$ donc $\nu(t)\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
-  \item On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n), \Xi$, $\nu(t) \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n),\Xi$ donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
-  \item Si $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
+  \item Cas Ax~: Pour le cas d'une variable, par hypothèse sur $\nu$, si $\varphi = \varphi_i$ et $x = x_i$ alors $\nu(t) = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
+  \item Cas $\to_\mathrm i$~: Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $\nu(t) \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $\nu(\lambda x.t)\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $\nu[x \leftarrow u](t)\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $\nu[x\leftarrow u](t) = \nu(t)[u/x]$ donc $\nu(t)[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.\nu(t)) u \reali_\rho^\sigma \psi$, donc $\lambda x.\nu(t)\reali_\rho^\sigma \varphi\to\psi$.
+  \item Cas $\to_\mathrm e$~: Supposons que $\nu(t)\reali_\rho^\sigma \varphi \to \psi$ et $\nu(u)\reali_\rho^\sigma \varphi$, alors par définition $\nu(t\;u)\reali_\rho^\sigma \psi$.
+  \item Cas $\forall_\mathrm i^1$~: On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S),\Delta,\Xi$, $\nu(t)\reali_\rho^\sigma \varphi$. Soit alors $\nu\reali_\rho^\sigma \Gamma,\Delta\Xi$ et $s \in \bS$, comme $\nu\reali_\rho^{\sigma[\bx\leftarrow s]} (\Gamma,\bx : S), \Delta,\Xi$, on en déduit que $\nu(t)\reali_\rho^{\sigma[\bx\leftarrow s]} \varphi$, ce qui est valide pour tout $s\in \bS$, donc par définition $\nu(t)\reali_\rho^\sigma \forall \bx^S, \varphi$.
+  \item Cas $\forall_\mathrm e^1$~: On suppose que $\nu(t)\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\sigma(\bt) \in \mathbb S$ donc $\nu(t)\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
+  \item Cas $\forall_\mathrm i^2$~: On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n), \Xi$, $\nu(t) \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n),\Xi$ donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
+  \item Cas $\forall_\mathrm e^2$~: Si $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
   \end{itemize}
 
   On en déduit par induction le résultat.
@@ -543,11 +545,11 @@ Malheureusement, notre modèle n'a pas beaucoup de principes logique intéressan
 
 Une façon habituelle de représenter les nombres entiers en $\lambda$-calcul est de considérer les entiers de Church, c'est-à-dire
 \[\overline n \defeq \lambda f.\lambda x.f^n\;x\]
-on peut montrer que toutes les fonctions calculables $\bN\to\bN$ peuvent se représenter (dans un sens fort) comme des $\lambda$-termes. On a donc une façon de représenter les objets du premier ordre (les entiers) au sein du langage.
+on peut montrer que toutes les fonctions calculables $\bN\to\bN$ peuvent se représenter (dans un sens fort) comme des $\lambda$-termes. On a donc une façon de représenter les objets du premier ordre (les entiers) au sein du langage. Comme le codage exact des entiers dans le langage de programmation n'importe pas réellement, on se contente de dire qu'il existe, pour tout $n\in \bN$, un terme $\overline n \in \Lambda$, avec un terme $\overline 0$ représentant $0$, un terme $S$ représentant la fonction successeur, ainsi qu'un terme $\rec_{\Nat}$, tel que $\rec_{\Nat}\;x\;y \overline 0 \rhd^* x$ et $\rec_{\Nat}\;x\;y\;\overline{S\;n}\rhd^* y\;\overline n (\rec_{\Nat}\;x\;y\;\overline n)$.
 
 Au niveau logique, on va ajouter un prédicat unaire, $\Nat$, qui exprime d'un terme qu'il représente un entier pris avec son contenu calculatoire, c'est-à-dire qu'on devra fournir à $\Nat(\bt)$ une preuve, qui est l'encodage de l'entier correspondant à $\bt$.
 
-Par exemple, reprenons l'exemple de la récurrence. Supposons qu'on possède $x\reali \psi(0)$ et $s\reali \forall \bn, \Nat(\bn) \to \psi(\bn) \to \psi(\bn+1)$. Ici, notre $s$ a besoin de l'information d'à quel $\bn$ il s'applique. Cela signifie en particulier qu'on peut maintenant définir un programme qui, étant donné $\bn$ et son encodage $\overline{\bn}$, peut retourner une preuve de $\psi(\bn)$ en itérant $s$ et en l'appliquant à $x$. On a donc récupéré, depuis notre interprétation par intersection, une interprétation fonctionnelle de la quantification universelle. On peut se demander si la même chose est possible pour une quantification du second ordre~: c'est une idée que nous avons exploré dans ce stage pour avoir diverses version de $\KL$, mais la syntaxe que nous avons finalement adoptée nous permet de ne pas introduire ce genre de quantification supplémentaire. Un prédicat $\psi^{\Nat}$ qui serait possible à représenter par un code serait un prédicat décidable, et avoir des fonctions comme objets du premier ordre nous suffira alors (puisqu'il nous suffira donc de considérer une fonction $\Nat\to\Bool$).
+Par exemple, reprenons l'exemple de la récurrence. Supposons qu'on possède $x\reali \psi(0)$ et $s\reali \forall \bn, \Nat(\bn) \to \psi(\bn) \to \psi(\bn+1)$. Ici, notre $s$ a besoin de l'information du $\bn$ auquel il s'applique. Cela signifie en particulier qu'on peut maintenant définir un programme qui, étant donné $\bn$ et son encodage $\overline{\bn}$, peut retourner une preuve de $\psi(\bn)$ en itérant $s$ et en l'appliquant à $x$. On a donc récupéré, depuis notre interprétation par intersection, une interprétation fonctionnelle de la quantification universelle. On peut se demander si la même chose est possible pour une quantification du second ordre~: c'est une idée que nous avons exploré dans ce stage pour avoir diverses version de $\KL$, mais la syntaxe que nous avons finalement adoptée nous permet de ne pas introduire ce genre de quantification supplémentaire. Un prédicat $\psi^{\Nat}$ qui serait possible à représenter par un code serait un prédicat décidable, et avoir des fonctions comme objets du premier ordre nous suffira alors (puisqu'il nous suffira donc de considérer une fonction $\Nat\to\Bool$).
 
 On augmente donc la syntaxe des propositions avec la construction d'encodage de terme~:
 \begin{center}
@@ -581,17 +583,17 @@ Cette théorie a un sens calculatoire bien plus profond~: par exemple, on peut v
 \[\reali \forall R^{\Nat,\Nat},(\forall \bx^{\{\Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by))\to (\exists \bbf^{\{\Nat\to\Nat\}}, \forall \bx^{\{\Nat\}}, R(\bx,\bbf(\bx)))\]
 Nous n'avons pas défini la sorte $\Nat\to\Nat$~: on verra plus tard comment parler des fonctions au premier ordre, mais on donne ici une idée informelle de la véracité de l'axiome du choix (dénombrable).
 
-On fixe $R^{\Nat,\Nat}$ et on suppose qu'il existe $r\reali \forall \bx^{\{Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by)$~: cela signifie que pour tout code $n$ de $\bx$, on peut trouver un code $m$ d'un certain $\by$ tel que $R(\bx,\by)$~: $r$ définit une fonction calculable qui aux codes de $\bx$ associe les codes de $\by$ correspondant. On considère les deux fonctions $\pi_1,\pi_2$ telles que pour $t \reali \exists \bx^{\{S\}}, \varphi$, $\pi_1\;t\reali S(\bx)$ et $\pi_2\;t\reali \varphi$, alors $\lambda x.\pi_1\;(r\;x)$ code une fonction $\Nat\to\Nat$ et $\lambda x.\pi_2\;(r\;x)$ montre que cette fonction réalise bien ce qu'on attend d'elle.
+On fixe $R^{\Nat,\Nat}$ et on suppose qu'il existe $r\reali \forall \bx^{\{Nat\}}, \exists \by^{\{\Nat\}}, R(\bx,\by)$~: cela signifie que pour tout code $n$ de $\bx$, on peut trouver un code $m$ d'un certain $\by$ tel que $R(\bx,\by)$~: $r$ définit une fonction calculable qui aux codes de $\bx$ associe les codes de $\by$ correspondant. Remarquons que, pour l'encodage que nous avons choisi pour $\exists$, on peut définir deux fonctions $\pi_1,\pi_2$ telles que si $t \reali \exists \bx^{\{S\}}, \varphi$, alors on a $\pi_1\;t\reali S(\bx)$ et $\pi_2\;t\reali \varphi$. Avec ces fonctions, $\lambda x.\pi_1\;(r\;x)$ code une fonction $\Nat\to\Nat$ et $\lambda x.\pi_2\;(r\;x)$ montre que cette fonction réalise bien le choix qu'on attend~: pour tout $\bx^{\{\Nat\}}$, elle trouve un $\by^{\{\Nat\}}$ tel que $R(\bx,\by)$.
 
-En réalité, le système de type permet plus que de montrer que $\{\mathcal T_\reali\}$ est close par déduction~: elle permet de construire des réaliseurs de façon simple et efficace. En effet, l'adéquation nous dit qu'un terme typé est un réaliseur, mais là où la réalisabilité est sémantique (la proposition $t\reali \varphi$ est liée à la sémantique de $t$ et non à sa forme), le typage est syntaxique. En particulier, il est facile de vérifier qu'un terme $t$ donné peut bien se typer avec un type $\varphi$ donné~: il nous suffit d'exhiber une dérivation de typage. On souhaite donc rajouter des règles de typage, non pour l'aspect logique, mais aussi pour simplifier les constructions de réaliseurs. Nous introduisons donc $3$ règles à propos de $\Nat$, qui s'apparentent largement aux règles de typage des constructeurs et du destructeur de $\Nat$ en système T~:
+En réalité, le système de type permet plus que de montrer que $\{\mathcal T_\reali\}$ est close par déduction~: elle permet de construire des réaliseurs de façon simple et efficace. En effet, l'adéquation nous dit qu'un terme typé est un réaliseur, mais là où la réalisabilité est sémantique (la proposition $t\reali \varphi$ est liée à la sémantique de $t$ et non à sa forme), le typage est syntaxique. En particulier, il est facile de vérifier qu'un terme $t$ donné peut bien se typer avec un type $\varphi$ donné~: il nous suffit d'exhiber une dérivation de typage. On souhaite donc rajouter des règles de typage, pas seulement pour leur aspect logique, mais aussi pour simplifier les constructions de réaliseurs. Nous introduisons donc $3$ règles à propos de $\Nat$, qui s'apparentent largement aux règles de typage des constructeurs et du destructeur de $\Nat$ en système T~:
 \begin{center}
     \begin{prooftree}
-        \infer0[$\bN_\mathrm i^0$]{\Gamma\mid\Delta\mid\Xi\vdash \lambda f.\lambda x.x : \Nat(0)}
+        \infer0[$\bN_\mathrm i^0$]{\Gamma\mid\Delta\mid\Xi\vdash \overline 0 : \Nat(0)}
     \end{prooftree}
     \qquad
     \begin{prooftree}
         \hypo{\Gamma\mid\Delta\mid\Xi\vdash t : \Nat(\bt)}
-        \infer1[$\bN_\mathrm i^S$]{\Gamma\mid\Delta\mid\Xi\vdash (\lambda n.\lambda f.\lambda x.n\;f\;(f\;x))\;t : \Nat(S\;\bt)}
+        \infer1[$\bN_\mathrm i^S$]{\Gamma\mid\Delta\mid\Xi\vdash S\;t : \Nat(S\;\bt)}
     \end{prooftree}
 
     \vspace{0.5cm}
@@ -601,19 +603,10 @@ En réalité, le système de type permet plus que de montrer que $\{\mathcal T_\
     \end{prooftree}
 \end{center}
 
-où $\rec_{\Nat}$ est le récurseur sur les entiers, vérifiant $\rec_{\Nat}\;x\;y\;\overline 0 \rhd^* x$ et $\rec_{\Nat}\;x\;y\;\overline{S\;n} \rhd^* y\;\overline n\;(\rec_{\Nat}\;x\;y\;\overline n)$. Nous n'en donnons pas la constructions, car nous l'ajouterons directement à notre langage final et l'écrire en $\lambda$-calcul pur demande de changer l'encodage des entiers, par exemple vers les entiers de Scott, qui sont moins lisibles pour introduire la notion actuelle.
-
 L'adéquation vis à vis de ces règles se prouve~:
 \begin{itemize}
-    \item on sait que $\lambda f.\lambda x.x = \overline 0$ donc le terme se réduit bien en $\overline 0$
-    \item supposons que $t\rhd^* \overline{\sigma(\bt)}$, alors $s\;t \rhd^* s\;\overline{\sigma(\bt)}$, où $s \defeq \lambda n\;f\;x.n\;f\;(f\;x)$. Cela signifie que
-    \begin{align*}
-        s\;t&\rhd^* s\;(\lambda f\;x. f^{\sigma(\bt)}\;x)\\
-        &\rhd \lambda f\;x. (\lambda f\;x. f^{\sigma(\bt)}\;x)\;f\;(f\;x)\\
-        &\rhd^2 \lambda f\;x. f^{\sigma(\bt) + 1}\;x\\
-        &= \overline{S\;\sigma(\bt)}
-    \end{align*}
-    d'où le résultat.
+    \item on sait que $\overline 0 = \overline 0$ donc le terme se réduit bien en $\overline 0$
+    \item supposons que $t\rhd^* \overline{\sigma(\bt)}$, alors $S\;t \rhd^* S\;\overline{\sigma(\bt)}$, ce qui est le résultat attendu.
     \item on suppose que $x_0 \reali X(0)$ et que $x_s \reali \forall \bx^{\{\Nat\}}, X(\bx) \to X(S\;\bx)$, montrons par récursion sur $n$ que pour tout $n$, $\rec_{\Nat}\;x_0\;x_s\;\overline n \reali X(\bx)$ (par saturation, si on sait seulement que $t \rhd^* \overline n$ cela suffit à dire que $\rec_{\Nat}\;x_0\;x_s\;t \reali X(\bx)$)~:
     \begin{itemize}
         \item si $n = 0$, alors $\rec_{\Nat}\;x_0\;x_s\;\overline 0 \rhd^* x_0 \reali X(0)$, d'où le résultat par saturation.
@@ -632,7 +625,7 @@ On voit donc que la théorie $\{\mathcal T_\reali\}$ est plus intéressante~: el
 
 \subsection{Encoder les fonctions et le reste}
 
-Pour finir, nous souhaitons permettre à notre modèle de parler d'autres choses que des entiers. Nous allons donc introduire d'autres sortes dans notre modèle~: les booléens, les listes, les fonctions et les paires. Notre $\lambda$-calcul sera, lui aussi, enrichi de constructeurs pour permettre de parler plus facilement des listes, des booléens et des paires (ainsi que des entiers).
+Pour finir, afin de pouvoir interpréter le fan theorem et le lemme de König, nous aurons besoin d’étendre notre modèle à d’autres types de données que les entiers. Nous allons donc introduire d'autres sortes dans notre modèle~: les booléens, les listes, les fonctions et les paires. Notre $\lambda$-calcul sera, lui aussi, enrichi de constructeurs pour permettre de parler plus facilement des listes, des booléens et des paires (ainsi que des entiers).
 
 Ainsi, notre ensemble $\mathcal S$ des sortes est engendré par la grammaire suivante~:
 \[S,S' ::= \Nat\mid\Bool\mid\List(S)\mid S\times S'\mid S\to S'\]
@@ -730,7 +723,7 @@ On définit l'interprétation de chaque sorte $S$ par un ensemble qu'on notera $
     \item l'interprétation de $\bx$ est $\sigma(\bx)$
     \item l'interprétation de $\bZ$ est $0\in \bN$
     \item l'interprétation de $\bS$ est $n\mapsto n + 1$
-    \item l'interprétation de $\rec_{\Nat}\;\bt\;\bu$ est l'unique fonction $f : \bN \to \bS$ valant $\sigma(\bt)$ en $0$ et vérifiant la relation $f(n+1) = \sigma(\bu)(n,f(n))$, et $\rec_{\Nat}\;\bt\;\bu\;\bv$ est donc sa valeur en $\sigma(\bv)$
+    \item l'interprétation de $\rec_{\Nat}\;\bt\;\bu$ est l'unique fonction $f : \bN \to \bS$ valant $\sigma(\bt)$ en $0$ et vérifiant la relation $f(n+1) = \sigma(\bu)(n)(f(n))$, et $\rec_{\Nat}\;\bt\;\bu\;\bv$ est donc sa valeur en $\sigma(\bv)$
     \item l'interprétation de $\bbtt$ est $1\in \{0,1\}$
     \item l'interprétation de $\bbff$ est $0\in\{0,1\}$
     \item l'interprétation de $\rec_{\Bool}\;\bt\;\bu\;\bv$ est celle d'un branchement conditionnel~: si $\sigma(\bt) = 1$ alors l'expression vaut $\sigma(\bu)$ et sinon l'expression vaut $\sigma(\bv)$
@@ -869,11 +862,11 @@ Nous avons donc construit un premier modèle de réalisabilité permettant de ma
 
 \subsection{Pourquoi l'arithmétique ?}
 
-Nous avons déjà mentionné l'idée de base des mathématiques à rebours dans l'introduction~: c'est un programme mathématique cherchant à partir des théorèmes déjà connus pour en analyser le contenu et la force logique. La réponse typique à laquelle on souhaite répondre est "quels axiomes sont les plus faibles pour entraîner un théorème $T$ ?'' Pour y répondre, on peut essayer de s'intéresser à une notion classique de théorie de la démonstration, celle de l'algèbre de Lindenbaum-Tarski (\cite{Tarski1983-TARLSM-5})~: étant donnée une théorie $\mathcal T$, on peut définir une relation de pré-ordre $\varphi \vdash_{\mathcal T} \psi$ par $\mathcal T\vdash \varphi \to \psi$. L'ensemble des propositions est alors, quotienté par l'équivalence $\dashv\vdash_{\mathcal T}$, une algèbre de Boole. Les classes d'équivalence, qui sont constituées de formules équivalentes modulo $\mathcal T$, sont alors l'objet d'étude des mathématiques à rebours~: on s'intéresse, étant donné un théorème fixé, à la classe d'équivalence (appelons cette classe degré logique, par analogie aux degrés Turing) de ce théorème.
+Nous avons déjà mentionné l'idée de base des mathématiques à rebours dans l'introduction~: c'est un programme mathématique cherchant à étudier le contenu et la force logique de théorèmes que l'on sait déjà vrais. La question typique à laquelle on souhaite répondre est ``quels sont les axiomes les plus faibles suffiants à entraîner un théorème $T$ ?'' Pour y répondre, on peut essayer de s'intéresser à une notion classique de théorie de la démonstration, celle de l'algèbre de Lindenbaum-Tarski (\cite{Tarski1983-TARLSM-5})~: étant donnée une théorie $\mathcal T$, on peut définir une relation de pré-ordre $\varphi \vdash_{\mathcal T} \psi$ par $\mathcal T\vdash \varphi \to \psi$. L'ensemble des propositions est alors, quotienté par l'équivalence $\dashv\vdash_{\mathcal T}$, une algèbre de Boole. Les classes d'équivalence, qui sont constituées de formules équivalentes modulo $\mathcal T$, sont alors l'objet d'étude des mathématiques à rebours~: on s'intéresse, étant donné un théorème fixé, à la classe d'équivalence (appelons cette classe degré logique, par analogie aux degrés Turing) de ce théorème.
 
 La question vient alors du choix de $\mathcal T$~: il nous faut avant tout que $\mathcal T$ soit faible, car plus la théorie est forte et plus les degrés sont gros. Le cas extrême, de $\ZFC$, met tous les théorèmes intéressants dans le degré de $\top$. On pourrait donc souhaiter que $\mathcal T$ soit vide~: le problème, alors, est que les symboles n'ont plus de sens. Dans le cas de l'arithmétique, par exemple, ne pas considérer d'axiomes entraîne que $0,S,+,\times$ sont des objets quelconques~: ça n'est pas ce que nous voulons. Il nous faut donc un entre-deux~: une théorie suffisamment faible pour être incapable de prouver la plupart des théorèmes mathématiques usuels, mais assez forte pour contenir une partie substantielle des fondements mathématiques (les entiers, le fait qu'ils se comportent correctement, etc). Une solution à cette question est donnée en partie par les travaux de Hilbert et Bernays dans \cite{Hilbert1935-HILGDM-8} et \cite{Hilbert1974-HILGDM-5}~: la puissance de la théorie des ensembles est superflue pour la plupart des résultats mathématiques, et l'arithmétique du second ordre suffit à les prouver. Le cadre de l'arithmétique du second ordre, utilisant des entiers et des ensembles d'entiers, semble donc un bon cadre. On considère donc un système plus faible d'axiomes (puisqu'on veut avoir un maximum d'énoncés indécidables dans notre théorie) mais contenant suffisamment d'informations pour donner un sens à nos objets.
 
-En particulier, puisqu'on souhaite coder les nombres réels et les fonctions continues (choses souhaitables pour formaliser les mathématiques usuelles), il nous faut une théorie permettant de définir ces objets. Le choix historique, qu'on peut voir dans \cite{Simpson_2009} par exemple, est de considérer le sous-système $\RCAO$~: ce sous-système est celui des mathématiques calculables. Cette théorie contient, en plus de l'arithmétique de Robinson, le schéma d'axiomes de compréhension sur les formules $\Delta_1^0$ et le schéma d'induction sur les formules $\Sigma_1^0$. Le schéma de compréhension est l'ensemble des formules de la forme $\exists X^{\Nat}, \forall \bx^{\Nat}, X(\bx) \leftrightarrow \psi(\bx)$, tandis que le schéma d'induction est l'ensemble des formules de la forme $\psi(0)\land (\forall \bx^{\Nat}, \psi(\bx) \to \psi(S\;\bx)) \to \forall \bx^{\Nat}, \psi(\bx)$. $\RCAO$ est donc une restriction de ces schémas pour certaines familles de formules $\psi$. Cette théorie contient l'expressivité des fonctions calculables~: les nombres réels peuvent se représenter comme certaines fonctions calculables, et on peut représenter jusqu'aux fonctions mesurables.
+En particulier, puisqu'on souhaite coder les nombres réels et les fonctions continues (choses souhaitables pour formaliser les mathématiques usuelles), il nous faut une théorie permettant de définir ces objets. Le choix historique, qu'on peut voir dans \cite{Simpson_2009} par exemple, est de considérer le sous-système $\RCAO$~: ce sous-système est celui des mathématiques calculables. Cette théorie contient, en plus de l'arithmétique de Robinson, le schéma d'axiomes de compréhension sur les formules $\Delta_1^0$ et le schéma d'induction sur les formules $\Sigma_1^0$. Le schéma de compréhension est l'ensemble des formules de la forme $\exists X^{\Nat}, \forall \bx^{\Nat}, X(\bx) \leftrightarrow \psi(\bx)$ où $\psi$ est $\Delta_1^0$, tandis que le schéma d'induction est l'ensemble des formules de la forme $\psi(0)\land (\forall \bx^{\Nat}, \psi(\bx) \to \psi(S\;\bx)) \to \forall \bx^{\Nat}, \psi(\bx)$ où $\psi$ est $\Sigma_1^0$. $\RCAO$ est donc une restriction de ces schémas pour certaines familles de formules $\psi$. Cette théorie contient l'expressivité des fonctions calculables~: les nombres réels peuvent se représenter comme certaines fonctions calculables, et on peut représenter jusqu'aux fonctions mesurables.
 
 Une conclusion importante de \cite{Simpson_2009} est le phénomène du \textit{Big Five}~: la plupart des théorèmes mathématiques usuels sont équivalents à l'un des cinq sous-systèmes de l'arithmétique du second ordre (modulo $\RCAO$). Parmi ces sous-systèmes se trouve l'un des principes de choix mentionnés dans l'introduction, le lemme de König (en fait, sa version faible).
 
@@ -885,13 +878,13 @@ La prémisse indique que si $x$ est présenté, alors il est possible de choisir
 
 Donnons une liste des principes de choix importants pour notre étude, qui seront organisés par force logique croissante en logique classique, strictement pour le symbole $>$ et de même force pour le symbole $=$~:
 \begin{itemize}
-    \item $\WFT$ qui est comme $\FT$ mais où $C$ ne contient que des éléments dans $\{0,1\}^*$.
-    \item $=$~: $\WKL$, qui est comme $\KL$ exprimé plus tôt mais où $T$ ne contient que des éléments dans $\{0,1\}^*$
-    \item $>$ : $\FT$
-    \item $=$~: $\KL$
-    \item $>$~: $\ACN$ dans le cas où $A = \bN$ et $B$ est quelconque
-    \item $>$~: $\DC \defeq \forall x^A, \exists y^A, R(x,y) \implies \exists u^{\bN\to A}, \forall n^{\bN}, R(u_n,u_{n+1})$
-    \item $>$ : $\AC$ en toute généralité.
+    \item \textit{Weak Fan Theorem} ($\WFT$) qui est comme $\FT$ mais où $C$ ne contient que des éléments dans $\{0,1\}^*$.
+    \item $=$~: \textit{Weak König's Lemma} ($\WKL$), qui est comme $\KL$ exprimé plus tôt mais où $T$ ne contient que des éléments dans $\{0,1\}^*$
+    \item $>$ : \textit{Fan Theorem} ($\FT$)
+    \item $=$~: \textit{König's Lemma} ($\KL$)
+    \item $>$~: Axiome du choix dénombrable ($\ACN$) dans le cas où $A = \bN$ et $B$ est quelconque
+    \item $>$~: Axiome du choix dépendant ($DC$), $\DC \defeq \forall x^A, \exists y^A, R(x,y) \implies \exists u^{\bN\to A}, \forall n^{\bN}, R(u_n,u_{n+1})$
+    \item $>$ : Axiome du choix ($\AC$) en toute généralité.
 \end{itemize}
 
 Dans l'article \cite{DBLP:journals/corr/abs-2105-08951}, une façon plus systématique est détaillée pour traiter les principes de choix. Cette présentation se base en partie sur les notions d'arbre, que nous allons maintenant détailler.
@@ -901,7 +894,7 @@ Dans l'article \cite{DBLP:journals/corr/abs-2105-08951}, une façon plus systém
 Nous avons jusque là évité de rentrer dans les détails du sens de $\KL$ et $\FT$, car leur version formelle nécessite des explications. Nous allons donc détailler le fonctionnement de nos prédicats sur les arbres, en considérant à chaque fois des arbres branchant sur les entiers, de profondeur potentiellement infinie.
 
 Deux présentations classiques existent pour parler d'arbres (au moins dans leur version finie, nous ne nous intéressons pas à leurs versions indicées par des ordinaux)~: \cite{DBLP:journals/corr/abs-2105-08951} parle de présentation intentionnelle et extensionnelle. La présentation intentionnelle, bien plus utilisée en théorie des types et en programmation, considère l'ensemble $\mathbb T$ construit par induction par
-\[T ::= \langle\rangle \mid \mathrm{Node}\;(\bN \to \mathbb T)\]
+\[\mathbb T ::= \langle\rangle \mid \mathrm{Node}\;(\bN \to \mathbb T)\]
 Ainsi, on peut par exemple construire un arbre par $\mathrm{Node}(0 \mapsto \mathrm{Node}(\_\mapsto \langle\rangle), n \mapsto \langle\rangle)$, qui représente alors l'arbre
 \begin{center}
     \begin{tikzcd}
@@ -915,7 +908,7 @@ En supprimant les n\oe uds $\langle\rangle$, on a donc un arbre contenant le che
 
 Au contraire, l'approche extensionnelle va considérer les chemins (finis) appartenant à l'arbre. Dans le cas de notre exemple précédent, l'arbre associé est donc $\{(0)\}$. A chaque arbre défini de façon intentionnelle, on peut naturellement associer l'ensemble de ses chemins finis. On remarque que la propriété essentielle de ces ensembles, qui sont donc des parties de $\bN^*$ (puisque des listes finies d'entiers) est d'être stable par préfixe~: étant donné un arbre $T$, un mot $u \in T$ et un mot $v\preceq u$, $v\in T$ puisque le chemin parcouru par $u$ dans l'arbre a aussi parcouru $v$.
 
-On définit donc un arbre extensionnel comme une partie de $\bN^*$ stable par préfixe. La question se pose alors de si nos deux présentations coïncident. Dans un sens, on peut associer à un arbre l'ensemble de ses chemins. Dans l'autre sens, cependant, construire un arbre intentionnel à partir d'un arbre extensionnel n'est pas évident~: il nécessite ce qu'on appelle la \textit{bar induction}, dont le \textit{fan theorem} est un cas particulier, où l'arbre est finiment branchant. Le cas d'un arbre finiment branchant peut se traiter de deux façons~: on peut au choix considérer des arbres comme des parties de $B^*$ stables par préfixe, où $B$ est un ensemble fini, ou garder la notion d'arbres sur $\bN^*$ et exprimer qu'à un $u \in T$ donné, il existe un majorant des $n$ tels que $u \star n \in T$. La seconde option est la plus générale, mais elle est calculatoirement plus complexe puisqu'il faut être capable de calculer ce majorant (et ça n'est pas toujours possible) pour construire un nouvel arbre finiment branchant. Au total, on décide donc de s'intéresser à la définition extensionnelle des arbres et aux arbres finiment branchants dans le premier sens évoqué, de parties de $B^*$.
+On définit donc un arbre extensionnel comme une partie de $\bN^*$ stable par préfixe. La question se pose alors de si nos deux présentations coïncident. Dans un sens, on peut associer à un arbre l'ensemble de ses chemins. Dans l'autre sens, cependant, construire un arbre intentionnel à partir d'un arbre extensionnel n'est pas évident~: il nécessite ce qu'on appelle la \textit{bar induction}\footnote{Pour construire l'arbre intentionnel, il est nécessaire, \textit{a priori}, de parcourir tous les chemins possibles. C'est donc une forme de principe d'omniscience, permettant d'accéder à une information infinie directement. La \textit{bar induction} permet, si pour tout chemin infini il est possible de déterminer la taille maximale à partie de laquelle celui-ci n'est plus dans l'arbre, de déduire une hauteur finie à l'arbre. On n'a alors plus qu'une quantité finie d'information à traiter.}, dont le \textit{fan theorem} est un cas particulier, où l'arbre est finiment branchant. Le cas d'un arbre finiment branchant peut se traiter de deux façons~: on peut au choix considérer des arbres comme des parties de $B^*$ stables par préfixe, où $B$ est un ensemble fini, ou garder la notion d'arbres sur $\bN^*$ et exprimer qu'à un $u \in T$ donné, il existe un majorant des $n$ tels que $u \star n \in T$. La seconde option est la plus générale, mais elle est calculatoirement plus complexe puisqu'il faut être capable de calculer ce majorant (et ça n'est pas toujours possible) pour construire un nouvel arbre finiment branchant. Au total, on décide donc de s'intéresser à la définition extensionnelle des arbres et aux arbres finiment branchants dans le premier sens évoqué, de parties de $B^*$.
 
 Un chemin infini, que nous appellerons désormais simplement chemin (nous préciserons à chaque fois "chemin fini'' quand c'est le cas) dans un arbre $T \subseteq A^*$ est une fonction $\alpha : \bN \to A$ telle que pour tout $n\in \bN$, le mot fini $\alpha_0\ldots\alpha_{n-1}$ est un élément de $T$. On notera $\alpha \in_\infty T$ pour dire que $\alpha$ est un chemin de $T$. Nous définissons aussi la notation $\in_n$, pour $n \in \bN$~:
 \[\alpha \in_n T \defeq \alpha_0\ldots\alpha_{n-1} \in T\]
@@ -999,9 +992,9 @@ On cite aussi le résultat suivant, nous donnant la continuité des fonctions qu
 
 On peut même montrer qu'on a un foncteur entre la catégorie $\mathbf{Set}$ et la catégorie $\mathbf{Cpo}$ décrite plus haut, avec $X \mapsto X_\bot$ et $f \mapsto f_\bot$.
 
-On souhaite donc assigner à chaque sorte $S$ un cpo $\tilde S$, et à chaque terme $t$ tel que $t\reali S(\bt)$ un élément $\tilde t \in \tilde S$. L'existence d'une telle assignation dans le cas du $\lambda$-calcul non typé est encore une question ouverte (du moins nous n'avons pas trouvé de preuves d'une telle chose), et semble difficile. Nous n'avons pas réussi à construire une telle assignation, bien que nous pensions fortement que celle-ci existe. Pour pouvoir néanmoins obtenir un résultat positif à propos de $\FT$, nous construisons un nouveau $\lambda$-calcul pour faire un modèle de réalisabilité.
+On souhaite donc assigner à chaque sorte $S$ un cpo $\tilde S$, et à chaque terme $t$ tel que $t\reali S(\bt)$ un élément $\tilde t \in \tilde S$. L'existence d'une telle assignation dans le cas du $\lambda$-calcul non typé est encore une question ouverte (du moins nous n'avons pas trouvé de preuves d'une telle chose), et semble difficile\footnote{Dans le cas typé, cette assignation est un résultat classique que l'on peut trouver dans \cite{Amadio_Curien_1998} par exemple. On sait aussi interpréter un terme $t$ dans un domaine qui contient tous les termes. Le problème se pose dans l'entre-deux d'un terme $t$ dont on sait que $t\reali \varphi$, pour en déduire une interprétation dans un domaine lié à $\varphi$.}. Nous n'avons pas réussi à construire une telle assignation, bien que nous pensions fortement que celle-ci existe. Pour pouvoir néanmoins obtenir un résultat positif à propos de $\FT$, nous construisons un nouveau $\lambda$-calcul pour faire un modèle de réalisabilité.
 
-Un résultat standard, que l'on retrouve par exemple dans \cite{Amadio_Curien_1998}, est que l'on peut interpréter le langage PCF dans $\mathbf{Cpo}$, où PCF désigne une variante du $\lambda$-calcul simplement typé avec un opérateur de point fixe $Y : (A \to A) \to A$ tel que $Y(t) \rhd t(Y(t))$. Ce langage est Turing-complet, comme le $\lambda$-calcul précédent, renforçant notre confiance en la possibilité d'une assignation n'utilisant que $t\reali S(\bt)$.
+Un résultat standard, que l'on retrouve par exemple dans \cite{Amadio_Curien_1998}, est que l'on peut interpréter le langage PCF dans $\mathbf{Cpo}$, où PCF désigne une variante du $\lambda$-calcul simplement typé avec un opérateur de point fixe $Y : (A \to A) \to A$ tel que $Y(t) \rhd t(Y(t))$. Ce langage est Turing-complet, comme le $\lambda$-calcul précédent, renforçant notre confiance en la possibilité d'une assignation n'utilisant que $t\reali S(\bt)$\footnote{On peut aussi relever que la preuve d'adéquation calculatoire repose sur des arguments semblables à ceux décrits par $t\reali \varphi$.}.
 
 On définit donc $\LamP$, notre variant de PCF utilisée pour notre modèle. Tout d'abord, on ajoute un contructeur $Y$, unaire, à notre langage $\Lambda$. On introduit maintenant $\LamP$ comme un ensemble de termes typés.
 
@@ -1104,7 +1097,7 @@ On définit donc $\LamP$, notre variant de PCF utilisée pour notre modèle. Tou
   \[\LamS{S}\defeq \{t\in\LamP\mid \vdash t : S\}\]
 \end{defi}
 
-On redéfinit aussi l'ensemble de code, de façon simple~: toute la définition reste la même, mais on remplace chaque fois $t\in \Lambda$ par $t\in \LamS{S}$ (où $S$ est la sorte dans laquelle on définit l'ensemble de codes). Ce changement fonctionne bien~: en particulier, en associant à la sorte $S$ le type de PCF $S$, les termes dans un code de $s\in \bS$ sont bien de type $S$.
+On redéfinit aussi l'ensemble de code, de façon simple~: toute la définition reste la même, mais on remplace chaque fois $t\in \Lambda$ par $t\in \LamS{S}$ (où $S$ est la sorte dans laquelle on définit l'ensemble de codes). Ce changement fonctionne bien grâce à notre séparation de chaque couche dans le modèle (termes du premier ordre, proposition, langage de programmation)~: en particulier, en associant à la sorte $S$ le type de PCF $S$, les termes dans un code de $s\in \bS$ sont bien de type $S$.
 
 On modifie maintenant la relation $\reali$ en un seul endroit~:
 \[t\reali_\rho^\sigma S(\bt) \defeq \{ t \in \Lambda\mid \exists u \in \ceil{\sigma(\bt)}t\rhd^* u\}\]
@@ -1127,14 +1120,14 @@ On définit maintenant notre plongement dans $\mathbf{Cpo}$~:
 On construit maintenant une interprétation des termes de $\LamP$ dans nos cpos. Pour cela, on construit par induction, à partir d'un jugement de typage $\Gamma\vdash t : S$ une fonction $\trad t : \left(\prod_{\gamma \in \Gamma} \tilde\gamma\right) \to \tilde S$~:
 \begin{itemize}
     \item si $t$ est la variable $x_i$ alors $\trad t$ est la $i$ème projection depuis $\prod \tilde \gamma$.
-    \item si $t$ est $\lambda x.u$ alors $\trad{\Gamma\vdash \lambda x. t : S \to S'} = \Lambda(\trad{\Gamma, x : S\vdash t : S'}$ où $\Lambda$ est l'opération d'abstraction, transformant un terme de type $a\times b \to c$ en un terme $a \to (b \to c)$.
+    \item si $t$ est $\lambda x.u$ alors $\trad{\Gamma\vdash \lambda x. t : S \to S'} = \Lambda(\trad{\Gamma, x : S\vdash t : S'}$ où $\Lambda$ est l'opération d'abstraction, continue (car la catégorie $\mathbf{Cpo}$ est cartésienne fermée), transformant un terme de type $a\times b \to c$ en un terme $a \to (b \to c)$.
     \item si $t$ est $u\;v$ alors $\trad{\Gamma\vdash u\;v : S} = \mathrm{eval}\circ \langle \trad{\Gamma\vdash u : S' \to S}, \trad{\Gamma\vdash v : S'}\rangle$ où eval est la fonction $((a\to b)\times a) \to b$ et $\langle -,-\rangle$ représente le pairing de fonctions.
     \item si $t$ est $0,\btt,\bff,[\,]$ alors son interprétation est (la fonction renvoyant) directement l'élément correspondant, $0 \in \bN_\bot$, $\btt, \bff \in \bB_\bot$, $[\,] \in \tilde S^*_\bot$ (attention, $\bff \neq \bot$ et $[\,] \neq \bot$).
     \item le pairing $\langle -,-\rangle$ ainsi que les projections sont définis de façon évidente.
     \item $S$ est la fonction associée à la fonction ensembliste $n \mapsto n + 1$, qui est donc continue.
     \item $::$ est aussi la fonction associe à la fonction ensembliste $(a,\ell) \mapsto a :: \ell$.
     \item $Y$ est défini comme l'opération de point fixe de Kleene~: $f \mapsto \bigvee_{n \in \bN} f^n(\bot)$. C'est une fonction continue, cf\cite{Amadio_Curien_1998}.
-    \item les récurseurs sont définis comme on l'attend~: on admet que ces fonctions sont continues (la preuve est longue et peu instructive).
+    \item les récurseurs sont définis comme on l'attend~: on admet que ces fonctions sont continues (la preuve est longue et peu instructive, et le résultat est standard).
 \end{itemize}
 
 On peut prouver par induction  sur $S$ que si $s \in \bS$ possède deux codes $t,u \in \ceil s$, alors $\trad t = \trad u$. Cela nous permet de dire que si $s \in \bS$ est un objet possédant un code, alors on peut lui associer un unique objet $\tilde s \in \tilde S$ qui l'objet associé à ses codes.
@@ -1145,13 +1138,13 @@ On peut prouver par induction  sur $S$ que si $s \in \bS$ possède deux codes $t
 
 On peut maintenant prouver le résultat de cette sous-section~: notre modèle valide $\FT$.
 
-\begin{them}
+\begin{them}\label{them.FT}
     Il existe $t \in \Lambda$ tel que
     \[t \reali \FT\]
 \end{them}
 
 \begin{proof}
-    Soit un prédicat croissant $C$ sur un ensemble $A$ fini non vide (on notera $0$ un certain élément arbitraire de $A$). On suppose qu'on a un réaliseur
+    Soit un prédicat croissant $C$ sur un ensemble fini $\{0,\ldots,N-1\}$. On suppose qu'on a un réaliseur
     \[r \reali \isBarred(C)\]
 
     Comme on l'a dit plus tôt, on peut construire à partir de $r$ un réaliseur
@@ -1159,17 +1152,15 @@ On peut maintenant prouver le résultat de cette sous-section~: notre modèle va
 
     Où $r'$ représente la fonction $f$ et $p$ la preuve que $f$ réalise la propriété souhaitée.
     
-    On construit le prédicat décidable $C : \List(A) \to \Bool$ dont l'idée est de parcourir tous les chemins les uns à la suite des autres en ajoutant chaque fois pour une liste $\ell$ la liste obtenue en appliquant $r$ à $\ell 0^\infty$. On a donc besoin d'une fonction d'énumération des listes~:
-    \[\enumer \defeq A FAIRE\]
-
-    On a aussi besoin d'une fonction transformant une liste $\ell$ en la fonction $\bN \to A$ définie par $\ell 0^\infty$~:
-    \[\toinfty \defeq \rec_{\List}\;(\lambda n.0)\;(\lambda n.\lambda x.\lambda f.\rec_{\Nat}\;n\;(\lambda m.\lambda g.f\;m))\]
+    On construit le prédicat décidable $C : \List(A) \to \Bool$ dont l'idée est de parcourir tous les chemins les uns à la suite des autres en ajoutant chaque fois pour une liste $\ell$ la liste obtenue en appliquant $r$ à $\ell 0^\infty$. On se réfère à l'appendice \ref{app.A} pour les codes de fonctions que l'on veut utiliser.
 
     La construction de $C$ est alors la suivante~:
-    \[C \defeq \lambda b. Y(\lambda f. \lambda \ell. \rec_{Bool}\;(\ell << b)\;(\rec_{\Bool}\;(r\;(\toinfty\;\ell)\preceq b)\;\top\;(f\;(\enumer\;\ell)))\;(r\;(\toinfty\;\ell) \preceq b))\]
+    \begin{multline*}
+        C \defeq \lambda \ell. (Y(\lambda\;f\;n.\mathrm{if}\;(|\enumer\;N\;n| =_{\Nat} |\ell|)\;\mathrm{then}\;\bff \;\mathrm{else}\;\\(\mathrm{if}\;(r\;(\toinfty\;(\enumer\;N\;n))\preceq \ell)\;\mathrm{then}\;\btt\;\mathrm{else}f\;(n+1)))\;0)\| (r\;(\toinfty\;\ell)\preceq\ell)
+    \end{multline*}
 
     Pour trouver le $n$ correspondant, il nous suffit alors de regarder pour chaque $n$ si toutes les listes de taille $n$ sont dans $C$~:
-    \[fan\defeq Y (\lambda f\;i. \rec_{\Bool}\;(\forall \ell, |\ell| = i \implies C(\ell))\;i\;(f\;(i+1)))\;0\]
+    \[\mathrm{fan}\defeq Y(\lambda f\; n. \rec_{\List}\;(\btt)\;(\lambda \ell\;b.C\;\ell\;\&\!\&\;b)\;(\forall\;N\;n))\;0\]
 
     On souhaite donc montrer que cet algorithme termine. Par l'absurde, si cet algorithme ne termine pas, alors pour tout $n$ il existe au moins un $\ell_n \in \List(A)$ tel que $\ell_n \notin C'$. Notons $T$ le complémentaire de $C'$~: c'est un arbre car $C'$ est croissant. On peut alors appliquer le lemme de König sur cette suite $(\ell_n)$~: on en déduit une fonction $\alpha : \bN \to A$ telle que $\alpha \in_\infty T$. On note alors $\alpha_\bot$ la fonction continue associée, $\alpha_\bot : \bN_\bot \to A_\bot$, valant $\bot$ en $\bot$.
 
@@ -1215,7 +1206,7 @@ On notera $e$ le code de cette fonction.
 
 On définit aussi les approximations de $F$, qu'on notera $F^{(n)}$, par~:
 \[F^{(n)}(x) \defeq \left\{\begin{array}{l}
-    F(n) \text{ si } F(n)[t]\downarrow\\
+    F(x) \text{ si } F(x)[n]\downarrow\\
     \bot\text{ sinon}
 \end{array}\right.\]
 Chaque $F^{(n)}$ est calculable, on notera $e_n$ leur code respectif.
@@ -1264,121 +1255,89 @@ Un potentiel travail ultérieur serait donc de montrer qu'une telle propriété 
 
 Notre utilisation du langage PCF est particulièrement artificielle, puisqu'elle répondait à un besoin immédiat de construire une interprétation vers \textbf{Cpo} de notre langage, chose que l'on sait facilement faire avec un langage typé comme PCF mais pas avec un langage non typé. Cependant, nous pensons qu'il est très probable que l'on puisse interpréter notre langage actuel, sans termes typés, dans \textbf{Cpo}. Le faire semble relativement difficile, puisque l'argument habituel pour montrer qu'on peut interpréter PCF dans \textbf{Cpo} repose sur l'induction des dérivations de typage $\Gamma\vdash t : P$, ce que nous ne pouvons pas faire ici. Il reste que nos fonctions contiennent simplement un modèle de calcul, et devraient donc être continue, puisqu'elles peuvent être simulées par une machine de Turing et que cette machine ne peut traiter qu'un nombre fini d'informations.
 
+\appendix
+
+\section{Réaliseurs classiques}\label{app.A}
+
+Nous donnons ici différents termes qui permettent la preuve du théorème \ref{them.FT}.
+
+\subsection{Booléens}
+
+On donne les opérations ``et'', ``ou'' et ``non''.
+
+\[b \&\& b' \defeq \rec_{\Bool}\;(\lambda x.x)\;\bff\;b\;b'\]
+
+\[b \| b'\defeq \rec_{\Bool}\;\btt\;(\lambda x.x)\]
+
+\[\sim b \defeq \rec_{\Bool}\;\bff\;\btt\;b\]
+
+\subsection{\'Egalités}
+
+On définit les fonctions booléennes décidant l'égalité des booléens, des entiers et des listes d'un type $S$ où l'égalité sur $S$ est décidable.
+
+\[b =_{\Bool} b' \defeq \rec_{\Bool}\;(\rec_{\Bool}\;\btt\;\bff)\;(\rec_{\Bool}\;\bff\;\btt)\;b\;b'\]
+
+\[n =_{\Nat} n' \defeq \rec_{\Nat} \;(\rec_{\Nat}\;\btt\;(\lambda \_\;\_.\bff))\;(\lambda f\;m.\rec_{\Nat}\;\bff\;(\lambda\_\;m'.f\;m'))\;n\;n'\]
+
+\[\ell =_{\List(S)} \ell' \defeq \rec_{\List}\;(\rec_{\List}\;\btt\;(\lambda\;\_\;\_.\bff))\;(\lambda f\;s.\rec_{\List}\;\bff\;(\lambda f'\;s'.(\ell =_S \ell')\&\& (f\;s')))\;\ell\;\ell'\]
+
+On notera maintenant if / then / else plutôt que $\rec_{\Bool}$, par souci de lisibilité. De plus, on se permettra de faire des définitions récursives, telles que (pour reprendre les cas précédents)~:
+\begin{align*}
+    0 =_{\Nat} 0 &\defeq \btt \\
+    S\;n =_{\Nat} 0 &\defeq \bff \\
+    0 =_{\Nat} S\;n' &\defeq \bff\\
+    S\;n=_{\Nat} S\;n' &\defeq n =_{\Nat} n'
+\end{align*}
+en considérant que la traduction vers la définition précédente peut toujours se faire, mais est moins lisible et plus laborieuse à écrire.
+
+\subsection{Nombres entiers}
+
+On définit la fonction $\leq$ décidant l'inégalité des entiers.
+
+\begin{align*}
+    0 \leq 0 &\defeq \btt \\
+    0 \leq S\;n' &\defeq \btt \\
+    S\;n \leq 0 &\defeq \bff \\
+    S\;n \leq S\;n' &\defeq n \leq n'
+\end{align*}
+
+On admet l'existence des fonctions $/$ et $\%$ donnant le quotient et le reste de la division euclidienne, ainsi que de $+,-\times$ ($n-m$ retournant $\max(n-m,0)$). On définit la décomposition en base $p$ de $n$, notée $\basep{n}{p}$, par la liste des restes successifs de la division euclidienne de $n$ par $p$.
+
+\[\basep{n}{p} \defeq Y(\lambda f\;x\;\ell.\mathrm{if} \;(x =_{\Nat} 0) \;\mathrm{then} \;\ell\;\mathrm{else} \;f\;(x\%p)\;((x/p)::\ell))\;n\;[\,]\]
+
+\subsection{Listes}
+
+On définit la fonction de préfixe sur des listes de données où l'égalité est décidables..
+
+\begin{align*}
+    [\,]\preceq [\,] &\defeq \btt \\
+    [\,]\preceq h'::t' &\defeq \btt \\
+    h::t \preceq [\,] &\defeq \bff \\
+    h::t \preceq h'::t' &\defeq (h = h') \&\& (t \preceq t')
+\end{align*}
+
+Le même schéma permet de définir $\leq$ sur les entiers, en supprimant simplement $(h = h')$.
+
+La fonction $|\ell|$ donnant la taille d'une liste~:
+
+\begin{align*}
+    |[\,]| &\defeq 0\\
+    |h::t| &\defeq S\;|t|
+\end{align*}
+
+On définit une fonction prenant en paramètre $p$, qui énumère toutes les listes dans $\{0,\ldots,p-1\}^*$, par longueur croissante.
+
+\begin{align*}
+    \enumer\;p\;0 &\defeq [\,]\\
+    \enumer\;p\;(S\;n) &\defeq \basep{n}{p}
+\end{align*}
+
+On a aussi besoin d'une fonction transformant une liste $\ell$ en la fonction $\bN \to A$ définie par $\ell 0^\infty$~:
+\[\toinfty \defeq \rec_{\List}\;(\lambda n.0)\;(\lambda n.\lambda x.\lambda f.\rec_{\Nat}\;n\;(\lambda m.\lambda g.f\;m))\]
+
+Enfin, on définit la fonction $\mathrm{forall}\;p\;n$ qui retourne l'ensemble des listes à valeurs dans $\{0,\ldots,p-1\}$ de taille $n$.
+
 \bibliographystyle{plain}
 \bibliography{biblio}
-
-\begin{comment}
-
-\subsection{Traiter les arbres}
-
-On peut désormais étudier les notions liées aux arbres. On donne d'abord deux fonctions utilitaires liées aux listes et aux fonctions~:
-
-\begin{defi}[Longueur, préfixe]
-  On définit les deux fonctions suivantes au premier ordre, où $\ell : \List$ et $f : \Nat\to\Nat$~:
-  \begin{align*}
-    |\ell| &\defeq \rec_{\List}\;\bZ\;(\blam \bx.\blam\by.\blam\bz.\bfS\;\bz)\;\ell\\
-    f_n &\defeq \rec_{\Nat}\;\bnil\;(\blam \bn.\blam \bx.(f(\bn))\bcons \bx)\;n
-  \end{align*}
-\end{defi}
-
-\begin{rmk}
-  En utilisant l'adéquation, on peut directement voir que ces deux fonctions possèdent un code. On définit $\Gamma_0\mid\Xi_0 = \ell : \List\mid\varnothing\mid l : \List(\ell)$ et $\Gamma_1\mid\Xi_1 = \ell : \List, \bx : \Nat, \by : \List, \bz : \Nat\mid \varnothing\mid l : \List(\ell), x : \Nat(\bx), y : \Nat(\by), z : \Nat(\bz)$~:
-  \begin{center}
-    \begin{prooftree}
-      \infer0[$\bN_\mathrm i^0$]{\Gamma_0\mid\Xi_0\vdash 0 : \Nat(\bZ)}
-      \infer0[Ax]{\Gamma_1\mid\Xi_1\vdash \Nat(\bz)}
-      \infer1[$\bN_\mathrm i^S$]{\Gamma_1\mid\Xi_1\vdash S\;z : \Nat(\bfS\;\bz)}
-      \infer1[$(\blam_\mathrm i)^3$]{\Gamma_0\mid\Xi_0\vdash \lambda x\; y\;z.S\;z : (\Nat\to \List\to\Nat\to\Nat)(\blam \bx\;\by\;\bz.\bfS\;\bz)}
-      \infer0[Ax]{\Gamma_0\mid\Xi_0\vdash \List(\ell)}
-      \infer3{\Gamma_0\mid\Xi_0\vdash \rec_\bL\;0\;(\lambda x.\lambda y.\lambda z.S\;z)\;l : \Nat(|\ell|)}
-      \infer1[$\blam_\mathrm i$]{\vdash \lambda l.\rec_\bL\;0\;(\lambda x\;y\;z.S\;z)\;l : (\List\to\Nat)(\lambda \ell.|\ell|)}
-    \end{prooftree}
-  \end{center}
-\end{rmk}
-
-Pour définir un arbre, on considère directement un prédicat sur $\List$ qui est stable par préfixe. Pour cela, introduisons la notion de préfixe~:
-
-\begin{defi}[Préfixe]
-  On définit la relation $\preceq$ de préfixe sur $\List$ par la fonction suivante~:
-  \[\ell\preceq\ell' \defeq (\rec_{\List}\;(\rec_{\List}\;\bbtt\;(\blam n.\blam l. \blam b.\bbff))\;(\blam n.\blam l.\blam b.\rec_{\List}\;\bbff\;(\blam n'.\blam l'.\blam b'.(n =? n') \land_\bB (b\;l)))\;\ell\;\ell') = \bbtt\]
-\end{defi}
-
-On peut vérifier que cette relation fait bien ce qu'on attend~:
-\begin{itemize}
-\item si $\ell = \bnil$, alors on a la fonction valant $\bbtt$ en $\bnil$ et $\bbff$ ailleurs.
-\item si $\ell = h \bcons t$ et $\ell' = h' \bcons t'$ alors la fonction vaut $h = h' \land t = t'$, et si $\ell' = \bnil$ alors la fonction vaut $\bbff$.
-\end{itemize}
-
-\begin{defi}[Arbre, prédicat monotone]
-  On définit le prédicat $\isTree(T)$ pour $T^{\List}$ par
-  \[\isTree(T)\defeq \forall \ell^{\List}\;\ell'^{\List}, T(\ell') \land \ell \preceq \ell' \to T(\ell)\]
-  On définit aussi le fait d'être monotone par
-  \[\isMono(T)\defeq \forall \ell^{\List}\;\ell'^{\List}, T(\ell) \land \ell \preceq \ell' \to T(\ell')\]
-\end{defi}
-
-\begin{nota}
-  On notera $\forall T^{\Tree}, \varphi$ et $\forall T^{\Mono}, \varphi$ pour considérer respectivement $\forall T^{\List}, \isTree(T) \to \varphi$ et $\forall T^{\List}, \isMono(T) \to \varphi$.
-\end{nota}
-
-On définit aussi $\BinTree$ par~:
-\[\BinTree(T) \defeq \forall \ell, T(\ell) \implies \forall n, n \in \ell \implies n \leq 1\]
-
-Avec ces termes, on peut déjà définir les deux théorèmes que l'on veut étudier~:
-\begin{equation}
-  \KL \defeq \forall T^{\Tree}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
-\end{equation}
-\begin{equation}
-  \WKL \defeq \forall T^{\BinTree}, (\forall n^{\{\Nat\}}, \exists \ell^{\{\List\}}, |\ell| = n \land T(\ell)) \implies \exists \alpha^{\{\Nat\to\Nat\}}, \forall n^{\{\Nat\}}, T(\alpha_n)
-\end{equation}
-\begin{equation}
-  \FT \defeq \forall T^{\Mono}, (\forall \alpha^{\{\Nat \to \Nat\}},\exists n^{\{\Nat\}}, T(\alpha_n)) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
-\end{equation}
-\begin{equation}
-  \FT' \defeq \forall T^{\Mono}, (\exists f^{\{(\Nat\to\Nat)\to\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_{f(\alpha)})) \implies \exists n^{\{\Nat\}}, \forall \alpha^{\{\Nat \to \Nat\}}, T(\alpha_n)
-\end{equation}
-
-\begin{them}[FAN]
-  Il existe $t\in \Lambda$ tel que
-  \[t\reali \FT\]
-\end{them}
-
-  On définit une interprétation des sortes et termes du premier ordre dans la catégorie $\Cpo$. Par induction~:
-  \begin{itemize}
-  \item $\trad{\Nat}_{\Cpo} \defeq \bN_\bot$
-  \item $\trad{\Bool}_{\Cpo} \defeq \bB_\bot$
-  \item $\trad{\List}_{\Cpo} \defeq (\List(\bN))_\bot$
-  \item $\trad{S \to S'}_{\Cpo} \defeq \bS'^{\bS}$
-  \item $\trad{S\times S'}_{\Cpo} \defeq \bS\times \bS'$
-  \end{itemize}
-  L'interprétation des termes du premier ordre est définie naturellement comme l'interprétation de système T dans $\Cpo$ (les paires, les abstraction et applications viennent directement de la structure de catégorie cartésienne fermée, les constructeurs de $\Nat$ d'un objet entier naturel \textit{etc}.)
-
-On montre maintenant que $\KL$ n'est pas vérifié, même sous sa forme faible $\WKL$.
-
-\begin{them}
-  Il n'existe pas de $t\in \Lambda$ tel que
-  \[t\reali \WKL\]
-\end{them}
-
-\begin{proof}
-  La démonstration repose sur l'argument classique de l'arbre de Kleene. Pour pouvoir l'utiliser, on commence par admettre le résultat habituel de l'existence d'une machine universelle, ce que l'on peut écrire par le résultat suivant~:
-  
-  Cela repose principalement sur l'argument qu'une fonction $f^{\{\Nat\to\Nat\}}$ est encodée par un terme, et les termes sont dénombrables~: on peut donc simuler $f(x)$ par l'exécution de la réduction de $t(x)$ où $t$ est le terme qui représente $f$.
-
-  On définit alors la fonction $d : \Nat\to\Nat\to\Nat$ qui représente la fonction diagonalement non récursive obtenue en tronquant le calcul à une étape donnée~:
-  \[d \defeq \lambda x.\lambda t. \rec_{\Nat}\;2\;(\lambda x\;n.\rec_{\Nat}\;1\;(\lambda\;\_\;\_.0)\;n)\;(U(x,x,t))\]
-
-  Si $\varphi_e(e)[t]\downarrow$ alors $d(e,t) \rhd^* \rec_{\Nat}\;1\;(\lambda\;\_\;\_.0)\;(\varphi_e(e))$, ce qui se réduit vers $0$ si $\varphi_e(e) > 0$ et vers $1$ si $\varphi_e(e) = 0$. Si $\varphi_e(e)[t]\uparrow$; alors $d(e,t) \rhd^* 2$.
-
-  On définit maintenant
-  \[\surd(n,k,a) \defeq \rec_{\Bool}\;\btt\;(d(k,t) =? a)\;(d(k,t) =? 2)\]
-  et l'arbre de Kleene~:
-  \[K \defeq \lambda \ell. [\rec_{\List}(\lambda n\;k.\btt)\;(\lambda h\;t\;f\;n\;k.\surd(n,k,h) \&\& f\;n\;(k+1)\;t)]\;|\ell|\;0\]
-
-  On voit que $K$ est clos par préfixe. De plus, pour tout $n\in \mathbb N$, on peut effectivement trouver une liste de taille $n$ appartenant à $K$~: $d(-,n)_n \in K$ et $|d(-,n)_n| = n$.
-
-  Cependant, supposons qu'il existe un chemin infini dans l'arbre, $\alpha$, alors on trouve $j$ tel que $\alpha = \varphi_j$. On sait donc que pour $t$ suffisamment grand, $d(j,t) \neq \varphi_j(j) = \alpha_j$, donc $\alpha_j \notin K$, ce qui est une contradiction. On voit donc que $K$ ne possède pas de chemin infini.
-\end{proof}
-
-\end{comment}
 
 \end{document}
