@@ -5,11 +5,44 @@
 
 \author{Titouan Leclercq\\ Sous l'encadrement de\\ \'Etienne Miquey}
 
-\date{April 15$^{\mathrm{th}}$ -- July 15$^{\mathrm{th}}$}
+\date{April 15$^{\mathrm{th}}$ -- July 15$^{\mathrm{th}}$ \\
+Institut de Mathématiques de Marseille \\
+\'Equipe Logique de la programmation}
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+		\begin{center}
+            \begin{tabular}{c@{\hskip 7cm}c@{\hskip 1cm}}
+                \includegraphics[height=2.5cm]{UniversiteParisCite_logo_horizontal_couleur_CMJN.jpg} &
+                \hspace{-5cm}\includegraphics[height=2.3cm]{logo_i2m_color_hex_horizontal_3lines_regular_72dpi.png}
+            \end{tabular}
+        \end{center}
+    
+        \begin{center}
+        
+\vspace*{.03\textheight}
+\textsc{\LARGE Stage de recherche Master Logique Mathématique Fondements de l'Informatique\\
+        \LARGE \'A l'Institut de Mathématiques de Marseille}\\[0.2cm] % Univ name
+        \large Dans l'équipe Logique de la Programmation\\
+  
+            \vfill
+ 
+            \rule{\textwidth}{0.8pt} \\ % Horizontal line
+            \vspace{10pt}
+             { \LARGE Vers une étude du contenu calculatoire des principes de choix} % Thesis title
+             \vspace{10pt}
+             \rule{\textwidth}{0.8pt} \\ % Horizontal line
+        \end{center}
+        
+        \vfill
+        % Author and supervisor	
+        \begin{center}
+            Par \textsc{\Large Titouan LECLERCQ}\\[1cm] 
+            Stage sous l'encadrement de \textsc{\large \'Etienne MIQUEY}\\[0.2cm]
+        \end{center}
+        
+    \end{titlepage}
 
 \tableofcontents
 
@@ -71,7 +104,7 @@ Rappelons les règles de déduction naturelle, et profitons-en pour clarifier le
     \end{itemize}
 \end{defi}
 
-On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(x,S)$ où $x \in \mathcal X_1$ et $S\in\mathcal S$), et $f \in \mathcal F$~:
+On se fixe donc une signature $\Sigma$ pour le reste de cette présentation de la syntaxe utilisée. On fixe de plus un ensemble $\mathcal X_1$, dénombrable, de variables du premier ordre, qu'on notera $\bx,\by,\ldots$ (on gardera les lettres non en gras pour désigner d'autres variables). L'ensemble des termes typés est défini par les règles suivantes, où $S,S_1,\ldots$ désignent des éléments de $\mathcal S$ et $\Gamma$ désigne un contexte de typage du premier ordre (une liste de couples $(\bx,S)$ où $\bx \in \mathcal X_1$ et $S\in\mathcal S$), et $f \in \mathcal F$~:
 \begin{center}
     \begin{prooftree}
         \infer0{\Gamma, \bx : S \vdash \bx : S}
@@ -102,8 +135,8 @@ On définit maintenant les propositions, mais comme celles-ci contiennent des co
             \hypo{\Gamma\vdash \bt_1 : S_1}
             \hypo{\cdots}
             \hypo{\Gamma\vdash \bt_n : S_n}
-            \hypo{\alpha(R) = (S_1,\ldots,S_n)}
-            \infer4{\Gamma\mid\Delta\vdash R(\bt_1,\ldots,\bt_n) : \Propo}
+            \hypo{\alpha(r) = (S_1,\ldots,S_n)}
+            \infer4{\Gamma\mid\Delta\vdash r(\bt_1,\ldots,\bt_n) : \Propo}
         \end{prooftree}
 
         \vspace{0.5cm}
@@ -126,7 +159,7 @@ On définit maintenant les propositions, mais comme celles-ci contiennent des co
     \end{center}
 \end{defi}
 
-On définit de façon usuelles les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$. On considère aussi que toutes nos définitions sont faite à $\alpha$-renommage près, de façon standard.
+On définit de façon usuelle les notions de variables libres dans les termes et les propositions, on notera $\varlib{\bt}$ (respectivement $\varlib{\varphi}$) pour cela. Les variables libres d'une proposition contiennent potentiellement des éléments de $\mathcal X_1$ et de $\mathcal X_2$. On considère aussi que toutes nos définitions sont faite à $\alpha$-renommage près, de façon standard.
 
 On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
 
@@ -140,7 +173,7 @@ On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
     On peut maintenant, pour $\Gamma, \bx : S\mid\Delta\vdash \varphi : \Propo$ et $\Gamma\vdash \bt : S$, définir $\Gamma\mid\Delta\vdash\varphi[\bt/\bx] : \Propo$~:
     \begin{itemize}
         \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = X(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
-        \item si $\varphi = R(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = R(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
+        \item si $\varphi = r(\bt_1,\ldots,\bt_n)$ alors $\varphi[\bt/\bx] = r(\bt_1[\bt/\bx],\ldots,\bt_n[\bt/\bx])$.
         \item si $\varphi = \psi \to \chi$ alors $\varphi[\bt/\bx] = \psi[\bt/\bx] \to \chi[\bt/\bx]$.
         \item si $\varphi = \forall \by^{S'}, \psi$ et que $\by\notin \varlib{\bt}$, alors $\varphi[\bt/\bx] = \forall \by^{S'}, \psi[\bt/\bx]$.
         \item si $\varphi = \forall X^{S_1,\ldots,S_n}, \psi$ alors $\varphi[\bt/\bx] = \forall X^{S_1,\ldots,S_n}, \psi[\bt/\bx]$.
@@ -150,14 +183,14 @@ On définit aussi la substitution d'ordre $1$ et d'ordre $2$.
 Par une induction sur les termes et les propositions, on peut montrer que la substitution préserve le typage, c'est-à-dire qu'on a bien la relation de typage décrite dans la définition~: $\Gamma\vdash \bt[\bu/\bx] : S'$ et $\Gamma\mid\Delta\vdash \varphi[\bt/\bx] : \Propo$.
 
 \begin{defi}[Substitution du second ordre]
-    Soit $\Gamma\mid \Delta, X : S_1,\ldots,S_n\vdash \varphi : \Propo$ et $\Gamma, \bx_1 : S_1,\ldots, \bx_n : S_n\mid\Delta\vdash \psi : \Propo$, alors on définit $\Gamma\mid\Delta\vdash\varphi[X/\psi(\bx_1,\ldots,\bx_n)]$ par induction sur $\varphi$~:
+    Soit $\Gamma\mid \Delta, X \subseteq (S_1,\ldots,S_n)\vdash \varphi : \Propo$ et $\Gamma, \bx_1 : S_1,\ldots, \bx_n : S_n\mid\Delta\vdash \psi : \Propo$, alors on définit $\Gamma\mid\Delta\vdash\varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par induction sur $\varphi$~:
     \begin{itemize}
-        \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]$.
-        \item si $\varphi = Y(\bt_1,\ldots,\bt_n)$
-        \item si $\varphi = R(\bt_1,\ldots,\bt_n$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \varphi$.
-        \item si $\varphi = \chi \to \theta$ alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \chi[X/\psi(\bt_1,\ldots,\bt_n)] \to \theta[X/\psi(\bt_1,\ldots,\bt_n)]$.
-        \item si $\varphi = \forall \bx^S, \chi$ et $\bx \notin \varlib{\psi}$, alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \forall \bx^S, \chi[X/\psi(\bt_1,\ldots,\bt_n)]$.
-        \item si $\varphi = \forall Y^{S'_1,\ldots,S'_n}, \chi$ et $Y\notin\varlib{\psi}$, alors $\varphi[X/\psi(\bx_1,\ldots,\bx_n)] = \forall Y^{S'_1,\ldots,S'_n}, \chi[X/\psi(\bx_1,\ldots,\bx_n)]$.
+        \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \psi[\bt_1/\bx_1,\ldots,\bt_n/\bx_n]$.
+        \item si $\varphi = Y(\bt_1,\ldots,\bt_n)$ alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \varphi$.
+        \item si $\varphi = r(\bt_1,\ldots,\bt_n)$ alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \varphi$.
+        \item si $\varphi = \chi \to \theta$ alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \chi[\psi(\bt_1,\ldots,\bt_n)/X] \to \theta[\psi(\bt_1,\ldots,\bt_n)/X]$.
+        \item si $\varphi = \forall \bx^S, \chi$ et $\bx \notin \varlib{\psi}$, alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \forall \bx^S, \chi[\psi(\bt_1,\ldots,\bt_n)/X]$.
+        \item si $\varphi = \forall Y^{S'_1,\ldots,S'_n}, \chi$ et $Y\notin\varlib{\psi}$, alors $\varphi[\psi(\bx_1,\ldots,\bx_n)/X] = \forall Y^{S'_1,\ldots,S'_n}, \chi[\psi(\bx_1,\ldots,\bx_n)/X]$.
     \end{itemize}
 \end{defi}
 
@@ -256,7 +289,7 @@ Nous ne donnons pas ici les règles liées à ces différents constructeurs, mai
     \end{prooftree}
 \end{center}
 
-Passons maintenant à comment interpréter le second ordre dans notre modèle de réalisabilité. Une variable du second ordre représente une partie de l'univers de discours. Par exemple, $X^\bN$ représente une partie de $\mathbb N$. Les parties d'un ensemble $X$, en logique classique, donc exactement les éléments de $2^X$~: cela est dû au fait que le sens d'une proposition est toujours un élément de $2$. Comme, dans notre cas, le sens d'une proposition doit être l'ensemble de ses témoins, on remplace $2$ par $\mathcal P(\bX)$. On obtient donc comme interprétation d'une variable $X^\bN$ une fonction $\mathbb N \to \mathcal P (\bX)$ Plus généralement, en ayant défini une interprétation $\bS$ de chaque sorte $S$, une variable $X^{S_1,\ldots,S_n}$ sera interprétée par une fonction $\bS_1\times\cdots\times\bS_n \to \mathcal P(\bX)$.
+Passons maintenant à comment interpréter le second ordre dans notre modèle de réalisabilité. Une variable du second ordre représente une partie de l'univers de discours. Par exemple, $X^\bN$ représente une partie de $\mathbb N$. Les parties d'un ensemble $X$, en logique classique, sont exactement les éléments de $2^X$~: cela est dû au fait que le sens d'une proposition est toujours un élément de $2$. Comme, dans notre cas, le sens d'une proposition doit être l'ensemble de ses témoins, on remplace $2$ par $\mathcal P(\bX)$. On obtient donc comme interprétation d'une variable $X^\bN$ une fonction $\mathbb N \to \mathcal P (\bX)$ Plus généralement, en ayant défini une interprétation $\bS$ de chaque sorte $S$, une variable $X^{S_1,\ldots,S_n}$ sera interprétée par une fonction $\bS_1\times\cdots\times\bS_n \to \mathcal P(\bX)$.
 
 Pour permettre à notre relation de réalisabilité de prendre en compte le second ordre, nous allons paramétrer cette relation par une assignation (partielle) des variables du second ordre à des interprétations comme décrites plus haut.
 
@@ -313,16 +346,16 @@ On définit aussi la $\beta$-réduction.
 
 Commençons maintenant à présenter un premier modèle de réalisabilité, basé sur ce $\lambda$-calcul. Nous utiliserons les notions d'environnement définies plus tôt à la fois pour le premier et le second ordre. On se place dans le cas d'une signature sans symbole de relation, et on considère que $\Nat$ est l'unique sorte, pour simplifier notre modèle dans un premier temps. On possède les fonctions habituelles de l'arithmétique~: $S,+,\times$ et la constante $0$. On interprétera $\Nat$ par l'ensemble $\bN$. On écrira cependant nos définitions en toute généralité, en particulier pour les sortes $S$ que l'on notera $S$ et leur interprétation sémantique $\bS$, pour que les définitions puissent être appliquées de façon identique pour les autres signatures que l'on peut choisir.
 
-Précisons d'abord les interprétations de variables qui nous intéressent. On dira qu'une interprétation $\sigma$ du premier ordre, c'est-à-dire une fonction partielle $\sigma : \mathcal X_1 \rightharpoonup \bN$, est adéquate vis à vis d'un contexte du premier ordre $\Gamma$ si pour tout $(x,S) \in \Gamma$, on a $\sigma(x) \in \bS$.
+Précisons d'abord les interprétations de variables qui nous intéressent. On dira qu'une interprétation $\sigma$ du premier ordre, c'est-à-dire une fonction partielle $\sigma : \mathcal X_1 \rightharpoonup \bN$, est adéquate vis à vis d'un contexte du premier ordre $\Gamma$ si pour tout $(x,S) \in \Gamma$, on a $\sigma(x) \in \bS$, ce qu'on notera $\sigma \models \Gamma$.
 
 Moralement, une variable du second ordre doit pouvoir être remplacée par la valeur de vérité d'une formule, c'est-à-dire dans la logique classique une partie des objets du premier ordre. Ici, on a dit que la valeur de vérité d'une formule est, plutôt qu'une valeur dans $\{0,1\}$, une partie de notre langage de programmation $\Lambda$. On est donc tentés d'interpréter une formule par un élément $A \in \mathcal P(\Lambda)$, mais on verra plus tard que cette interprétation cause des problèmes. On considère donc à la place que $A \in \bP$, où $\bP$ sera une famille de parties de $\Lambda$ que l'on décrira plus tard, mais qui se rapproche grandement de $\mathcal P(\Lambda)$ dans l'interprétation qu'on en fait.
 
-Une interprétation $\rho$ du second ordre, alors, est une fonction partielle $\rho$ qui, à un élément de $\mathcal X_2$, associe une fonction $\bS_1\times\cdots\times\bS_n \to \bP$. On dira que $\rho$ est adéquat pour une proposition $\Gamma\mid\Delta\vdash \varphi : \Propo$ si, pour tout $(X, (S_1,\ldots,S_n))\in \Delta$, $\rho(X) : \bS_1\times\cdots\times\bS_n \to \bP$.
+Une interprétation $\rho$ du second ordre, alors, est une fonction partielle $\rho$ qui, à un élément de $\mathcal X_2$, associe une fonction $\bS_1\times\cdots\times\bS_n \to \bP$. On dira que $\rho$ est adéquat pour un contexte du second ordre $\Delta$ si, pour tout $(X, (S_1,\ldots,S_n))\in \Delta$, $\rho(X) : \bS_1\times\cdots\times\bS_n \to \bP$, ce qu'on notera $\rho \models \Delta$.
 
 On peut maintenant définir la relation de réalisabilité.
 
 \begin{defi}[Relation de réalisabilité]
-    Soit une proposition $\varphi$, $\sigma\models \varphi$ et $\rho\models \varphi$. On définit $\trad\varphi_\rho^\sigma \in \mathcal \bP$ par induction sur $\varphi$~:
+    Soit une proposition bien typée $\Gamma\mid\Delta\vdash\varphi : \Propo$, $\sigma\models \Gamma$ et $\rho\models \Delta$. On définit $\trad\varphi_\rho^\sigma \in \mathcal \bP$ par induction sur $\varphi$~:
     \begin{itemize}
         \item si $\varphi = X(\bt_1,\ldots,\bt_n)$ alors $\trad\varphi_\rho^\sigma = \rho(X)(\sigma(\bt_1),\ldots,\sigma(\bt_n))$.
         \item si $\varphi = \psi \to \chi$ alors $\trad{\varphi\to\chi}_\rho^\sigma = \{t \in \Lambda\mid \forall u \in \trad{\psi}_\rho^\sigma, t\;u \in \trad{\chi}_\rho^\sigma\}$.
@@ -428,7 +461,7 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
 
 \begin{lem}\label{lem.subst.1}
   Pour tous $\Gamma,\Delta$, $\varphi$ telle que $\Gamma\mid\Delta\vdash \varphi : \Propo$ et interprétations $\sigma\models \Gamma, \rho \models \Delta$, pour tout terme $\Gamma\vdash \bt : S$, on a
-  \[\trad\varphi_\rho^{\sigma[\bx \leftarrow \bt^\sigma]}\iff \trad{\varphi[\bt/\bx]}\reali_\rho^\sigma\]
+  \[\trad\varphi_\rho^{\sigma[\bx \leftarrow \bt^\sigma]}= \trad{\varphi[\bt/\bx]}\reali_\rho^\sigma\]
 \end{lem}
 
 \begin{proof}
@@ -467,7 +500,7 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
 
 \begin{lem}\label{lem.subst.2}
   Pour tous $\Gamma,\Delta$, si $\Gamma,\bx_1 : S_1,\ldots,\bx_n : S_n\mid\Delta\vdash \psi : \Propo$ alors pour tous $\gamma\models\Gamma, \rho\models \Delta$ on a, en notant $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[\bx_1\leftarrow s_1,\ldots,\bx_n\leftarrow s_n]}$~:
-  \[t\reali_{\rho[X\leftarrow F]}^\sigma \varphi \iff t\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]\]
+  \[\trad\varphi_{\rho[X\leftarrow F]}^\sigma = \trad{\varphi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma \]
 \end{lem}
 
 \begin{proof}
@@ -492,8 +525,8 @@ On a donc traité les règles Ax et $\to_\mathrm i$ pour l'adéquation. La règl
     \begin{align*}
       \trad{\forall \bx^S, \chi}_{\rho[X\leftarrow F]}^\sigma &= \bigcap_{s\in\bS}\trad\chi_{\rho[X\leftarrow F]}^{\sigma[\bx\leftarrow s]}\\
       &= \bigcap_{s\in\bS}\trad{\chi/[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^{\sigma[\bx\leftarrow s]}\\
-      &= \trad{\forall \bx^S, \chi[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma\\
-      &= \trad{(\forall \bx^S, \chi)[\psi(\bx_1,\ldots,\bx_n)/S]}_\rho^\sigma
+      &= \trad{\forall \bx^S, \chi[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma\\
+      &= \trad{(\forall \bx^S, \chi)[\psi(\bx_1,\ldots,\bx_n)/X]}_\rho^\sigma
     \end{align*}
   \item si $\varphi = \forall Y^{S_1,\ldots,S_p},\chi$ alors
     \begin{align*}
@@ -524,9 +557,9 @@ Il nous reste alors à montrer le lemme d'adéquation. Là encore, il nous faut 
   \item Cas Ax~: Pour le cas d'une variable, par hypothèse sur $\nu$, si $\varphi = \varphi_i$ et $x = x_i$ alors $\nu(t) = \nu(x_i)\reali_\rho^\sigma \varphi_i$.
   \item Cas $\to_\mathrm i$~: Supposons que pour tout $\nu \reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \varphi)$, on a $\nu(t) \reali_\rho^\sigma \psi$. Soit $\nu \reali_\rho^\sigma \Gamma,\Delta,\Xi$, montrons que $\nu(\lambda x.t)\reali_\rho^\sigma \varphi \to \psi$. Soit $u \reali_\rho^\sigma \varphi$, alors $\nu[x \leftarrow u](t)\reali_\rho^\sigma \psi$ puisque $\nu[x\leftarrow u]\reali_\rho^\sigma \Gamma,\Delta,(\Xi, x : \psi)$. De plus, quitte à renommer, on a $\nu[x\leftarrow u](t) = \nu(t)[u/x]$ donc $\nu(t)[u/x]\reali_\rho^\sigma \psi$, donc par saturation $(\lambda x.\nu(t)) u \reali_\rho^\sigma \psi$, donc $\lambda x.\nu(t)\reali_\rho^\sigma \varphi\to\psi$.
   \item Cas $\to_\mathrm e$~: Supposons que $\nu(t)\reali_\rho^\sigma \varphi \to \psi$ et $\nu(u)\reali_\rho^\sigma \varphi$, alors par définition $\nu(t\;u)\reali_\rho^\sigma \psi$.
-  \item Cas $\forall_\mathrm i^1$~: On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S),\Delta,\Xi$, $\nu(t)\reali_\rho^\sigma \varphi$. Soit alors $\nu\reali_\rho^\sigma \Gamma,\Delta\Xi$ et $s \in \bS$, comme $\nu\reali_\rho^{\sigma[\bx\leftarrow s]} (\Gamma,\bx : S), \Delta,\Xi$, on en déduit que $\nu(t)\reali_\rho^{\sigma[\bx\leftarrow s]} \varphi$, ce qui est valide pour tout $s\in \bS$, donc par définition $\nu(t)\reali_\rho^\sigma \forall \bx^S, \varphi$.
-  \item Cas $\forall_\mathrm e^1$~: On suppose que $\nu(t)\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\sigma(\bt) \in \mathbb S$ donc $\nu(t)\reali_{\rho[\bx\leftarrow \bt^\sigma]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
-  \item Cas $\forall_\mathrm i^2$~: On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n), \Xi$, $\nu(t) \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X : S_1,\ldots,S_n),\Xi$ donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
+  \item Cas $\forall_\mathrm i^1$~: On suppose que pour tout $\nu\reali_\rho^\sigma (\Gamma, \bx : S),\Delta,\Xi$, $\nu(t)\reali_\rho^\sigma \varphi$. Soit alors $\nu\reali_\rho^\sigma \Gamma,\Delta,\Xi$ et $s \in \bS$. Comme $\nu\reali_\rho^{\sigma[\bx\leftarrow s]} (\Gamma,\bx : S), \Delta,\Xi$, on en déduit que $\nu(t)\reali_\rho^{\sigma[\bx\leftarrow s]} \varphi$, ce qui est valide pour tout $s\in \bS$, donc par définition $\nu(t)\reali_\rho^\sigma \forall \bx^S, \varphi$.
+  \item Cas $\forall_\mathrm e^1$~: On suppose que $\nu(t)\reali_\rho^\sigma \forall \bx, \varphi$, donc pour tout $\bt : S$, $\sigma(\bt) \in \mathbb S$ donc $\nu(t)\reali_{\rho}^{\sigma[\bx\leftarrow \bt^\sigma]} \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\bt/\bx]$ par le lemme de substitution du premier ordre.
+  \item Cas $\forall_\mathrm i^2$~: On suppose que pour tout $\nu\reali_\rho^\sigma \Gamma, (\Delta, X \subseteq (S_1,\ldots,S_n)), \Xi$, $\nu(t) \reali_\rho^\sigma \varphi$. Soit alors des valuations $\nu\reali_\rho^\sigma\Gamma, \Delta,\Xi$. On voit que pour tout $F : S_1\times\ldots\times S_n \to \SAT$, $\nu\reali_{\rho[X\leftarrow F]}^\sigma \Gamma, (\Delta, X \subseteq (S_1,\ldots,S_n)),\Xi$ donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$. Comme cela tient pour tout $F : S_1\times\ldots\times S_n \to \SAT$, on en déduit que $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$.
   \item Cas $\forall_\mathrm e^2$~: Si $\nu(t)\reali_\rho^\sigma \forall X^{S_1,\ldots,S_n}, \varphi$ et $\Gamma,x_1 : S_1,\ldots,x_n : S_n\mid\Delta\vdash \psi : \Propo$, alors en particulier $F : (s_1,\ldots,s_n) \mapsto \trad\psi_\rho^{\sigma[x_1\leftarrow s_1,\ldots, x_n \leftarrow s_n]}$ définit une fonction $S_1\times\ldots\times S_n \to\SAT$, donc $\nu(t)\reali_{\rho[X\leftarrow F]}^\sigma \varphi$, c'est-à-dire $\nu(t)\reali_\rho^\sigma \varphi[\psi(\bx_1,\ldots,\bx_n)/X]$ par le lemme de substitution du second ordre.
   \end{itemize}
 
@@ -742,7 +775,7 @@ On souhaite aussi définir un ensemble de codes pour nos termes, mais il nous fa
     \[t,u ::= [\cdots] \mid\langle t,u\rangle\mid \pi_1\;t\mid\pi_2\;t\mid 0\mid S\;t \mid\rec_\bN\mid \btt\mid\bff\mid\rec_\bB\mid[\,]\mid t::u\mid\rec_\bL\]
 \end{defi}
 
-On étend la substitution de façon évidente, et on ajoute dans $\mapsto$ les règles suivantes~:
+On étend la substitution de façon naturelle, et on ajoute dans $\mapsto$ les règles suivantes~:
 \begin{center}
     \begin{prooftree}
         \infer0[$i\in\{1,2\}$]{\pi_i\;\langle t_1,t_2\rangle \mapsto t_i}
@@ -781,7 +814,7 @@ On peut désormais définir les codes des objets du premier ordre~: caque objet 
 \begin{itemize}
     \item pour $n\in\bN$, $\ceil n \defeq \{t\in\Lambda \mid t \rhd^* S^n\,0\}$
     \item pour $b \in \bB$, $\ceil 0 \defeq \{t\in\Lambda\mid t \rhd^* \bff\}$ et $\ceil 1 \defeq \{t \in \Lambda\mid t \rhd^* \btt\}$
-    \item pour $l \in \bS^*$, $\ceil{\varepsilon} \defeq \{t\in\Lambda \mid t\rhd^* [\,]\}$ et $\ceil{s\star l} \defeq \{t \in \Lambda\mid\exists u \in \ceil s,\exists v \in \ceil l,t \rhd^* u::v\}$
+    \item pour $\ell \in \bS^*$, $\ceil{\varepsilon} \defeq \{t\in\Lambda \mid t\rhd^* [\,]\}$ et $\ceil{s\star \ell} \defeq \{t \in \Lambda\mid\exists u \in \ceil s,\exists v \in \ceil \ell,t \rhd^* u::v\}$
     \item pour $(s,s') \in \bS\times \bS'$, $\ceil{(s,s')} \defeq \{t\in \Lambda\mid \exists u \in \ceil s, \exists v \in \ceil{s'}, t \rhd^* \langle u,v\rangle\}$
     \item pour $f \in \bS\to \bS'$, $\ceil f \defeq \{t \in \Lambda\mid \forall s \in \bS, \forall u \in \ceil s, t\;u \in \ceil{f(s)}\}$
 \end{itemize}
@@ -864,7 +897,7 @@ Nous avons donc construit un premier modèle de réalisabilité permettant de ma
 
 Nous avons déjà mentionné l'idée de base des mathématiques à rebours dans l'introduction~: c'est un programme mathématique cherchant à étudier le contenu et la force logique de théorèmes que l'on sait déjà vrais. La question typique à laquelle on souhaite répondre est ``quels sont les axiomes les plus faibles suffiants à entraîner un théorème $T$ ?'' Pour y répondre, on peut essayer de s'intéresser à une notion classique de théorie de la démonstration, celle de l'algèbre de Lindenbaum-Tarski (\cite{Tarski1983-TARLSM-5})~: étant donnée une théorie $\mathcal T$, on peut définir une relation de pré-ordre $\varphi \vdash_{\mathcal T} \psi$ par $\mathcal T\vdash \varphi \to \psi$. L'ensemble des propositions est alors, quotienté par l'équivalence $\dashv\vdash_{\mathcal T}$, une algèbre de Boole. Les classes d'équivalence, qui sont constituées de formules équivalentes modulo $\mathcal T$, sont alors l'objet d'étude des mathématiques à rebours~: on s'intéresse, étant donné un théorème fixé, à la classe d'équivalence (appelons cette classe degré logique, par analogie aux degrés Turing) de ce théorème.
 
-La question vient alors du choix de $\mathcal T$~: il nous faut avant tout que $\mathcal T$ soit faible, car plus la théorie est forte et plus les degrés sont gros. Le cas extrême, de $\ZFC$, met tous les théorèmes intéressants dans le degré de $\top$. On pourrait donc souhaiter que $\mathcal T$ soit vide~: le problème, alors, est que les symboles n'ont plus de sens. Dans le cas de l'arithmétique, par exemple, ne pas considérer d'axiomes entraîne que $0,S,+,\times$ sont des objets quelconques~: ça n'est pas ce que nous voulons. Il nous faut donc un entre-deux~: une théorie suffisamment faible pour être incapable de prouver la plupart des théorèmes mathématiques usuels, mais assez forte pour contenir une partie substantielle des fondements mathématiques (les entiers, le fait qu'ils se comportent correctement, etc). Une solution à cette question est donnée en partie par les travaux de Hilbert et Bernays dans \cite{Hilbert1935-HILGDM-8} et \cite{Hilbert1974-HILGDM-5}~: la puissance de la théorie des ensembles est superflue pour la plupart des résultats mathématiques, et l'arithmétique du second ordre suffit à les prouver. Le cadre de l'arithmétique du second ordre, utilisant des entiers et des ensembles d'entiers, semble donc un bon cadre. On considère donc un système plus faible d'axiomes (puisqu'on veut avoir un maximum d'énoncés indécidables dans notre théorie) mais contenant suffisamment d'informations pour donner un sens à nos objets.
+La question vient alors du choix de $\mathcal T$~: il nous faut avant tout que $\mathcal T$ soit faible, car plus la théorie est forte et plus les degrés sont gros. Le cas extrême de $\ZFC$ met tous les théorèmes intéressants dans le degré de $\top$. On pourrait donc souhaiter que $\mathcal T$ soit vide~: le problème, alors, est que les symboles n'ont plus de sens. Dans le cas de l'arithmétique, par exemple, ne pas considérer d'axiomes entraîne que $0,S,+,\times$ sont des objets quelconques~: ça n'est pas ce que nous voulons. Il nous faut donc un entre-deux~: une théorie suffisamment faible pour être incapable de prouver la plupart des théorèmes mathématiques usuels, mais assez forte pour contenir une partie substantielle des fondements mathématiques (les entiers, le fait qu'ils se comportent correctement, etc). Une solution à cette question est donnée en partie par les travaux de Hilbert et Bernays dans \cite{Hilbert1935-HILGDM-8} et \cite{Hilbert1974-HILGDM-5}~: la puissance de la théorie des ensembles est superflue pour la plupart des résultats mathématiques, et l'arithmétique du second ordre suffit à les prouver. Le cadre de l'arithmétique du second ordre, utilisant des entiers et des ensembles d'entiers, semble donc un bon cadre. On considère donc un système plus faible d'axiomes (puisqu'on veut avoir un maximum d'énoncés indécidables dans notre théorie) mais contenant suffisamment d'informations pour donner un sens à nos objets.
 
 En particulier, puisqu'on souhaite coder les nombres réels et les fonctions continues (choses souhaitables pour formaliser les mathématiques usuelles), il nous faut une théorie permettant de définir ces objets. Le choix historique, qu'on peut voir dans \cite{Simpson_2009} par exemple, est de considérer le sous-système $\RCAO$~: ce sous-système est celui des mathématiques calculables. Cette théorie contient, en plus de l'arithmétique de Robinson, le schéma d'axiomes de compréhension sur les formules $\Delta_1^0$ et le schéma d'induction sur les formules $\Sigma_1^0$. Le schéma de compréhension est l'ensemble des formules de la forme $\exists X^{\Nat}, \forall \bx^{\Nat}, X(\bx) \leftrightarrow \psi(\bx)$ où $\psi$ est $\Delta_1^0$, tandis que le schéma d'induction est l'ensemble des formules de la forme $\psi(0)\land (\forall \bx^{\Nat}, \psi(\bx) \to \psi(S\;\bx)) \to \forall \bx^{\Nat}, \psi(\bx)$ où $\psi$ est $\Sigma_1^0$. $\RCAO$ est donc une restriction de ces schémas pour certaines familles de formules $\psi$. Cette théorie contient l'expressivité des fonctions calculables~: les nombres réels peuvent se représenter comme certaines fonctions calculables, et on peut représenter jusqu'aux fonctions mesurables.
 
@@ -910,11 +943,11 @@ Au contraire, l'approche extensionnelle va considérer les chemins (finis) appar
 
 On définit donc un arbre extensionnel comme une partie de $\bN^*$ stable par préfixe. La question se pose alors de si nos deux présentations coïncident. Dans un sens, on peut associer à un arbre l'ensemble de ses chemins. Dans l'autre sens, cependant, construire un arbre intentionnel à partir d'un arbre extensionnel n'est pas évident~: il nécessite ce qu'on appelle la \textit{bar induction}\footnote{Pour construire l'arbre intentionnel, il est nécessaire, \textit{a priori}, de parcourir tous les chemins possibles. C'est donc une forme de principe d'omniscience, permettant d'accéder à une information infinie directement. La \textit{bar induction} permet, si pour tout chemin infini il est possible de déterminer la taille maximale à partie de laquelle celui-ci n'est plus dans l'arbre, de déduire une hauteur finie à l'arbre. On n'a alors plus qu'une quantité finie d'information à traiter.}, dont le \textit{fan theorem} est un cas particulier, où l'arbre est finiment branchant. Le cas d'un arbre finiment branchant peut se traiter de deux façons~: on peut au choix considérer des arbres comme des parties de $B^*$ stables par préfixe, où $B$ est un ensemble fini, ou garder la notion d'arbres sur $\bN^*$ et exprimer qu'à un $u \in T$ donné, il existe un majorant des $n$ tels que $u \star n \in T$. La seconde option est la plus générale, mais elle est calculatoirement plus complexe puisqu'il faut être capable de calculer ce majorant (et ça n'est pas toujours possible) pour construire un nouvel arbre finiment branchant. Au total, on décide donc de s'intéresser à la définition extensionnelle des arbres et aux arbres finiment branchants dans le premier sens évoqué, de parties de $B^*$.
 
-Un chemin infini, que nous appellerons désormais simplement chemin (nous préciserons à chaque fois "chemin fini'' quand c'est le cas) dans un arbre $T \subseteq A^*$ est une fonction $\alpha : \bN \to A$ telle que pour tout $n\in \bN$, le mot fini $\alpha_0\ldots\alpha_{n-1}$ est un élément de $T$. On notera $\alpha \in_\infty T$ pour dire que $\alpha$ est un chemin de $T$. Nous définissons aussi la notation $\in_n$, pour $n \in \bN$~:
+Un chemin infini, que nous appellerons désormais simplement chemin (nous préciserons à chaque fois ``chemin fini'' quand c'est le cas) dans un arbre $T \subseteq A^*$ est une fonction $\alpha : \bN \to A$ telle que pour tout $n\in \bN$, le mot fini $\alpha_0\ldots\alpha_{n-1}$ est un élément de $T$. On notera $\alpha \in_\infty T$ pour dire que $\alpha$ est un chemin de $T$. Nous définissons aussi la notation $\in_n$, pour $n \in \bN$~:
 \[\alpha \in_n T \defeq \alpha_0\ldots\alpha_{n-1} \in T\]
 Ainsi $\alpha\in_\infty T$ peut se voir comme $\forall n\in \bN, \alpha\in_n T$.
 
-Les théorèmes nous intéressant, $\WKL$, $\KL$ et $\FT$, s'énoncent alors ainsi en donnant toutes les conditions (on considère que $A$ est un ensemble fini)~:
+Les théorèmes nous intéressant, $\WKL$, $\KL$ et $\FT$, s'énoncent alors ainsi en donnant toutes les conditions (on considère que $A$ est un ensemble fini de la forme $\{0,\ldots,p\}$ pour un certain $p \in \bN$)~:
 \begin{multline*}
     \WKL \defeq \forall T \subseteq\{0,1\}^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land (\forall n \in \bN, \exists u \in T, |u| = n)\\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
 \end{multline*}
@@ -922,23 +955,23 @@ Les théorèmes nous intéressant, $\WKL$, $\KL$ et $\FT$, s'énoncent alors ain
     \KL \defeq \forall T \subseteq A^*, (\forall u,v\in \bN^*, u\preceq v \implies v \in T \implies u \in T)\land (\forall n \in \bN, \exists u \in T, |u| = n) \\ \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T
 \end{multline*}
 \begin{multline*}
-    \FT \defeq \forall C \subseteq \bN^*, (\forall u,v\in \bN^*, u\preceq v \implies u \in C \implies v \in C) \land (\forall \alpha : \bN\to\bN, \exists n \in \bN, \alpha \in_n C) \\\implies \exists n \in \bN, \forall \alpha : \bN\to\bN, \alpha \in_n C
+    \FT \defeq \forall C \subseteq A^*, (\forall u,v\in \bN^*, u\preceq v \implies u \in C \implies v \in C) \land (\forall \alpha : \bN\to A, \exists n \in \bN, \alpha \in_n C) \\\implies \exists n \in \bN, \forall \alpha : \bN\to A, \alpha \in_n C
 \end{multline*}
 
-Les énoncés sont longs et difficilement lisibles, nous allons donc donner des noms aux différentes propriétés essentielles. Tout d'abord, être un arbre~: cela signifie être stable par préfixe (la première condition), ce que l'on résumera par $\isTree(T)$. Dans le cas de $\WKL$, on définit $\isBinTree(T)$, qui et la même condition mais où $T\subseteq\{0,1\}^*$. Ensuite, être le complémentaire d'un arbre~: comme un arbre est clos par préfixe, son complémentaire est clos par extension (on dit alors que cette partie est croissante, ou monotone), ce qu'on notera $\isMono(C)$. La condition commune à $\WKL$ et $\KL$ est d'avoir des chemins finis de longueur arbitrairement grande, ce qui peut se comprendre par ``il y a une infinité de sommets dans l'arbre'', d'où le fait de nommer cette condition $\isInfinite(T)$. Pour la condition sur $\FT$, il nous faut un peu de vocabulaire~: on appelle barre pour $C$ une fonction $b : (\bN \to \bN) \to \bN$ qui vérifie que $\alpha \in_{b(\alpha)} C$. Par analogie, on dit que $C$ est barré si pour tout $\alpha : \bN \to \bN$, on peut trouver $n_\alpha$ tel que $\alpha \in_{n_\alpha} C$. On notera donc $\isBarred(C)$ l'hypothèse.
+Les énoncés sont longs et difficilement lisibles, nous allons donc donner des noms aux différentes propriétés essentielles. Tout d'abord, être un arbre~: cela signifie être stable par préfixe (la première condition), ce que l'on résumera par $\isTree(T)$. Dans le cas de $\WKL$, on définit $\isBinTree(T)$, qui et la même condition mais où $T\subseteq\{0,1\}^*$. Ensuite, être le complémentaire d'un arbre~: comme un arbre est clos par préfixe, son complémentaire est clos par extension (on dit alors que cette partie est croissante, ou monotone), ce qu'on notera $\isMono(C)$. La condition commune à $\WKL$ et $\KL$ est d'avoir des chemins finis de longueur arbitrairement grande, ce qui peut se comprendre par ``il y a une infinité de sommets dans l'arbre'', d'où le fait de nommer cette condition $\isInfinite(T)$. Pour la condition sur $\FT$, il nous faut un peu de vocabulaire~: on appelle barre pour $C$ une fonction $b : (\bN \to A) \to \bN$ qui vérifie que $\alpha \in_{b(\alpha)} C$. Par analogie, on dit que $C$ est barré si pour tout $\alpha : \bN \to A$, on peut trouver $n_\alpha$ tel que $\alpha \in_{n_\alpha} C$. On notera donc $\isBarred(C)$ l'hypothèse.
 
 On définit alors les notations $\forall T^{\Tree}$, $\forall T^{\BinTree}$, et $\forall T^{\Mono}$ pour alléger notre écriture. Les axiomes sont alors~:
 \begin{align*}
     \WKL &= \forall T^{\BinTree}, \isInfinite(T) \implies \exists \alpha : \bN \to \bN, \alpha\in_\infty T\\
     \KL &= \forall T^{\Tree},\isInfinite(T) \implies \exists \alpha : \bN\to\bN, \alpha \in_\infty T\\
-    \FT &= \forall C^{\Mono},\isBarred(C) \implies \exists n \in \bN, \forall \alpha : \bN \to \bN, \alpha \in_n C
+    \FT &= \forall C^{\Mono},\isBarred(C) \implies \exists n \in \bN, \forall \alpha : \bN \to A, \alpha \in_n C
 \end{align*}
 
 La conclusion de $\FT$ est ce qu'on appelle une \textit{bar} uniforme~: le même $n$ fonctionne pour tous les chemins. Remarquons que le fait de considérer que $C$ est croissant signifie que l'on peut toujours prendre un $n$ plus grand ensuite pour obtenir une nouvelle \textit{bar} uniforme.
 
 \subsection{Vient l'intuitionnisme}
 
-Notre distinction entre $\FT$ (respectivement $\WFT$) et $\KL$ (respectivement $\WKL$) n'est intéressante que parce que les résultats ne sont plus équivalents en logique intuitionniste, logique dans laquelle nous menons notre étude. Dans ce cadre, les degrés logiques sont encore plus restreints, et plus de résultats peuvent être séparés. Cependant, au contraire des mathématiques à rebours classiques, une volonté de prouver des résultats d'indépendance existe~: en logique intuitionniste, des résultats habituellement faibles mais non constructifs deviennent des résultats bien plus forts (nous le verrons avec $\WKL$). Dans ces cas-là, prendre une théorie plus faible n'est pas forcément le meilleur moyen puisqu'être indépendant d'une théorie plus forte est un meilleur résultat. Dans ce rapport, nous nous contentons d'une sorte d'arithmétique du second ordre, la question se pose donc de si notre résultat d'indépendance principal, que $\FT$ n'implique pas $\WKL$, est encore vrai dans une théorie plus forte. Dans \cite{lubarsky2015realizabilitymodelsseparatingvarious}, une construction montre que cette indépendance est vraie même dans la version intuitionniste de $\ZF$.
+Notre distinction entre $\FT$ (respectivement $\WFT$) et $\KL$ (respectivement $\WKL$) n'est intéressante que parce que les résultats ne sont plus équivalents en logique intuitionniste, logique dans laquelle nous menons notre étude. Dans ce cadre, les degrés logiques sont encore plus restreints, et plus de résultats peuvent être séparés. Cependant, au contraire des mathématiques à rebours classiques, une volonté de prouver des résultats d'indépendance existe~: en logique intuitionniste, des résultats habituellement faibles mais non constructifs deviennent des résultats bien plus forts (nous le verrons avec $\WKL$). Dans ces cas-là, prendre une théorie plus faible n'est pas forcément le meilleur moyen puisqu'être indépendant d'une théorie plus forte est un meilleur résultat. Dans ce rapport, nous nous contentons d'une version de l'arithmétique du second ordre, la question se pose donc de si notre résultat d'indépendance principal, que $\FT$ n'implique pas $\WKL$, est encore vrai dans une théorie plus forte. Dans \cite{lubarsky2015realizabilitymodelsseparatingvarious}, une construction montre que cette indépendance est vraie même dans la version intuitionniste de $\ZF$.
 
 Cet article, néanmoins, semble répondre à notre question, puisqu'il construit un modèle de réalisabilité séparant $\FT$ et $\WKL$ dans un cadre intuitionniste. Il est ce qui nous a donné l'idée de considérer la continuité comme le principe calculatoire validant $\FT$. Cependant, la construction considérée dedans est largement plus complexe que ce que nous faisons ici~: on part d'un modèle de $\ZF$ pour considérer une structure de Kripke dans laquelle chaque monde est un modèle de réalisabilité indicée par un oracle, et les oracles sont strictement plus forts (pour la réduction Turing) quand on considère une arrête $v < w$ entre deux mondes. Au contraire, notre modèle est un simple modèle de réalisabilité sur un lambda-calcul, comme on peut en trouver facilement dans la littérature.
 
@@ -1160,18 +1193,18 @@ On peut maintenant prouver le résultat de cette sous-section~: notre modèle va
     \end{multline*}
 
     Pour trouver le $n$ correspondant, il nous suffit alors de regarder pour chaque $n$ si toutes les listes de taille $n$ sont dans $C$~:
-    \[\mathrm{fan}\defeq Y(\lambda f\; n. \rec_{\List}\;(\btt)\;(\lambda \ell\;b.C\;\ell\;\&\!\&\;b)\;(\forall\;N\;n))\;0\]
+    \[\mathrm{fan}\defeq Y(\lambda f\; n. \rec_{\Bool}\;(\rec_{\List}\;(\btt)\;(\lambda \ell\;b.C\;\ell\;\&\!\&\;b)\;(\forall\;N\;n))\;n\;(f\;(n+1)))\;0\]
 
     On souhaite donc montrer que cet algorithme termine. Par l'absurde, si cet algorithme ne termine pas, alors pour tout $n$ il existe au moins un $\ell_n \in \List(A)$ tel que $\ell_n \notin C'$. Notons $T$ le complémentaire de $C'$~: c'est un arbre car $C'$ est croissant. On peut alors appliquer le lemme de König sur cette suite $(\ell_n)$~: on en déduit une fonction $\alpha : \bN \to A$ telle que $\alpha \in_\infty T$. On note alors $\alpha_\bot$ la fonction continue associée, $\alpha_\bot : \bN_\bot \to A_\bot$, valant $\bot$ en $\bot$.
 
     Comme $f$ est une fonction possédant un code $r'$, celle-ci existe en tant que fonction continue dans $(\bN_\bot\to\bN_\bot)\to\bN_\bot$. On peut donc considérer $f(\alpha_\bot)\in\bN_\bot$. On sait que $\alpha_\bot$ est la borne supérieure de ses approximations finies, dont on notera l'ensemble $\Delta$. Par continuité de $f$ on en déduit que
     \[\bigvee_{\delta \in \Delta} f(\delta) = f\left(\bigvee \Delta\right)\]
 
-    Or, comme $\bN_\bot$ est un domaine plat, seuls deux cas sont possibles~: soit pour une certaine approximation $\alpha_n$ on a $f(\alpha_n) \in \bN$, soit $f(\delta) = \bot$ pour tout $\delta\in\Delta$. Dans les deux cas, cela signifie que la suite des $f(\alpha_0\cdots \alpha_n)$ (en considérant $\alpha_0\cdots\alpha_n$ comme la fonction définie uniquement sur $[0,n]$) est une suite stationnaire. On en déduit qu'il existe $n$ tel que $f(\alpha) = f(\alpha_0\cdots \alpha_n)$, vu que cette suite prend au maximum deux valeurs, on fixe maintenant ce $n$. Comme $f$ est croissante, cela signifie aussi que $f(\alpha_0\ldots\alpha_n 0^\infty) = f(\alpha)$. Or $\alpha_0\cdots\alpha_n 0^\infty$ possède un code, donc cette valeur n'est pas vide (une fonction possédant un code est totale, donc $f$ ne peut pas renvoyer $\bot$ sur une fonction possédant un code).
+    Or, comme $\bN_\bot$ est un domaine plat, seuls deux cas sont possibles~: soit pour une certaine approximation $\alpha_n$ on a $f(\alpha_n) \in \bN$, soit $f(\delta) = \bot$ pour tout $\delta\in\Delta$. Dans les deux cas, cela signifie que la suite des $f(\alpha_0\cdots \alpha_n)$ (en considérant $\alpha_0\cdots\alpha_n$ comme la fonction définie uniquement sur $[0,n]$) est une suite stationnaire. On en déduit qu'il existe $n$ tel que $f(\alpha) = f(\alpha_0\cdots \alpha_n)$, vu que cette suite prend au maximum deux valeurs. On fixe maintenant ce $n$. Comme $f$ est croissante, cela signifie aussi que $f(\alpha_0\cdots\alpha_n 0^\infty) = f(\alpha)$. Or $\alpha_0\cdots\alpha_n 0^\infty$ possède un code, donc cette valeur n'est pas vide (une fonction possédant un code est totale, donc $f$ ne peut pas renvoyer $\bot$ sur une fonction possédant un code).
 
     De plus, on sait que pour tout chemin $\beta$ possédant un code, $\beta_{f(\beta)} \in C'$, par construction même de $C'$. Soit $m = f(\alpha)$. Si $m \leq n$, alors on sait que $\alpha_0\cdots \alpha_m$ est retourné au moment d'inclure $\alpha_0\cdots\alpha_m 0^\infty$ dans $C'$, donc $\alpha \in_\infty C'$, ce qui est absurde. On en déduit que $n < m$, mais alors en considérant $\alpha_0\cdots \alpha_m 0^\infty$, le résultat est $m$ puisque $\alpha_0\cdots \alpha_n$ est un préfixe de ce mot~: on ajoute donc $\alpha_0\cdots \alpha_m$ à $C'$ à ce moment-là, donc $\alpha \in_\infty C'$. Tous les cas sont donc absurdes.
 
-    On aboutit à une contradiction~: l'algorithme termine donc, et retourne une barre uniforme.
+    On aboutit à une contradiction~: l'algorithme termine donc, et retourne une barre uniforme.\footnote{Une erreur a été trouvée dans cette preuve, sur la question de la totalité de $f(\alpha)$. Il est en fait possible, \textit{a priori}, que chaque $f(\alpha_0\cdots\alpha_n0^\infty)$ retourne $\bot$, mais que chaque extension pour $\beta$ calculable donne $f(\beta) \neq \bot$. On a dans ce cas encore la croissance de $f$ qui est vérifiée, ainsi que sa continuité. Il nous faut donc un autre argument pour assurer qu'une telle situation n'est pas possible. Une idée de correction, qui n'a été trouvée qu'après le stage, est de modifier notre interprétation en interdisant d'avoir $\bot$ dans nos valeurs.}
 \end{proof}
 
 \subsection[Lemme faible de König]{Ne pas satisfaire le lemme faible de König}
